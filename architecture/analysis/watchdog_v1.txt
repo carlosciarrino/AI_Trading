@@ -1,0 +1,45 @@
+     1	# AI_BRIDGE - Watchdog System
+     2	
+     3	import time
+     4	
+     5	
+     6	class Watchdog:
+     7	    """
+     8	    Sistema di sicurezza che monitora crash e blocchi.
+     9	    """
+    10	
+    11	    def __init__(self, monitoring, persistence):
+    12	
+    13	        self.monitoring = monitoring
+    14	        self.persistence = persistence
+    15	
+    16	        self.last_heartbeat = time.time()
+    17	        self.max_silence = 10  # secondi
+    18	
+    19	    # =========================================
+    20	    # HEARTBEAT UPDATE
+    21	    # =========================================
+    22	
+    23	    def heartbeat(self):
+    24	
+    25	        self.last_heartbeat = time.time()
+    26	
+    27	    # =========================================
+    28	    # CHECK SYSTEM
+    29	    # =========================================
+    30	
+    31	    def check(self):
+    32	
+    33	        silence = time.time() - self.last_heartbeat
+    34	
+    35	        if silence > self.max_silence:
+    36	            print("[WATCHDOG] SYSTEM SILENCE DETECTED → RECOVERY MODE")
+    37	
+    38	            return {
+    39	                "action": "RECOVERY",
+    40	                "reason": "HEARTBEAT_TIMEOUT"
+    41	            }
+    42	
+    43	        return {
+    44	            "action": "OK"
+    45	        }

@@ -1,0 +1,196 @@
+     1	import json
+     2	import os
+     3	import threading
+     4	import time
+     5	
+     6	
+     7	class RuntimeController:
+     8	
+     9	    def __init__(self):
+    10	
+    11	        self.runtime_file = (
+    12	            "data/runtime_state.json"
+    13	        )
+    14	
+    15	        self.lock = threading.Lock()
+    16	
+    17	        self.default_state = {
+    18	
+    19	            "system_status": "STARTING",
+    20	
+    21	            "trading_enabled": True,
+    22	
+    23	            "safe_mode": False,
+    24	
+    25	            "evolution_mode": False,
+    26	
+    27	            "recovery_mode": False,
+    28	
+    29	            "last_update": time.time()
+    30	
+    31	        }
+    32	
+    33	        self.initialize_runtime()
+    34	
+    35	    def initialize_runtime(self):
+    36	
+    37	        os.makedirs("data", exist_ok=True)
+    38	
+    39	        if not os.path.exists(self.runtime_file):
+    40	
+    41	            self.save_state(self.default_state)
+    42	
+    43	    def load_state(self):
+    44	
+    45	        with self.lock:
+    46	
+    47	            try:
+    48	
+    49	                with open(self.runtime_file, "r") as f:
+    50	
+    51	                    return json.load(f)
+    52	
+    53	            except:
+    54	
+    55	                return self.default_state.copy()
+    56	
+    57	    def save_state(self, state):
+    58	
+    59	        with self.lock:
+    60	
+    61	            state["last_update"] = time.time()
+    62	
+    63	            with open(self.runtime_file, "w") as f:
+    64	
+    65	                json.dump(state, f, indent=4)
+    66	
+    67	    def update_state(self, key, value):
+    68	
+    69	        state = self.load_state()
+    70	
+    71	        state[key] = value
+    72	
+    73	        self.save_state(state)
+    74	
+    75	        print(f"[RUNTIME] {key} -> {value}")
+    76	
+    77	    def set_system_status(self, status):
+    78	
+    79	        allowed = [
+    80	
+    81	            "STARTING",
+    82	            "RUNNING",
+    83	            "SAFE_MODE",
+    84	            "EVOLVING",
+    85	            "RECOVERING",
+    86	            "SHUTDOWN"
+    87	
+    88	        ]
+    89	
+    90	        if status not in allowed:
+    91	
+    92	            print("[RUNTIME] Invalid status")
+    93	
+    94	            return
+    95	
+    96	        self.update_state(
+    97	            "system_status",
+    98	            status
+    99	        )
+   100	
+   101	    def enable_safe_mode(self):
+   102	
+   103	        self.update_state(
+   104	            "safe_mode",
+   105	            True
+   106	        )
+   107	
+   108	        self.update_state(
+   109	            "trading_enabled",
+   110	            False
+   111	        )
+   112	
+   113	        self.set_system_status(
+   114	            "SAFE_MODE"
+   115	        )
+   116	
+   117	    def disable_safe_mode(self):
+   118	
+   119	        self.update_state(
+   120	            "safe_mode",
+   121	            False
+   122	        )
+   123	
+   124	        self.update_state(
+   125	            "trading_enabled",
+   126	            True
+   127	        )
+   128	
+   129	        self.set_system_status(
+   130	            "RUNNING"
+   131	        )
+   132	
+   133	    def start_evolution_mode(self):
+   134	
+   135	        self.update_state(
+   136	            "evolution_mode",
+   137	            True
+   138	        )
+   139	
+   140	        self.set_system_status(
+   141	            "EVOLVING"
+   142	        )
+   143	
+   144	    def stop_evolution_mode(self):
+   145	
+   146	        self.update_state(
+   147	            "evolution_mode",
+   148	            False
+   149	        )
+   150	
+   151	        self.set_system_status(
+   152	            "RUNNING"
+   153	        )
+   154	
+   155	    def start_recovery_mode(self):
+   156	
+   157	        self.update_state(
+   158	            "recovery_mode",
+   159	            True
+   160	        )
+   161	
+   162	        self.set_system_status(
+   163	            "RECOVERING"
+   164	        )
+   165	
+   166	    def stop_recovery_mode(self):
+   167	
+   168	        self.update_state(
+   169	            "recovery_mode",
+   170	            False
+   171	        )
+   172	
+   173	        self.set_system_status(
+   174	            "RUNNING"
+   175	        )
+   176	
+   177	    def shutdown_system(self):
+   178	
+   179	        self.update_state(
+   180	            "trading_enabled",
+   181	            False
+   182	        )
+   183	
+   184	        self.set_system_status(
+   185	            "SHUTDOWN"
+   186	        )
+   187	
+   188	    def get_runtime_summary(self):
+   189	
+   190	        state = self.load_state()
+   191	
+   192	        print("\n[RUNTIME STATUS]\n")
+   193	
+   194	        print(json.dumps(state, indent=4))
+   195	
+   196	        return state
