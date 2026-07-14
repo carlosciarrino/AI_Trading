@@ -1,0 +1,185 @@
+     1	import time
+     2	
+     3	from core.state_manager import StateManager
+     4	from core.self_repair import SelfRepair
+     5	from core.watchdog import Watchdog
+     6	from core.memory_engine import MemoryEngine
+     7	from core.pattern_memory_engine import PatternMemoryEngine
+     8	from core.backup_engine import BackupEngine
+     9	from core.config_manager import ConfigManager
+    10	from core.logger import Logger
+    11	from core.evolution_engine import EvolutionEngine
+    12	from core.telemetry import Telemetry
+    13	from core.performance_engine import PerformanceEngine
+    14	from core.confidence_engine import ConfidenceEngine
+    15	from core.risk_mode import RiskMode
+    16	
+    17	from core.market_feed import MarketFeed
+    18	from core.market_regime import MarketRegime
+    19	from core.market_intelligence import MarketIntelligence
+    20	
+    21	from core.feedback_engine import FeedbackEngine
+    22	from core.execution_engine import ExecutionEngine
+    23	
+    24	
+    25	class Orchestrator:
+    26	
+    27	    def __init__(self):
+    28	
+    29	        self.config = ConfigManager()
+    30	
+    31	        self.logger = Logger()
+    32	
+    33	        self.state = StateManager()
+    34	
+    35	        self.repair = SelfRepair()
+    36	
+    37	        self.watchdog = Watchdog()
+    38	
+    39	        self.memory = MemoryEngine()
+    40	
+    41	        self.pattern_memory = PatternMemoryEngine()
+    42	
+    43	        self.backup = BackupEngine()
+    44	
+    45	        self.evolution = EvolutionEngine()
+    46	
+    47	        self.telemetry = Telemetry()
+    48	
+    49	        self.performance = PerformanceEngine()
+    50	
+    51	        self.confidence = ConfidenceEngine()
+    52	
+    53	        self.risk_mode = RiskMode()
+    54	
+    55	        self.market_feed = MarketFeed()
+    56	
+    57	        self.market_regime = MarketRegime()
+    58	
+    59	        self.market_intelligence = MarketIntelligence()
+    60	
+    61	        self.feedback = FeedbackEngine()
+    62	
+    63	        self.execution = ExecutionEngine()
+    64	
+    65	        self.running = True
+    66	
+    67	    def startup_check(self):
+    68	
+    69	        self.logger.log("Startup sequence initiated.")
+    70	
+    71	        self.repair.check_critical_files()
+    72	
+    73	        self.state.load_state()
+    74	
+    75	        self.watchdog.system_health()
+    76	
+    77	        if self.config.get("backup", "enabled"):
+    78	
+    79	            self.backup.create_backup()
+    80	
+    81	        self.logger.log("System startup completed.")
+    82	
+    83	    def market_cycle(self):
+    84	
+    85	        snapshot = self.market_feed.get_market_snapshot()
+    86	
+    87	        regime_data = self.market_regime.detect_regime(snapshot)
+    88	
+    89	        intelligence = self.market_intelligence.evaluate_market(regime_data)
+    90	
+    91	        self.state.update_state("market_regime", regime_data["regime"])
+    92	
+    93	        self.state.update_state("market_message", intelligence["message"])
+    94	
+    95	        self.state.update_state("trading_enabled", intelligence["trade_allowed"])
+    96	
+    97	        self.state.update_state("last_market_snapshot", snapshot)
+    98	
+    99	        self.logger.log(f"Market regime: {regime_data['regime']}")
+   100	
+   101	    def intelligence_cycle(self):
+   102	
+   103	        report = self.performance.analyze()
+   104	
+   105	        confidence_score = self.confidence.calculate_confidence(report)
+   106	
+   107	        trading_allowed = self.confidence.is_safe_to_trade(confidence_score)
+   108	
+   109	        risk_mode = self.risk_mode.detect_mode(report)
+   110	
+   111	        self.state.update_state("confidence_score", confidence_score)
+   112	
+   113	        self.state.update_state("trading_enabled", trading_allowed)
+   114	
+   115	        self.state.update_state("risk_mode", risk_mode)
+   116	
+   117	        self.logger.log(f"Risk mode: {risk_mode}")
+   118	
+   119	    def feedback_cycle(self):
+   120	
+   121	        report = self.performance.analyze()
+   122	
+   123	        self.feedback.process_trade_feedback(report)
+   124	
+   125	    def execution_cycle(self):
+   126	
+   127	        state = self.state.load_state()
+   128	
+   129	        performance = self.performance.analyze()
+   130	
+   131	        market_data = state.get("last_market_snapshot", {})
+   132	
+   133	        self.execution.execute(performance, market_data, state)
+   134	
+   135	    def evolution_cycle(self):
+   136	
+   137	        self.logger.log("Evolution cycle started.")
+   138	
+   139	        self.evolution.evolve()
+   140	
+   141	        self.telemetry.record("evolution_cycle", "completed")
+   142	
+   143	    def main_loop(self):
+   144	
+   145	        self.logger.log("Main loop started.")
+   146	
+   147	        sleep_time = self.config.get("runtime", "loop_sleep_seconds")
+   148	
+   149	        cycle_counter = 0
+   150	
+   151	        while self.running:
+   152	
+   153	            try:
+   154	
+   155	                self.watchdog.system_health()
+   156	
+   157	                self.market_cycle()
+   158	
+   159	                if self.config.get("ai", "auto_repair_enabled"):
+   160	
+   161	                    self.repair.quick_repair()
+   162	
+   163	                self.state.save_runtime_state()
+   164	
+   165	                self.intelligence_cycle()
+   166	
+   167	                self.feedback_cycle()
+   168	
+   169	                self.execution_cycle()
+   170	
+   171	                cycle_counter += 1
+   172	
+   173	                if cycle_counter >= 6:
+   174	
+   175	                    self.evolution_cycle()
+   176	
+   177	                    cycle_counter = 0
+   178	
+   179	                time.sleep(sleep_time)
+   180	
+   181	            except Exception as e:
+   182	
+   183	                self.logger.log(f"CRITICAL ERROR: {e}")
+   184	
+   185	                time.sleep(5)

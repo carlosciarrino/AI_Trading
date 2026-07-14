@@ -1,0 +1,15 @@
+     1	from core.orchestrator import Orchestrator
+     2	
+     3	
+     4	def main():
+     5	
+     6	    system = Orchestrator()
+     7	
+     8	    system.startup_check()
+     9	
+    10	    system.main_loop()
+    11	
+    12	
+    13	if __name__ == "__main__":
+    14	
+    15	    main()
