@@ -1,0 +1,9 @@
+{
+    "name": "baseline_strategy",
+    "ema_fast": 21,
+    "ema_slow": 50,
+    "stop_loss": 20,
+    "take_profit": 40,
+    "confidence_threshold": 0.7,
+    "risk_per_trade": 1.0
+}

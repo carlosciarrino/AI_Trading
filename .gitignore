@@ -1,0 +1,32 @@
+# Python
+__pycache__/
+*.py[cod]
+*.so
+
+# Virtual environments
+.venv/
+venv/
+
+# IDE
+.vscode/
+.idea/
+
+# Runtime
+*.log
+*.tmp
+
+# Trading runtime
+ai_signal.txt
+performance_log.txt
+trades_log.txt
+news_events.txt
+market_memory.csv
+anti_memory.csv
+
+# Runtime state
+data/logs/
+data/backups/
+data/runtime_state.json
+
+# Archives
+*.zip

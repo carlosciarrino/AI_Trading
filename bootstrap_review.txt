@@ -1,0 +1,300 @@
+from core.orchestrator import Orchestrator
+
+
+def main():
+
+    system = Orchestrator()
+
+    system.startup_check()
+
+    system.main_loop()
+
+
+if __name__ == "__main__":
+
+    main()
+import os
+import time
+from datetime import datetime
+
+from core.self_repair import SelfRepair
+from core.state_manager import StateManager
+from core.watchdog import Watchdog
+
+
+class Orchestrator:
+
+    def __init__(self):
+
+        self.state = StateManager()
+        self.repair = SelfRepair()
+        self.watchdog = Watchdog()
+
+        self.running = True
+
+    def startup_check(self):
+
+        print("\n[ORCHESTRATOR] Startup system check...\n")
+
+        self.repair.check_critical_files()
+
+        self.state.load_state()
+
+        self.watchdog.system_health()
+
+        print("\n[ORCHESTRATOR] System ready.\n")
+
+    def main_loop(self):
+
+        print("[ORCHESTRATOR] Running...\n")
+
+        while self.running:
+
+            try:
+
+                self.watchdog.system_health()
+
+                self.repair.quick_repair()
+
+                self.state.save_runtime_state()
+
+                time.sleep(10)
+
+            except Exception as e:
+
+                print(f"[ORCHESTRATOR ERROR] {e}")
+
+                time.sleep(5)
+import time
+
+from core.state_manager import StateManager
+from core.self_repair import SelfRepair
+from core.watchdog import Watchdog
+from core.memory_engine import MemoryEngine
+from core.pattern_memory_engine import PatternMemoryEngine
+from core.backup_engine import BackupEngine
+from core.config_manager import ConfigManager
+from core.logger import Logger
+from core.evolution_engine import EvolutionEngine
+from core.telemetry import Telemetry
+from core.performance_engine import PerformanceEngine
+from core.confidence_engine import ConfidenceEngine
+from core.risk_mode import RiskMode
+
+from core.market_feed import MarketFeed
+from core.market_regime import MarketRegime
+from core.market_intelligence import MarketIntelligence
+
+from core.feedback_engine import FeedbackEngine
+from core.execution_engine import ExecutionEngine
+
+
+class Orchestrator:
+
+    def __init__(self):
+
+        self.config = ConfigManager()
+
+        self.logger = Logger()
+
+        self.state = StateManager()
+
+        self.repair = SelfRepair()
+
+        self.watchdog = Watchdog()
+
+        self.memory = MemoryEngine()
+
+        self.pattern_memory = PatternMemoryEngine()
+
+        self.backup = BackupEngine()
+
+        self.evolution = EvolutionEngine()
+
+        self.telemetry = Telemetry()
+
+        self.performance = PerformanceEngine()
+
+        self.confidence = ConfidenceEngine()
+
+        self.risk_mode = RiskMode()
+
+        self.market_feed = MarketFeed()
+
+        self.market_regime = MarketRegime()
+
+        self.market_intelligence = MarketIntelligence()
+
+        self.feedback = FeedbackEngine()
+
+        self.execution = ExecutionEngine()
+
+        self.running = True
+
+    def startup_check(self):
+
+        self.logger.log("Startup sequence initiated.")
+
+        self.repair.check_critical_files()
+
+        self.state.load_state()
+
+        self.watchdog.system_health()
+
+        if self.config.get("backup", "enabled"):
+
+            self.backup.create_backup()
+
+        self.logger.log("System startup completed.")
+
+    def market_cycle(self):
+
+        snapshot = self.market_feed.get_market_snapshot()
+
+        regime_data = self.market_regime.detect_regime(snapshot)
+
+        intelligence = self.market_intelligence.evaluate_market(regime_data)
+
+        self.state.update_state("market_regime", regime_data["regime"])
+
+        self.state.update_state("market_message", intelligence["message"])
+
+        self.state.update_state("trading_enabled", intelligence["trade_allowed"])
+
+        self.state.update_state("last_market_snapshot", snapshot)
+
+        self.logger.log(f"Market regime: {regime_data['regime']}")
+
+    def intelligence_cycle(self):
+
+        report = self.performance.analyze()
+
+        confidence_score = self.confidence.calculate_confidence(report)
+
+        trading_allowed = self.confidence.is_safe_to_trade(confidence_score)
+
+        risk_mode = self.risk_mode.detect_mode(report)
+
+        self.state.update_state("confidence_score", confidence_score)
+
+        self.state.update_state("trading_enabled", trading_allowed)
+
+        self.state.update_state("risk_mode", risk_mode)
+
+        self.logger.log(f"Risk mode: {risk_mode}")
+
+    def feedback_cycle(self):
+
+        report = self.performance.analyze()
+
+        self.feedback.process_trade_feedback(report)
+
+    def execution_cycle(self):
+
+        state = self.state.load_state()
+
+        performance = self.performance.analyze()
+
+        market_data = state.get("last_market_snapshot", {})
+
+        self.execution.execute(performance, market_data, state)
+
+    def evolution_cycle(self):
+
+        self.logger.log("Evolution cycle started.")
+
+        self.evolution.evolve()
+
+        self.telemetry.record("evolution_cycle", "completed")
+
+    def main_loop(self):
+
+        self.logger.log("Main loop started.")
+
+        sleep_time = self.config.get("runtime", "loop_sleep_seconds")
+
+        cycle_counter = 0
+
+        while self.running:
+
+            try:
+
+                self.watchdog.system_health()
+
+                self.market_cycle()
+
+                if self.config.get("ai", "auto_repair_enabled"):
+
+                    self.repair.quick_repair()
+
+                self.state.save_runtime_state()
+
+                self.intelligence_cycle()
+
+                self.feedback_cycle()
+
+                self.execution_cycle()
+
+                cycle_counter += 1
+
+                if cycle_counter >= 6:
+
+                    self.evolution_cycle()
+
+                    cycle_counter = 0
+
+                time.sleep(sleep_time)
+
+            except Exception as e:
+
+                self.logger.log(f"CRITICAL ERROR: {e}")
+
+                time.sleep(5)
+# AI_BRIDGE - System Gateway
+
+from core.cognitive_orchestrator import CognitiveOrchestrator
+
+
+class SystemGateway:
+    """
+    Gateway centrale AI_BRIDGE.
+
+    Responsabilità:
+    - accesso unificato orchestrator
+    - routing richieste
+    - governance centralizzata
+    """
+
+    def __init__(
+        self,
+        runtime_controller=None,
+        risk_governor=None,
+        event_journal=None
+    ):
+
+        self.orchestrator = CognitiveOrchestrator(
+            runtime_controller=runtime_controller,
+            risk_governor=risk_governor,
+            event_journal=event_journal
+        )
+
+    # ==========================================
+    # ACTION REQUEST API
+    # ==========================================
+
+    def request_action(
+        self,
+        module,
+        action,
+        priority=1,
+        reason="",
+        metadata=None
+    ):
+
+        return self.orchestrator.request_action(
+            module=module,
+            action=action,
+            priority=priority,
+            reason=reason,
+            metadata=metadata
+        )

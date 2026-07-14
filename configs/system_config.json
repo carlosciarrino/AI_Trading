@@ -1,0 +1,31 @@
+{
+    "system": {
+        "name": "AI_BRIDGE",
+        "version": "EVOLUTION_CORE",
+        "mode": "LIVE",
+        "debug": true
+    },
+
+    "runtime": {
+        "loop_sleep_seconds": 10,
+        "max_log_size_mb": 10
+    },
+
+    "risk": {
+        "risk_per_trade": 1.0,
+        "max_daily_drawdown": 5.0,
+        "max_open_trades": 3
+    },
+
+    "ai": {
+        "confidence_threshold": 0.70,
+        "mutation_enabled": false,
+        "auto_repair_enabled": true
+    },
+
+    "backup": {
+        "enabled": true,
+        "interval_minutes": 60,
+        "max_backups": 20
+    }
+}

@@ -1,0 +1,7 @@
+{
+    "risk_per_trade": 1.0,
+    "max_drawdown": 10,
+    "confidence_threshold": 0.60,
+    "trade_frequency_limit": 5,
+    "safe_mode": false
+}
