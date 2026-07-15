@@ -1,4 +1,3 @@
-```python
 """Logging initialization for AI_BRIDGE V2.
 
 This module contains the single AI_BRIDGE V2 logger configuration
@@ -81,4 +80,3 @@ def initialize_logging(data_dir: Path) -> logging.Logger:
     logger.addHandler(file_handler)
 
     return logger
-```
