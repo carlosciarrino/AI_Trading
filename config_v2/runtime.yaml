@@ -1,0 +1,30 @@
+# AI_BRIDGE V2 - runtime.yaml
+# Responsabilita': governo del ciclo dell'Orchestrator (intervalli, safe mode,
+# soglie di errore, arresto). Vedi config_v2/CONFIGURATION_ARCHITECTURE.md,
+# sezione 3.2, per la descrizione completa di ogni chiave.
+
+# Intervallo, in secondi, tra un ciclo e il successivo del loop principale.
+loop_interval_seconds: 5.0
+
+# Se vero, forza il sistema in modalita' protetta all'avvio (nessun ordine reale).
+safe_mode: false
+
+# Abilita i tentativi automatici di ripristino di file critici mancanti/corrotti.
+auto_repair_enabled: true
+
+# Secondi di silenzio del loop principale oltre i quali il Watchdog considera
+# il sistema bloccato.
+watchdog_timeout_seconds: 30
+
+# Eccezioni consecutive nel loop principale oltre le quali scatta il safe mode.
+max_consecutive_errors: 3
+
+# Numero di cicli dell'Orchestrator tra un'esecuzione e la successiva del ciclo
+# di evoluzione della strategia.
+evolution_cycle_interval: 6
+
+# Secondi massimi concessi a un arresto ordinato prima di forzare la terminazione.
+graceful_shutdown_timeout_seconds: 10
+
+# Secondi minimi in stato RECOVERY prima di poter tornare in stato ACTIVE.
+recovery_mode_cooldown_seconds: 60

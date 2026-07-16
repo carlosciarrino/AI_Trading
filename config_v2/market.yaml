@@ -1,0 +1,18 @@
+# AI_BRIDGE V2 - market.yaml
+
+data_source: simulated
+
+session_start_hour_utc: 0
+session_end_hour_utc: 23
+
+watched_symbols_count: 1
+symbol_1: EURUSD
+
+broker_count: 1
+
+broker_1_name: DemoBroker
+broker_1_platform: MT4
+broker_1_connection_type: local
+broker_1_terminal_path: /home/carlo/.wine
+broker_1_account_id: demo
+broker_1_enabled: true

@@ -1,0 +1,25 @@
+# AI_BRIDGE V2 - system.yaml
+# Responsabilita': identita' statica dell'istanza e dell'ambiente di esecuzione.
+# Vedi config_v2/CONFIGURATION_ARCHITECTURE.md, sezione 3.1, per la descrizione
+# completa di ogni chiave.
+
+# Versione dello schema di configurazione dei 4 file config_v2/*.yaml.
+config_schema_version: 1
+
+# Ambiente di esecuzione: development, staging, production.
+environment: development
+
+# Etichetta identificativa dell'architettura, registrata in log e telemetria.
+architecture: AI_BRIDGE_V2
+
+# Identificativo di questa istanza in esecuzione.
+instance_id: ai_bridge_v2_default
+
+# Fuso orario di riferimento (formato IANA) per timestamp di mercato e log.
+timezone: UTC
+
+# Valuta di riferimento (ISO 4217) per normalizzare P&L, esposizione, drawdown.
+base_currency: USD
+
+# Livello minimo di log: DEBUG, INFO, WARNING, ERROR.
+log_level: INFO

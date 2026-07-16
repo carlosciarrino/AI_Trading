@@ -1,0 +1,21 @@
+# AI_BRIDGE V2 - risk.yaml
+
+max_risk_per_trade: 1.0
+max_daily_loss: 5.0
+max_open_positions: 3
+
+default_position_size: 0.01
+allow_multiple_positions: true
+
+decision_confidence_threshold: 0.70
+
+learning_enabled: true
+telemetry_enabled: true
+
+auto_recovery_enabled: true
+watchdog_enabled: true
+
+emergency_stop_enabled: true
+
+paper_trading: true
+live_trading: false
