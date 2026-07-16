@@ -1,4 +1,3 @@
-runtime_controller.py aperto
 """Runtime controller for AI_BRIDGE V2.
 
 This module owns the runtime lifecycle state of AI_BRIDGE V2.
