@@ -12,7 +12,8 @@ Only the Python standard library is used.
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
+from typing import Any
 
 from core_v2.market_engine import MarketEngine
 from core_v2.decision_engine import DecisionEngine
@@ -29,10 +30,18 @@ from core_v2.orchestrator import Orchestrator
 
 @dataclass
 class AIComponents:
-    """Container holding all AI_BRIDGE V2 components."""
+    """Container holding all AI_BRIDGE V2 components.
+
+    This class is the official container of all system engines.
+
+    It keeps engine references centralized and provides
+    a simple access layer for future orchestration,
+    pipeline execution and engine communication.
+    """
 
     runtime: RuntimeController
     orchestrator: Orchestrator
+
     market: MarketEngine
     decision: DecisionEngine
     risk: RiskEngine
@@ -42,6 +51,42 @@ class AIComponents:
     memory: MemoryEngine
     learning: LearningEngine
     events: EventEngine
+
+    _registry: dict[str, Any] = field(
+        default_factory=dict,
+        init=False,
+        repr=False,
+    )
+
+    def __post_init__(self) -> None:
+        """Build internal engine registry."""
+
+        self._registry = {
+            "market": self.market,
+            "decision": self.decision,
+            "risk": self.risk,
+            "execution": self.execution,
+            "monitoring": self.monitoring,
+            "recovery": self.recovery,
+            "memory": self.memory,
+            "learning": self.learning,
+            "events": self.events,
+        }
+
+    def get_engine(self, name: str) -> Any | None:
+        """Return an engine by name."""
+
+        return self._registry.get(name)
+
+    def has_engine(self, name: str) -> bool:
+        """Check whether an engine exists."""
+
+        return name in self._registry
+
+    def engines(self) -> dict[str, Any]:
+        """Return all registered engines."""
+
+        return dict(self._registry)
 
 
 def build_system(
@@ -90,7 +135,11 @@ def build_system(
     )
 
     # ==========================================================
-    # Engine registration inside Orchestrator
+    # Temporary compatibility layer
+    #
+    # The orchestrator still uses callbacks.
+    # This will be replaced in a later migration step
+    # with direct engine orchestration.
     # ==========================================================
 
     orchestrator.register_market(
