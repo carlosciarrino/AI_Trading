@@ -2,9 +2,9 @@
 
 The orchestrator coordinates the execution lifecycle of AI_BRIDGE V2.
 
-At this stage it maintains backward compatibility with the callback
-registry system while preparing the migration toward direct engine
-orchestration through AIComponents.
+This module maintains backward compatibility with the callback registry
+system while introducing direct engine orchestration through the
+AIComponents container.
 
 Only the Python standard library is used.
 """
@@ -15,6 +15,8 @@ from dataclasses import dataclass, field
 from typing import Callable, Any
 
 from core_v2.runtime_controller import RuntimeController, RuntimeState
+from core_v2.pipeline_context import PipelineContext
+from core_v2.execution_engine import ExecutionRequest
 
 
 EngineCallback = Callable[[], None]
@@ -46,16 +48,12 @@ class OrchestratorStatistics:
 class Orchestrator:
     """Coordinates all AI_BRIDGE V2 engines.
 
-    The components reference is intentionally generic to avoid
-    circular imports with system_builder.AIComponents.
-
     The callback registry remains active during the migration phase.
+    Direct orchestration is performed through the AIComponents container.
     """
 
     runtime: RuntimeController
 
-    # Future direct engine container reference.
-    # It will later replace the callback registry.
     components: Any | None = None
 
     registry: EngineRegistry = field(
@@ -67,11 +65,7 @@ class Orchestrator:
     )
 
     def attach_components(self, components: Any) -> None:
-        """Attach AIComponents container.
-
-        This method prepares the transition toward direct engine
-        orchestration without breaking current behaviour.
-        """
+        """Attach AIComponents container."""
 
         self.components = components
 
@@ -120,12 +114,118 @@ class Orchestrator:
                 RuntimeState.SHUTDOWN
             )
 
-    def run_cycle(self) -> None:
-        """Execute one orchestration cycle.
+    def run_pipeline_cycle(self) -> PipelineContext:
+        """Execute one complete AI_BRIDGE V2 engine pipeline."""
 
-        Current implementation uses callbacks.
-        Future versions will execute the engine pipeline directly.
-        """
+        context = PipelineContext(
+            cycle_id=self.statistics.cycles + 1
+        )
+
+        if not self.runtime.is_running():
+            context.errors.append(
+                "Runtime is not running."
+            )
+            return context
+
+        if self.components is None:
+            context.errors.append(
+                "AIComponents container not attached."
+            )
+            return context
+
+        try:
+            self.components.market.update()
+
+            context.market_data = {
+                "symbols": self.components.market.get_symbols(),
+                "ready": self.components.market.is_ready(),
+            }
+
+            decision_result = (
+                self.components.decision.evaluate()
+            )
+
+            context.decision = {
+                "decision": decision_result.decision.value,
+                "confidence": decision_result.confidence,
+                "reason": decision_result.reason,
+            }
+
+            risk_result = (
+                self.components.risk.evaluate(
+                    decision_result
+                )
+            )
+
+            context.risk = {
+                "approved": risk_result.approved,
+                "reason": risk_result.reason,
+            }
+
+            symbols = self.components.market.get_symbols()
+
+            if symbols:
+                request = ExecutionRequest(
+                    symbol=symbols[0],
+                    decision=decision_result.decision,
+                    volume=1.0,
+                )
+
+                execution_result = (
+                    self.components.execution.execute(
+                        request,
+                        risk_result,
+                    )
+                )
+
+                context.order = {
+                    "symbol": request.symbol,
+                    "volume": request.volume,
+                    "decision": request.decision.value,
+                }
+
+                context.execution_result = {
+                    "executed": execution_result.executed,
+                    "reason": execution_result.reason,
+                }
+
+            health = (
+                self.components.monitoring.evaluate()
+            )
+
+            context.metadata["health"] = str(
+                health
+            )
+
+            recovery = (
+                self.components.recovery.evaluate(
+                    health
+                )
+            )
+
+            context.metadata["recovery"] = str(
+                recovery
+            )
+
+            context.learning_data = {
+                "samples": self.components.memory.size
+            }
+
+            self.components.learning.analyse(
+                self.components.memory.size
+            )
+
+        except Exception as error:
+            context.errors.append(
+                str(error)
+            )
+
+        self.statistics.cycles += 1
+
+        return context
+
+    def run_cycle(self) -> None:
+        """Execute one orchestration cycle using callbacks."""
 
         if not self.runtime.is_running():
             return
