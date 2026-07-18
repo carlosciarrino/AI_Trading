@@ -1,32 +1,31 @@
-# Python
+# Python cache
 __pycache__/
-*.py[cod]
-*.so
+*.pyc
 
-# Virtual environments
-.venv/
-venv/
+# Temporary files
+*.bak
 
-# IDE
-.vscode/
-.idea/
+# Development archives
+backups/
 
-# Runtime
-*.log
-*.tmp
+# Recovery notes
+recovery_notes/
+# Runtime data
+*.csv
+*.txt
+*.zip
+
+data/
+data_v2/
+logs_v2/
 
 # Trading runtime
-ai_signal.txt
-performance_log.txt
-trades_log.txt
-news_events.txt
-market_memory.csv
-anti_memory.csv
+mt4/
+mt4_shared/
 
 # Runtime state
-data/logs/
-data/backups/
-data/runtime_state.json
+*.json
 
-# Archives
-*.zip
+# Keep architecture documentation
+!architecture/
+!architecture/**/*.md
