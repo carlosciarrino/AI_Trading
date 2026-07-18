@@ -45,14 +45,22 @@ class AIComponents:
 
 
 def build_system(
-    configuration: dict[str, str],
+    configuration: dict[str, dict[str, str]],
 ) -> AIComponents:
-    """Create and connect the AI_BRIDGE V2 system."""
+    """Create and connect the AI_BRIDGE V2 system.
+
+    Args:
+        configuration:
+            Complete AI_BRIDGE V2 configuration divided into sections.
+
+    Returns:
+        Fully constructed AI_BRIDGE V2 component container.
+    """
 
     runtime = RuntimeController()
 
     market = MarketEngine(
-        configuration=configuration
+        configuration=configuration.get("market", {})
     )
 
     market.initialize()
