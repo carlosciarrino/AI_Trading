@@ -34,9 +34,8 @@ class AIComponents:
 
     This class is the official container of all system engines.
 
-    It keeps engine references centralized and provides
-    a simple access layer for future orchestration,
-    pipeline execution and engine communication.
+    It centralizes engine references and provides an access layer
+    for orchestration, pipeline execution and engine communication.
     """
 
     runtime: RuntimeController
@@ -137,9 +136,8 @@ def build_system(
     # ==========================================================
     # Temporary compatibility layer
     #
-    # The orchestrator still uses callbacks.
-    # This will be replaced in a later migration step
-    # with direct engine orchestration.
+    # Callback registration remains active during migration.
+    # Future versions will replace it with direct engine calls.
     # ==========================================================
 
     orchestrator.register_market(
@@ -170,7 +168,7 @@ def build_system(
         lambda: memory.snapshot()
     )
 
-    return AIComponents(
+    components = AIComponents(
         runtime=runtime,
         orchestrator=orchestrator,
         market=market,
@@ -183,3 +181,16 @@ def build_system(
         learning=learning,
         events=events,
     )
+
+    # ==========================================================
+    # New architecture connection
+    #
+    # The orchestrator now has access to the official
+    # AIComponents container while callbacks remain active.
+    # ==========================================================
+
+    orchestrator.attach_components(
+        components
+    )
+
+    return components
