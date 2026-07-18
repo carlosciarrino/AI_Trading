@@ -2,10 +2,9 @@
 
 The orchestrator coordinates the execution lifecycle of AI_BRIDGE V2.
 
-At this stage it does not execute trading logic directly. Instead, it
-provides the central coordination point that future engines
-(market, decision, risk, execution, monitoring, learning, recovery,
-memory) will register with.
+At this stage it maintains backward compatibility with the callback
+registry system while preparing the migration toward direct engine
+orchestration through AIComponents.
 
 Only the Python standard library is used.
 """
@@ -13,7 +12,7 @@ Only the Python standard library is used.
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from typing import Callable
+from typing import Callable, Any
 
 from core_v2.runtime_controller import RuntimeController, RuntimeState
 
@@ -45,13 +44,36 @@ class OrchestratorStatistics:
 
 @dataclass
 class Orchestrator:
-    """Coordinates all AI_BRIDGE V2 engines."""
+    """Coordinates all AI_BRIDGE V2 engines.
+
+    The components reference is intentionally generic to avoid
+    circular imports with system_builder.AIComponents.
+
+    The callback registry remains active during the migration phase.
+    """
 
     runtime: RuntimeController
-    registry: EngineRegistry = field(default_factory=EngineRegistry)
+
+    # Future direct engine container reference.
+    # It will later replace the callback registry.
+    components: Any | None = None
+
+    registry: EngineRegistry = field(
+        default_factory=EngineRegistry
+    )
+
     statistics: OrchestratorStatistics = field(
         default_factory=OrchestratorStatistics
     )
+
+    def attach_components(self, components: Any) -> None:
+        """Attach AIComponents container.
+
+        This method prepares the transition toward direct engine
+        orchestration without breaking current behaviour.
+        """
+
+        self.components = components
 
     def register_market(self, callback: EngineCallback) -> None:
         self.registry.market = callback
@@ -81,19 +103,29 @@ class Orchestrator:
         """Move runtime into RUNNING state."""
 
         if self.runtime.state is RuntimeState.BOOTSTRAP:
-            self.runtime.transition_to(RuntimeState.INITIALIZING)
+            self.runtime.transition_to(
+                RuntimeState.INITIALIZING
+            )
 
         if self.runtime.state is RuntimeState.INITIALIZING:
-            self.runtime.transition_to(RuntimeState.RUNNING)
+            self.runtime.transition_to(
+                RuntimeState.RUNNING
+            )
 
     def stop(self) -> None:
         """Shutdown runtime."""
 
         if self.runtime.state is not RuntimeState.SHUTDOWN:
-            self.runtime.transition_to(RuntimeState.SHUTDOWN)
+            self.runtime.transition_to(
+                RuntimeState.SHUTDOWN
+            )
 
     def run_cycle(self) -> None:
-        """Execute one orchestration cycle."""
+        """Execute one orchestration cycle.
+
+        Current implementation uses callbacks.
+        Future versions will execute the engine pipeline directly.
+        """
 
         if not self.runtime.is_running():
             return
