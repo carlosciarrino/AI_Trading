@@ -49,12 +49,8 @@ def build_system(
 ) -> AIComponents:
     """Create and connect the AI_BRIDGE V2 system.
 
-    Args:
-        configuration:
-            Complete AI_BRIDGE V2 configuration divided into sections.
-
-    Returns:
-        Fully constructed AI_BRIDGE V2 component container.
+    The builder creates all engines and connects them.
+    It does not execute the system lifecycle.
     """
 
     runtime = RuntimeController()
@@ -91,6 +87,38 @@ def build_system(
 
     orchestrator = Orchestrator(
         runtime=runtime
+    )
+
+    # ==========================================================
+    # Engine registration inside Orchestrator
+    # ==========================================================
+
+    orchestrator.register_market(
+        market.update
+    )
+
+    orchestrator.register_decision(
+        decision.evaluate
+    )
+
+    orchestrator.register_monitoring(
+        monitoring.evaluate
+    )
+
+    orchestrator.register_recovery(
+        lambda: recovery.evaluate(
+            monitoring.last_report()
+        )
+    )
+
+    orchestrator.register_learning(
+        lambda: learning.analyse(
+            memory.size
+        )
+    )
+
+    orchestrator.register_memory(
+        lambda: memory.snapshot()
     )
 
     return AIComponents(
