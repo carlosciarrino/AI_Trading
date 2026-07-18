@@ -1,90 +1,93 @@
 """Execution engine for AI_BRIDGE V2.
 
-This module provides the execution stage of the AI_BRIDGE V2 pipeline.
+The execution engine receives a validated trading decision from the
+risk engine and simulates its execution.
 
-The execution engine is responsible for transforming an approved trading
-decision into an execution result. In the Baseline 1.0 implementation,
-execution is simulated only: no broker, network connection or external
-platform is contacted.
+This first implementation intentionally performs only simulated
+executions. It provides a stable interface that future broker adapters
+(MT4, MT5, FIX, etc.) will implement.
 
-The module depends exclusively on the Python standard library.
+Only the Python standard library is used.
 """
 
 from __future__ import annotations
 
 from dataclasses import dataclass
-from enum import Enum
-from typing import Protocol
+
+from core_v2.decision_engine import Decision
+from core_v2.risk_engine import RiskEvaluation
 
 
-class ExecutionStatus(Enum):
-    """Possible execution outcomes."""
-
-    SUCCESS = "SUCCESS"
-    REJECTED = "REJECTED"
-    FAILED = "FAILED"
-
-
-@dataclass(slots=True)
+@dataclass
 class ExecutionRequest:
-    """Request received by the execution engine."""
+    """Execution request generated after risk validation."""
 
     symbol: str
-    action: str
+    decision: Decision
     volume: float
 
 
-@dataclass(slots=True)
+@dataclass
 class ExecutionResult:
-    """Result returned by the execution engine."""
+    """Result produced by the execution engine."""
 
-    status: ExecutionStatus
-    symbol: str
-    action: str
-    volume: float
-    message: str
-
-
-class ExecutionBackend(Protocol):
-    """Protocol implemented by every execution backend."""
-
-    def execute(self, request: ExecutionRequest) -> ExecutionResult:
-        """Execute a trading request."""
-
-
-class SimulatedExecutionBackend:
-    """Simple simulated execution backend."""
-
-    def execute(self, request: ExecutionRequest) -> ExecutionResult:
-        """Simulate a successful execution."""
-
-        return ExecutionResult(
-            status=ExecutionStatus.SUCCESS,
-            symbol=request.symbol,
-            action=request.action,
-            volume=request.volume,
-            message="Simulated execution completed successfully.",
-        )
+    executed: bool
+    reason: str
 
 
 class ExecutionEngine:
-    """Execution engine for AI_BRIDGE V2."""
+    """AI_BRIDGE V2 execution engine."""
 
-    def __init__(
-        self,
-        backend: ExecutionBackend | None = None,
-    ) -> None:
-        """Create a new execution engine."""
-
-        if backend is None:
-            backend = SimulatedExecutionBackend()
-
-        self._backend = backend
+    def __init__(self) -> None:
+        self._last_result = ExecutionResult(
+            executed=False,
+            reason="Engine not initialized.",
+        )
 
     def execute(
         self,
         request: ExecutionRequest,
+        risk: RiskEvaluation,
     ) -> ExecutionResult:
-        """Execute a trading request."""
+        """Execute a validated trading request."""
 
-        return self._backend.execute(request)
+        if not risk.approved:
+            self._last_result = ExecutionResult(
+                executed=False,
+                reason=risk.reason,
+            )
+            return self._last_result
+
+        if request.volume <= 0.0:
+            self._last_result = ExecutionResult(
+                executed=False,
+                reason="Invalid trade volume.",
+            )
+            return self._last_result
+
+        if request.decision == Decision.HOLD:
+            self._last_result = ExecutionResult(
+                executed=False,
+                reason="No execution required.",
+            )
+            return self._last_result
+
+        self._last_result = ExecutionResult(
+            executed=True,
+            reason="Simulated execution completed.",
+        )
+
+        return self._last_result
+
+    def last_result(self) -> ExecutionResult:
+        """Return the last execution result."""
+
+        return self._last_result
+
+    def reset(self) -> None:
+        """Reset the engine state."""
+
+        self._last_result = ExecutionResult(
+            executed=False,
+            reason="Engine reset.",
+        )
