@@ -65,3 +65,13 @@ class MemoryEngine:
         """Return the number of stored records."""
 
         return len(self._records)
+
+    def records(self) -> list[MemoryRecord]:
+        """Return a copy of the internal record list."""
+
+        return list(self._records)
+
+    def recent(self, limit: int = 10) -> list[MemoryRecord]:
+        """Return the last `limit` records."""
+
+        return self._records[-limit:]

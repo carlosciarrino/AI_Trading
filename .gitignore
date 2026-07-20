@@ -29,3 +29,6 @@ mt4_shared/
 # Keep architecture documentation
 !architecture/
 !architecture/**/*.md
+
+# Local developer backups
+.local_backups/
