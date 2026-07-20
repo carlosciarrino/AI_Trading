@@ -12,11 +12,13 @@ Only the Python standard library is used.
 from __future__ import annotations
 
 from dataclasses import dataclass, field
+from datetime import datetime, timezone
 from typing import Callable, Any
 
 from core_v2.runtime_controller import RuntimeController, RuntimeState
 from core_v2.pipeline_context import PipelineContext
 from core_v2.execution_engine import ExecutionRequest
+from core_v2.memory_engine import MemoryRecord
 
 
 EngineCallback = Callable[[], None]
@@ -207,13 +209,29 @@ class Orchestrator:
                 recovery
             )
 
-            context.learning_data = {
-                "samples": self.components.memory.size
+            memory_record = MemoryRecord(
+                category="pipeline_cycle",
+                data={
+                    "timestamp": datetime.now(timezone.utc).isoformat(),
+                    "decision": context.decision,
+                    "risk": context.risk,
+                    "execution_result": context.execution_result,
+                },
+            )
+
+            self.components.memory.store(memory_record)
+
+            context.memory_data = {
+                "records": self.components.memory.size
             }
 
             self.components.learning.analyse(
                 self.components.memory.size
             )
+
+            context.learning_data = {
+                "samples": self.components.memory.size
+            }
 
         except Exception as error:
             context.errors.append(
