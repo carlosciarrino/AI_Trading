@@ -177,3 +177,65 @@ scegliere sempre quella:
 - più facile da testare.
 
 La complessità deve essere introdotta solo quando diventa realmente necessaria.
+
+------------------------------------------------------------
+EVOLUZIONI DIFFERITE (PROGETTO CLONE)
+------------------------------------------------------------
+
+Le seguenti funzionalità sono considerate valide ma NON devono
+essere implementate nel Progetto Primario finché non esiste una
+necessità reale.
+
+Saranno sviluppate nel Progetto Clone.
+
+DashboardEngine
+
+Responsabilità futura:
+
+- stato completo del sistema
+- statistiche della pipeline
+- memoria
+- apprendimento
+- monitoraggio
+- dashboard web
+- API REST
+- monitoraggio remoto
+
+Nel Progetto Primario è sufficiente un semplice report testuale.
+
+Principio:
+
+Quando una funzionalità può essere realizzata con una soluzione
+semplice, la soluzione semplice ha sempre la priorità.
+
+------------------------------------------------------------
+PARCHEGGIO DELLE IDEE
+------------------------------------------------------------
+
+Le idee elencate qui NON devono essere implementate nel
+Progetto Primario solo perché sono interessanti.
+
+Rimangono disponibili come evoluzioni del Progetto Clone.
+
+[ ] DashboardEngine
+
+[ ] Web Dashboard
+
+[ ] API REST
+
+[ ] MT5 Adapter
+
+[ ] Multi Broker Adapter
+
+[ ] AI avanzata
+
+[ ] Machine Learning avanzato
+
+[ ] Auto Optimization
+
+[ ] Distributed Runtime
+
+[ ] Cloud Runtime
+
+Ogni nuova idea futura va aggiunta qui prima di essere
+presa in considerazione.
