@@ -69,6 +69,38 @@ def status_report(application: ApplicationContext) -> str:
     return "\n".join(lines)
 
 
+def pipeline_summary(application: ApplicationContext) -> str:
+    """Return a simple textual summary of the last pipeline cycle."""
+
+    record = application.components.memory.last_record()
+
+    if record is None:
+        return "No pipeline executed."
+
+    decision = record.data["decision"]["decision"]
+    risk_approved = record.data["risk"]["approved"]
+    risk_reason = record.data["risk"]["reason"]
+    execution_result = record.data["execution_result"]
+
+    risk = "APPROVED" if risk_approved else "REJECTED"
+
+    executed = bool(execution_result and execution_result.get("executed"))
+    execution = "EXECUTED" if executed else "NOT EXECUTED"
+
+    lines = [
+        "=" * 30,
+        " LAST PIPELINE",
+        "=" * 30,
+        f"{'Decision':<9}: {decision}",
+        f"{'Risk':<9}: {risk}",
+        f"{'Execution':<9}: {execution}",
+        f"{'Reason':<9}: {risk_reason}",
+        f"{'Memory':<9}: {application.components.memory.size} records",
+    ]
+
+    return "\n".join(lines)
+
+
 def cycle_history(application: ApplicationContext, limit: int = 5) -> str:
     """Return a simple textual history of the most recent cycles."""
 
