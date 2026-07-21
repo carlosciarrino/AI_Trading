@@ -101,6 +101,28 @@ def pipeline_summary(application: ApplicationContext) -> str:
     return "\n".join(lines)
 
 
+def decision_history(application: ApplicationContext, limit: int = 10) -> str:
+    """Return a simple textual history of recent decisions."""
+
+    records = application.components.memory.recent(limit)
+
+    if not records:
+        return "No decision history available."
+
+    lines = [
+        "=" * 30,
+        " DECISION HISTORY",
+        "=" * 30,
+    ]
+
+    for index, record in enumerate(records, start=1):
+        lines.append(
+            f"#{index} {record.data['decision']['decision']}"
+        )
+
+    return "\n".join(lines)
+
+
 def cycle_history(application: ApplicationContext, limit: int = 5) -> str:
     """Return a simple textual history of the most recent cycles."""
 
