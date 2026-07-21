@@ -41,3 +41,13 @@ class LearningEngine:
         analyse().
         """
         self.analyse(len(records))
+
+    def analyse_decisions(self, records: list[MemoryRecord]) -> dict[str, int]:
+        """Count how many BUY, SELL and HOLD decisions appear in records."""
+        counts = {"BUY": 0, "SELL": 0, "HOLD": 0}
+
+        for record in records:
+            decision = record.data["decision"]["decision"]
+            counts[decision] = counts.get(decision, 0) + 1
+
+        return counts
