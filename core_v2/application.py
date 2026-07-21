@@ -31,16 +31,7 @@ class ApplicationContext:
 
 
 def create_application() -> ApplicationContext:
-    """Create and initialize the AI_BRIDGE V2 application.
-
-    The function performs:
-    1. Environment bootstrap.
-    2. Engine construction.
-    3. Component wiring.
-
-    Returns:
-        A fully initialized application context.
-    """
+    """Create and initialize the AI_BRIDGE V2 application."""
 
     bootstrap_context = bootstrap()
 
@@ -54,3 +45,43 @@ def create_application() -> ApplicationContext:
         bootstrap=bootstrap_context,
         components=components,
     )
+
+
+def status_report(application: ApplicationContext) -> str:
+    """Return a simple textual status report."""
+
+    runtime = application.components.runtime
+    orchestrator = application.components.orchestrator
+    memory = application.components.memory
+
+    lines = [
+        "=" * 49,
+        " AI_BRIDGE V2 STATUS REPORT",
+        "=" * 49,
+        "",
+        f"Runtime............ {runtime.state.name}",
+        f"Cycles............. {orchestrator.statistics.cycles}",
+        f"Memory Records..... {memory.size}",
+        "",
+        "=" * 49,
+    ]
+
+    return "\n".join(lines)
+
+
+def cycle_history(application: ApplicationContext, limit: int = 5) -> str:
+    """Return a simple textual history of the most recent cycles."""
+
+    records = application.components.memory.recent(limit)
+
+    if not records:
+        return "No cycle history available."
+
+    lines = ["Last cycles"]
+
+    for index, record in enumerate(records, start=1):
+        lines.append(
+            f"#{index} {record.data['decision']['decision']}"
+        )
+
+    return "\n".join(lines)
