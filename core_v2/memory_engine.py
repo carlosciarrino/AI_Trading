@@ -75,3 +75,21 @@ class MemoryEngine:
         """Return the last `limit` records."""
 
         return self._records[-limit:]
+
+    def records_by_category(self, category: str) -> list[MemoryRecord]:
+        """Return all records matching the given category."""
+
+        return [
+            record
+            for record in self._records
+            if record.category == category
+        ]
+
+    def last_by_category(self, category: str) -> MemoryRecord | None:
+        """Return the most recent record matching the given category."""
+
+        for record in reversed(self._records):
+            if record.category == category:
+                return record
+
+        return None
