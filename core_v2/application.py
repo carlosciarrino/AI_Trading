@@ -123,6 +123,32 @@ def decision_history(application: ApplicationContext, limit: int = 10) -> str:
     return "\n".join(lines)
 
 
+def runtime_statistics(application: ApplicationContext) -> str:
+    """Return a simple textual runtime statistics report."""
+
+    runtime = application.components.runtime
+    orchestrator = application.components.orchestrator
+    memory = application.components.memory
+
+    record = memory.last_record()
+    last_decision = (
+        record.data["decision"]["decision"] if record else "NONE"
+    )
+
+    lines = [
+        "=" * 49,
+        " AI_BRIDGE V2 RUNTIME STATISTICS",
+        "=" * 49,
+        f"{'Runtime':.<19} {runtime.state.name}",
+        f"{'Cycles':.<19} {orchestrator.statistics.cycles}",
+        f"{'Memory Records':.<19} {memory.size}",
+        f"{'Last Decision':.<19} {last_decision}",
+        "=" * 49,
+    ]
+
+    return "\n".join(lines)
+
+
 def cycle_history(application: ApplicationContext, limit: int = 5) -> str:
     """Return a simple textual history of the most recent cycles."""
 
