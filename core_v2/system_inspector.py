@@ -28,8 +28,6 @@ class SystemInspector:
     """AI_BRIDGE V2 system inspector."""
 
     def __init__(self, components: AIComponents) -> None:
-        """Initialize the inspector."""
-
         self._components = components
 
     def snapshot(self) -> SystemSnapshot:
@@ -42,6 +40,14 @@ class SystemInspector:
         )
 
     def last_pipeline_record(self) -> MemoryRecord | None:
-        """Return the most recently stored pipeline record."""
+        """Return the most recently stored memory record."""
 
         return self._components.memory.last_record()
+
+    def recent_pipeline_records(
+        self,
+        limit: int = 10,
+    ) -> list[MemoryRecord]:
+        """Return the most recent pipeline records."""
+
+        return self._components.memory.recent(limit)
