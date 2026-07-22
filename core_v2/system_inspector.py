@@ -32,4 +32,8 @@ class SystemInspector:
     def snapshot(self) -> SystemSnapshot:
         """Return a snapshot of the current system state."""
 
-        raise NotImplementedError
+        return SystemSnapshot(
+            runtime_state=self._components.runtime.state.name,
+            cycle_count=self._components.orchestrator.statistics.cycles,
+            memory_records=self._components.memory.size,
+        )
