@@ -190,3 +190,23 @@ def learning_summary(application: ApplicationContext) -> str:
     ]
 
     return "\n".join(lines)
+
+
+def execution_summary(application: ApplicationContext) -> str:
+    """Return a simple textual execution summary."""
+
+    records = application.components.memory.records()
+
+    counts = application.components.learning.analyse_execution_results(records)
+
+    lines = [
+        "=" * 33,
+        " EXECUTION SUMMARY",
+        "=" * 33,
+        f"{'Approved':.<19} {counts['approved']}",
+        f"{'Rejected':.<19} {counts['rejected']}",
+        f"{'Executed':.<19} {counts['executed']}",
+        f"{'Not Executed':.<19} {counts['not_executed']}",
+    ]
+
+    return "\n".join(lines)
