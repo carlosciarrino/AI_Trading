@@ -210,3 +210,21 @@ def execution_summary(application: ApplicationContext) -> str:
     ]
 
     return "\n".join(lines)
+
+
+def system_report(application: ApplicationContext) -> str:
+    """Return a single report combining the existing report functions."""
+
+    sections = [
+        "=" * 49,
+        " AI_BRIDGE V2 SYSTEM REPORT",
+        "=" * 49,
+        status_report(application),
+        runtime_statistics(application),
+        pipeline_summary(application),
+        learning_summary(application),
+        execution_summary(application),
+        decision_history(application),
+    ]
+
+    return "\n\n".join(sections)
