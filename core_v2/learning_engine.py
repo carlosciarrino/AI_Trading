@@ -51,3 +51,35 @@ class LearningEngine:
             counts[decision] = counts.get(decision, 0) + 1
 
         return counts
+
+    def analyse_execution_results(self, records: list[MemoryRecord]) -> dict[str, int]:
+        """Count approved/rejected risk outcomes and executed/not_executed results."""
+        counts = {
+            "approved": 0,
+            "rejected": 0,
+            "executed": 0,
+            "not_executed": 0,
+        }
+
+        for record in records:
+            try:
+                approved = record.data["risk"]["approved"]
+            except (KeyError, TypeError):
+                approved = None
+
+            if approved is True:
+                counts["approved"] += 1
+            elif approved is False:
+                counts["rejected"] += 1
+
+            try:
+                executed = record.data["execution_result"]["executed"]
+            except (KeyError, TypeError):
+                executed = None
+
+            if executed is True:
+                counts["executed"] += 1
+            elif executed is False:
+                counts["not_executed"] += 1
+
+        return counts
