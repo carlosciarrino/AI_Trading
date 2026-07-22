@@ -11,6 +11,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
+from core_v2.memory_engine import MemoryRecord
 from core_v2.system_builder import AIComponents
 
 
@@ -27,6 +28,8 @@ class SystemInspector:
     """AI_BRIDGE V2 system inspector."""
 
     def __init__(self, components: AIComponents) -> None:
+        """Initialize the inspector."""
+
         self._components = components
 
     def snapshot(self) -> SystemSnapshot:
@@ -37,3 +40,8 @@ class SystemInspector:
             cycle_count=self._components.orchestrator.statistics.cycles,
             memory_records=self._components.memory.size,
         )
+
+    def last_pipeline_record(self) -> MemoryRecord | None:
+        """Return the most recently stored pipeline record."""
+
+        return self._components.memory.last_record()
