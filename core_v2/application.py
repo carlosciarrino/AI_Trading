@@ -165,3 +165,28 @@ def cycle_history(application: ApplicationContext, limit: int = 5) -> str:
         )
 
     return "\n".join(lines)
+
+
+def learning_summary(application: ApplicationContext) -> str:
+    """Return a simple textual learning summary."""
+
+    records = application.components.memory.records()
+
+    application.components.learning.analyse_records(records)
+    decision_counts = application.components.learning.analyse_decisions(records)
+
+    report = application.components.learning.analyse(len(records))
+    recommendation = report.recommendations[0]
+
+    lines = [
+        "=" * 33,
+        " LEARNING SUMMARY",
+        "=" * 33,
+        f"{'Samples':.<20} {report.samples}",
+        f"{'BUY':.<20} {decision_counts.get('BUY', 0)}",
+        f"{'SELL':.<20} {decision_counts.get('SELL', 0)}",
+        f"{'HOLD':.<20} {decision_counts.get('HOLD', 0)}",
+        f"{'Recommendation':.<20} {recommendation}",
+    ]
+
+    return "\n".join(lines)
