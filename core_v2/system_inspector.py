@@ -11,10 +11,10 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
-from core_v2.memory_engine import MemoryRecord
+from core_v2.memory_engine import MemoryRecord, MemorySnapshot
+from core_v2.orchestrator import OrchestratorStatistics
 from core_v2.runtime_controller import RuntimeState
 from core_v2.system_builder import AIComponents
-from core_v2.orchestrator import OrchestratorStatistics
 
 
 @dataclass(slots=True)
@@ -45,6 +45,11 @@ class SystemInspector:
         """Return the current runtime state."""
 
         return self._components.runtime.state
+
+    def memory_snapshot(self) -> MemorySnapshot:
+        """Return the current memory snapshot."""
+
+        return self._components.memory.snapshot()
 
     def last_pipeline_record(self) -> MemoryRecord | None:
         """Return the most recently stored memory record."""
