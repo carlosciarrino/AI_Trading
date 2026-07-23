@@ -12,6 +12,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 
 from core_v2.memory_engine import MemoryRecord
+from core_v2.orchestrator import OrchestratorStatistics
 from core_v2.system_builder import AIComponents
 
 
@@ -48,6 +49,11 @@ class SystemInspector:
         self,
         limit: int = 10,
     ) -> list[MemoryRecord]:
-        """Return the most recent pipeline records."""
+        """Return the most recent memory records."""
 
         return self._components.memory.recent(limit)
+
+    def orchestrator_statistics(self) -> OrchestratorStatistics:
+        """Return the current orchestrator statistics."""
+
+        return self._components.orchestrator.statistics
