@@ -37,7 +37,7 @@ Repository:
 
 Branch corrente:
 
-feature/diagnostics-cli
+feature/fast-track
 
 Stato repository:
 
@@ -64,8 +64,8 @@ Pulito
 | M13 | Continuity Dossier | ✅ COMPLETATA |
 | M14 | Handoff Prompt | ✅ COMPLETATA |
 | M15 | Project Progress | ✅ COMPLETATA |
-| M16 | System Diagnostics | ⏳ DA SVILUPPARE |
-| M17 | Monitoring Evolution | ⏳ IN ATTESA |
+| M16 | System Diagnostics | ✅ COMPLETATA |
+| M17 | Monitoring Evolution | ⏳ IN CORSO |
 | M18 | Dashboard | ⏳ IN ATTESA |
 | M19 | API Diagnostica | ⏳ IN ATTESA |
 | M20 | Produzione | ⏳ FUTURA |
@@ -74,31 +74,26 @@ Pulito
 
 # ULTIMI COMMIT
 
-b4f0cc1
-Add AI_BRIDGE V2 continuity dossier
+83e6b39
+Update handoff prompt with continuity rule
 
-59d0340
-Add official handoff prompt
+1882f95
+Add centralized system diagnostics
 
 ---
 
 # MILESTONE CORRENTE
 
-System Diagnostics
+Monitoring Evolution
 
 File previsto:
 
-core_v2/system_diagnostics.py
+core_v2/monitoring_engine.py
 
 Obiettivo:
 
-Centralizzare tutte le informazioni diagnostiche del sistema.
-
-Utilizzare SystemInspector come sorgente dati.
-
-Non contenere logica di presentazione.
-
-Essere riutilizzabile dalla CLI e da future Dashboard.
+Evolvere il Monitoring Engine mantenendo la piena compatibilità con
+l'architettura corrente.
 
 ---
 
@@ -106,7 +101,7 @@ Essere riutilizzabile dalla CLI e da future Dashboard.
 
 Implementare:
 
-core_v2/system_diagnostics.py
+Evoluzione di core_v2/monitoring_engine.py
 
 ---
 
