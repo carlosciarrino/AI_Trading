@@ -93,26 +93,25 @@ Architettura consolidata.
 
 # MILESTONE CORRENTE
 
-M16
+M17
 
-System Diagnostics
+Monitoring Evolution
 
-File da realizzare
+File da evolvere
 
-core_v2/system_diagnostics.py
+core_v2/monitoring_engine.py
 
 Obiettivo
 
-Centralizzare la diagnostica del sistema utilizzando
-SystemInspector come sorgente dati.
+Evolvere il Monitoring Engine mantenendo la piena
+compatibilità con l'architettura corrente.
 
-Il modulo non dovrà contenere logica di presentazione.
+Il modulo dovrà continuare a non contenere logica
+di presentazione.
 
-Dovrà poter essere utilizzato da:
-
-- Diagnostics CLI
-- Dashboard future
-- API future
+Dovrà produrre informazioni di monitoraggio
+riutilizzabili dai futuri moduli diagnostici,
+Dashboard e API.
 
 ---
 
