@@ -30,13 +30,7 @@ from core_v2.orchestrator import Orchestrator
 
 @dataclass
 class AIComponents:
-    """Container holding all AI_BRIDGE V2 components.
-
-    This class is the official container of all system engines.
-
-    It centralizes engine references and provides an access layer
-    for orchestration, pipeline execution and engine communication.
-    """
+    """Container holding all AI_BRIDGE V2 components."""
 
     runtime: RuntimeController
     orchestrator: Orchestrator
@@ -58,8 +52,6 @@ class AIComponents:
     )
 
     def __post_init__(self) -> None:
-        """Build internal engine registry."""
-
         self._registry = {
             "market": self.market,
             "decision": self.decision,
@@ -73,36 +65,25 @@ class AIComponents:
         }
 
     def get_engine(self, name: str) -> Any | None:
-        """Return an engine by name."""
-
         return self._registry.get(name)
 
     def has_engine(self, name: str) -> bool:
-        """Check whether an engine exists."""
-
         return name in self._registry
 
     def engines(self) -> dict[str, Any]:
-        """Return all registered engines."""
-
         return dict(self._registry)
 
 
 def build_system(
     configuration: dict[str, dict[str, str]],
 ) -> AIComponents:
-    """Create and connect the AI_BRIDGE V2 system.
-
-    The builder creates all engines and connects them.
-    It does not execute the system lifecycle.
-    """
+    """Create and connect the AI_BRIDGE V2 system."""
 
     runtime = RuntimeController()
 
     market = MarketEngine(
         configuration=configuration.get("market", {})
     )
-
     market.initialize()
 
     decision = DecisionEngine(
@@ -132,13 +113,6 @@ def build_system(
     orchestrator = Orchestrator(
         runtime=runtime
     )
-
-    # ==========================================================
-    # Temporary compatibility layer
-    #
-    # Callback registration remains active during migration.
-    # Future versions will replace it with direct engine calls.
-    # ==========================================================
 
     orchestrator.register_market(
         market.update
@@ -182,12 +156,9 @@ def build_system(
         events=events,
     )
 
-    # ==========================================================
-    # New architecture connection
-    #
-    # The orchestrator now has access to the official
-    # AIComponents container while callbacks remain active.
-    # ==========================================================
+    monitoring.attach_components(
+        components
+    )
 
     orchestrator.attach_components(
         components
