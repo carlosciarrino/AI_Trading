@@ -41,7 +41,6 @@ def diagnostics() -> int:
 
 
 def finish(message: str) -> int:
-
     if compile_project():
         return 1
 
@@ -72,13 +71,11 @@ def finish(message: str) -> int:
 
 
 def main() -> int:
-
     parser = argparse.ArgumentParser()
 
     sub = parser.add_subparsers(dest="command")
 
     finish_parser = sub.add_parser("finish")
-
     finish_parser.add_argument("message")
 
     args = parser.parse_args()
@@ -87,7 +84,6 @@ def main() -> int:
         return finish(args.message)
 
     parser.print_help()
-
     return 1
 
 
