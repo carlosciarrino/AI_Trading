@@ -40,6 +40,22 @@ def diagnostics() -> int:
     )
 
 
+def verify() -> int:
+    if compile_project():
+        return 1
+
+    if bootstrap():
+        return 1
+
+    if diagnostics():
+        return 1
+
+    if run("git", "diff", "--stat"):
+        return 1
+
+    return run("git", "status")
+
+
 def finish(message: str) -> int:
     if compile_project():
         return 1
@@ -75,10 +91,15 @@ def main() -> int:
 
     sub = parser.add_subparsers(dest="command")
 
+    sub.add_parser("verify")
+
     finish_parser = sub.add_parser("finish")
     finish_parser.add_argument("message")
 
     args = parser.parse_args()
+
+    if args.command == "verify":
+        return verify()
 
     if args.command == "finish":
         return finish(args.message)
