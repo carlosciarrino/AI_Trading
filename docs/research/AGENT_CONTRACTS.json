@@ -1,0 +1,160 @@
+{
+  "version": 1,
+  "contracts": [
+    {
+      "role": "RESEARCH_AGENT",
+      "mission": "Find existing reusable projects matching task.",
+      "inputs": [
+        "task",
+        "repository",
+        "constraints"
+      ],
+      "checklist": [
+        "Identify candidate",
+        "Verify source repository",
+        "Verify license",
+        "Verify maintenance status",
+        "Verify architecture fit",
+        "Verify dependency fit",
+        "Record strengths",
+        "Record weaknesses"
+      ],
+      "forbidden_actions": [
+        "Modify core_v2",
+        "Execute candidate code outside sandbox",
+        "Promote candidate"
+      ],
+      "required_evidence": [
+        "repository URL",
+        "license evidence",
+        "candidate capabilities",
+        "fit assessment"
+      ],
+      "pass_conditions": [
+        "All mandatory checks completed",
+        "Evidence complete"
+      ],
+      "fail_conditions": [
+        "Missing source evidence",
+        "License incompatible"
+      ],
+      "escalation": [
+        "Ambiguous license",
+        "Architecture incompatibility"
+      ]
+    },
+    {
+      "role": "SECURITY_AGENT",
+      "mission": "Detect malicious, unsafe, hidden, or project-destructive behavior.",
+      "inputs": [
+        "candidate repository",
+        "security rules"
+      ],
+      "checklist": [
+        "Scan hidden files",
+        "Scan symlinks",
+        "Scan executable files",
+        "Scan network commands",
+        "Scan shell execution",
+        "Scan privilege escalation",
+        "Scan destructive commands",
+        "Scan encoded payloads",
+        "Scan secrets",
+        "Inspect critical findings"
+      ],
+      "forbidden_actions": [
+        "Modify candidate",
+        "Execute untrusted candidate code",
+        "Approve own findings"
+      ],
+      "required_evidence": [
+        "file count",
+        "findings",
+        "critical findings",
+        "decision"
+      ],
+      "pass_conditions": [
+        "No unresolved critical findings"
+      ],
+      "fail_conditions": [
+        "Critical unresolved finding"
+      ],
+      "escalation": [
+        "Any uncertain security finding"
+      ]
+    },
+    {
+      "role": "VALIDATION_AGENT",
+      "mission": "Verify candidate behavior and integration suitability in sandbox.",
+      "inputs": [
+        "security-approved candidate",
+        "task contract"
+      ],
+      "checklist": [
+        "Create isolated workspace",
+        "Run declared validation",
+        "Check baseline integrity",
+        "Check required behavior",
+        "Check regression risk",
+        "Produce reproducible evidence"
+      ],
+      "forbidden_actions": [
+        "Modify protected core_v2",
+        "Promote candidate",
+        "Bypass security gate"
+      ],
+      "required_evidence": [
+        "validation commands",
+        "results",
+        "integrity result"
+      ],
+      "pass_conditions": [
+        "All mandatory validation passes"
+      ],
+      "fail_conditions": [
+        "Validation failure",
+        "Integrity failure"
+      ],
+      "escalation": [
+        "Environment-dependent failure"
+      ]
+    },
+    {
+      "role": "SUPERVISOR",
+      "mission": "Coordinate workforce and enforce gates.",
+      "inputs": [
+        "agent reports",
+        "task contract"
+      ],
+      "checklist": [
+        "Verify contract completeness",
+        "Verify required evidence",
+        "Verify Security Gate",
+        "Verify Validation Gate",
+        "Reject incomplete reports",
+        "Select qualified agent",
+        "Prepare promotion decision"
+      ],
+      "forbidden_actions": [
+        "Bypass failed gate",
+        "Treat WARNING as PASS",
+        "Promote without evidence"
+      ],
+      "required_evidence": [
+        "agent reports",
+        "gate results",
+        "final decision"
+      ],
+      "pass_conditions": [
+        "All required gates PASS"
+      ],
+      "fail_conditions": [
+        "Missing evidence",
+        "Failed mandatory gate"
+      ],
+      "escalation": [
+        "Strategic decision required"
+      ]
+    }
+  ]
+}
