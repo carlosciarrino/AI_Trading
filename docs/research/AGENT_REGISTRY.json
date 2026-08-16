@@ -1,0 +1,44 @@
+{
+  "candidates": [
+    {
+      "name": "mini-swe-agent",
+      "repository": "research/external_agents/mini-swe-agent",
+      "license": "MIT",
+      "capabilities": [
+        "agent",
+        "sandbox",
+        "docker",
+        "local",
+        "git",
+        "testing"
+      ],
+      "status": "RESEARCH_ONLY"
+    },
+    {
+      "name": "openhands-sdk",
+      "repository": "research/external_agents/openhands-sdk",
+      "license": "MIT",
+      "capabilities": [
+        "agent",
+        "docker",
+        "local",
+        "git",
+        "testing",
+        "mcp"
+      ],
+      "status": "RESEARCH_ONLY"
+    },
+    {
+      "name": "aider",
+      "repository": "research/external_agents/aider",
+      "license": "UNKNOWN",
+      "capabilities": [
+        "agent",
+        "local",
+        "git",
+        "testing"
+      ],
+      "status": "RESEARCH_ONLY"
+    }
+  ]
+}
