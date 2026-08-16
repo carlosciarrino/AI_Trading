@@ -1,0 +1,34 @@
+# Python cache
+__pycache__/
+*.pyc
+
+# Temporary files
+*.bak
+
+# Development archives
+backups/
+
+# Recovery notes
+recovery_notes/
+# Runtime data
+*.csv
+*.txt
+*.zip
+
+data/
+data_v2/
+logs_v2/
+
+# Trading runtime
+mt4/
+mt4_shared/
+
+# Runtime state
+*.json
+
+# Keep architecture documentation
+!architecture/
+!architecture/**/*.md
+
+# Local developer backups
+.local_backups/

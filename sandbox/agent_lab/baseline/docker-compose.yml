@@ -1,0 +1,58 @@
+version: '3.9'
+
+services:
+
+  ai_bridge:
+
+    build: .
+
+    container_name: ai_bridge_core
+
+    depends_on:
+      - redis
+      - postgres
+
+    ports:
+      - "8000:8000"
+
+    environment:
+      REDIS_HOST: redis
+      POSTGRES_HOST: postgres
+
+    volumes:
+      - .:/app
+
+    restart: unless-stopped
+
+  redis:
+
+    image: redis:7
+
+    container_name: ai_bridge_redis
+
+    ports:
+      - "6379:6379"
+
+    restart: unless-stopped
+
+  postgres:
+
+    image: postgres:16
+
+    container_name: ai_bridge_postgres
+
+    environment:
+      POSTGRES_USER: ai_bridge
+      POSTGRES_PASSWORD: ai_bridge_pass
+      POSTGRES_DB: ai_bridge_db
+
+    ports:
+      - "5432:5432"
+
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+    restart: unless-stopped
+
+volumes:
+  postgres_data:

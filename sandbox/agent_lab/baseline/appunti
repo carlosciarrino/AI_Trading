@@ -1,0 +1,1109 @@
+Prezzo MT4
+   ↓
+AI V2 (analisi multi-timeframe)
+   ↓
+FUSION PRO (decisione centrale)
+   ↓
+RISK MANAGER (controllo sicurezza)
+   ↓
+EXECUTION EA (apertura trade)
+   ↓
+RISULTATO TRADE
+   ↓
+FEEDBACK LOOP PRO (apprendimento)
+   ↓
+aggiorna comportamento AI
+
+
+🤯 VERSIONE SEMPLIFICATA (se non sei programmatore)
+
+Se ti perdi, pensa così:
+
+🧠 AI = decide
+🛡️ Risk = protegge
+🔁 Feedback = migliora
+🔗 Fusion = coordina
+🏦 Prop mode = limita
+👉 CONSIGLIO PRATICO (importante)
+
+Non costruire tutto insieme.
+
+Ordine corretto:
+
+Risk Manager
+Execution base EA
+Fusion semplice (if/else)
+AI V1 (anche banale)
+Feedback Loop
+Multitimeframe avanzato
+Prop Firm Mode
+
+
+
+Perfetto, qui facciamo una cosa pulita e molto importante: ti costruisco l’architettura vera da progetto MT4 professionale, non il solito EA “tutto in uno” che poi diventa ingestibile.
+
+🧱 1) SCHEMA FILE MT4 REALE (ARCHITETTURA PRO)
+
+In MT4 un sistema serio si divide così:
+
+.mq4 = cervello eseguibile (EA principale)
+.mqh = moduli riutilizzabili (librerie)
+
+Tu devi pensarlo come un “software a blocchi”.
+
+📁 STRUTTURA CARTELLA
+/Experts/
+   AI_Bridge_EA.mq4
+
+/Include/
+   RiskManager.mqh
+   FusionCore.mqh
+   AI_Multitimeframe.mqh
+   FeedbackLoop.mqh
+   TradeExecutor.mqh
+   Utils.mqh
+   PropFirmMode.mqh
+🧠 2) COSA FA OGNI FILE (CHIARO E PRATICO)
+📌 1. AI_Bridge_EA.mq4 (MAIN CONTROLLER)
+
+👉 È il “main brain orchestrator”
+
+Cosa fa:
+
+inizializza tutti i moduli
+riceve tick da MT4
+chiama AI → Risk → Execution
+gestisce ciclo operativo
+
+📌 NON deve contenere logica complessa
+
+🛡️ 2. RiskManager.mqh
+
+👉 il guardiano del capitale
+
+Cosa fa:
+
+calcola lotto
+controlla drawdown
+limita trade simultanei
+blocca trading se rischio alto
+
+📌 Qui vive la sopravvivenza del conto
+
+🔗 3. FusionCore.mqh
+
+👉 il “cervello decisionale finale”
+
+Cosa fa:
+
+riceve segnali AI
+applica filtri Risk Manager
+decide:
+BUY
+SELL
+NO TRADE
+
+📌 È il giudice finale
+
+🧠 4. AI_Multitimeframe.mqh
+
+👉 analisi multi-timeframe
+
+Cosa fa:
+
+legge M1 / M5 / M15 / M30 / H1
+crea punteggio direzionale
+identifica trend e micro-entrate
+
+📌 Output:
+
+Signal = BUY/SELL/NO TRADE
+Strength = 0–100
+Confidence = low/medium/high
+🔁 5. FeedbackLoop.mqh
+
+👉 sistema di apprendimento
+
+Cosa fa:
+
+analizza trade chiusi
+registra:
+profit/loss
+orario
+timeframe
+errore decisionale
+aggiorna pesi strategia
+
+📌 È il “memorizzatore esperienze”
+
+⚙️ 6. TradeExecutor.mqh
+
+👉 esecuzione ordini
+
+Cosa fa:
+
+OrderSend()
+gestione SL/TP
+trailing stop
+controllo errori broker
+
+📌 È il braccio operativo
+
+🧰 7. Utils.mqh
+
+👉 funzioni base
+
+Cosa contiene:
+
+normalizzazione lotti
+gestione stringhe (fix del tuo errore StringTrim)
+logging
+gestione errori MT4
+
+📌 Questo risolve anche i warning/errori che hai avuto
+
+🏦 8. PropFirmMode.mqh
+
+👉 modalità disciplina conto
+
+Cosa fa:
+
+max perdita giornaliera
+max drawdown
+blocco dopo violazioni
+riduzione rischio automatica
+
+📌 Si attiva come “switch”
+
+🔄 FLUSSO REALE DEL SISTEMA
+MT4 Tick
+   ↓
+AI_Multitimeframe.mqh
+   ↓
+FusionCore.mqh
+   ↓
+RiskManager.mqh
+   ↓
+PropFirmMode.mqh (se attivo)
+   ↓
+TradeExecutor.mqh
+   ↓
+FeedbackLoop.mqh (post-trade)
+
+
+MT4 EA
+  ↓ (scrive file)
+signals.txt
+
+Python AI
+  ↓ (legge e decide)
+response.txt
+
+MT4 EA
+  ↓ (legge risposta)
+esegue trade
+
+
+
+        ┌──────────────────────────────┐
+        │        AI ENGINE (Python)    │
+        │  - Strategia / ML / logica   │
+        │  - decision making           │
+        └────────────┬─────────────────┘
+                     │
+             API / File / Socket
+                     │
+        ┌────────────▼─────────────────┐
+        │        AI BRIDGE SERVER      │
+        │  - traduzione segnali       │
+        │  - gestione richieste MT4   │
+        └────────────┬─────────────────┘
+                     │
+        ┌────────────▼─────────────────┐
+        │         MT4 EA CORE         │
+        │  - esecuzione ordini       │
+        │  - gestione trade          │
+        │  - logging locale          │
+        └────────────────────────────┘
+
+
+1. MT4 legge mercato
+2. invia dati al Bridge
+3. Bridge passa all’AI
+4. AI analizza e decide
+5. risposta torna al Bridge
+6. Bridge traduce in formato MT4
+7. EA esegue trade
+8. risultato viene salvato
+9. AI aggiorna modello
+
+AI_BRIDGE_PROJECT/
+│
+├── MT4_EA/
+│   └── AI_Bridge_EA.mq4
+│
+├── BRIDGE_SERVER/
+│   ├── server.py
+│   ├── router.py
+│   └── formatter.py
+│
+├── AI_ENGINE/
+│   ├── model.py
+│   ├── strategy.py
+│   └── trainer.py
+│
+├── DATA/
+│   ├── trades.csv
+│   ├── market_log.csv
+│   └── performance.json
+│
+└── CONFIG/
+    └── settings.json
+
+MT4 EA
+  ↓ (scrive dati)
+ai_signal.txt
+  ↓
+main.py
+  ↓
+decision.py
+  ↓
+fusion_engine.py
+  ↓
+risk_manager.py
+  ↓
+MT4 (risultato: BUY/SELL/HOLD)
+  ↓
+feedback_loop.py (impara)
+
+🧠 RUOLO DI OGNI FILE (CHIARO ORA)
+🟦 MT4
+esegue ordini
+NON pensa
+🟨 main.py
+
+👉 “centralino”
+
+legge dati
+chiama moduli
+🧠 decision.py
+
+👉 cervello base
+
+decide BUY/SELL/HOLD
+🔀 fusion_engine.py
+
+👉 cervello avanzato
+
+combina segnali (trend + news + volatilità)
+🛡 risk_manager.py
+
+👉 guardia del sistema
+
+decide se NON tradare anche se segnale è buono
+📉 feedback_loop.py
+
+👉 il pezzo più importante
+
+registra trade
+valuta profitto
+migliora decisioni future
+📰 news.py
+filtro eventi negativi
+blocca trading in momenti pericolosi
+
+AI_Trading/
+│
+├── 🟦 MT4 (esecuzione)
+│   ├── AI_Bridge_EA.mq4
+│   ├── AI_Simple.mqh
+│   └── ai_signal.txt   ← INPUT/OUTPUT con Python
+│
+├── 🟨 CORE AI (cervello unico)
+│   ├── main.py          ← ORCHESTRATORE (UNICO CAPO)
+│   ├── decision.py      ← LOGICA DECISIONALE
+│   ├── fusion_engine.py ← CONFLITTO + UNIONE SEGNALI
+│   ├── risk_manager.py  ← CONTROLLO RISCHIO
+│
+├── 🧠 APPRENDIMENTO
+│   ├── feedback_loop.py ← MEMORIA + MIGLIORAMENTO
+│
+├── 📰 NEWS FILTER
+│   ├── news.py
+│   └── news_events.txt
+│
+└── 📊 LOG
+    └── trades_log.txt (lo creeremo dopo)
+
+
+ARCHITETTURA V10
+STRUTTURA CARTELLE
+
+AI_Trading/
+│
+├── AI_Bridge_EA.mq4
+├── ai_signal.txt
+├── trades_log.txt
+├── market_memory.csv
+├── optimization_data.csv
+│
+├── main.py
+├── decision.py
+├── feedback_loop.py
+├── fusion_engine.py
+├── risk_manager.py
+├── memory_engine.py
+├── optimizer.py
+├── volatility_engine.py
+├── market_regime.py
+├── trade_scorer.py
+└── performance_tracker.py
+
+
+AI_Trading/
+│
+├── main.py
+├── decision.py
+├── fusion_engine.py
+├── performance_tracker.py
+├── risk_manager.py
+├── market_classifier.py
+├── adaptive_ai.py
+├── feedback_loop.py
+├── ai_signal.txt
+├── trades_log.txt
+├── market_memory.csv
+├── AI_Bridge_EA.mq4
+
+
+
+--------------------------------------------------------
+
+🧠 ARCHITETTURA PRO V14 — AI TRADING BRIDGE SYSTEM
+🟦 1. LAYER MT4 (EXECUTION ENGINE)
+
+📁 AI_Bridge_EA.mq4
+
+👉 Ruolo:
+
+apre/chiude trade
+legge segnali da Python
+scrive log operazioni
+Funzioni chiave:
+OnTick() → esecuzione principale
+ReadSignal() → legge ai_signal.txt
+ExecuteTrade() → OrderSend
+WriteTradeLog() → trades_log.txt
+
+📌 MT4 NON pensa. Esegue soltanto.
+
+🟨 2. BRIDGE FILE (COMUNICAZIONE)
+
+📁 ai_signal.txt
+
+👉 Ruolo:
+
+canale semplice tra Python e MT4
+
+Esempio contenuto:
+
+BUY EURUSD 0.01 1.08450 1.08000 1.09000
+
+Oppure:
+
+SELL GBPUSD 0.02 MARKET
+
+📌 Questo è il “telefono” del sistema.
+
+🟩 3. PYTHON CORE (AI BRAIN)
+
+📁 main.py
+
+👉 Ruolo:
+
+orchestra tutto
+chiama decision engine
+genera segnali
+
+Flusso:
+
+market data → decision engine → signal → ai_signal.txt
+🟪 4. DECISION ENGINE (CUORE INTELLIGENTE)
+
+📁 decision.py (o V14 engine)
+
+👉 Ruolo:
+
+decide BUY / SELL / NO TRADE
+
+Input:
+
+trend
+volatilità
+momentum
+news
+sessione
+
+Output:
+
+signal + confidence score
+
+📌 QUI sta l’intelligenza, non in MT4.
+
+🟥 5. RISK MANAGER (PROTEZIONE CAPITALE)
+
+📁 risk_manager.py
+
+👉 Ruolo:
+
+decide lotto
+blocca overtrading
+limita drawdown
+
+Regole:
+
+max trade per giorno
+max perdita giornaliera
+lot scaling dinamico
+🟧 6. PERFORMANCE TRACKER (FEEDBACK LOOP)
+
+📁 performance_tracker.py
+
+👉 Ruolo:
+
+legge trades_log.txt
+calcola:
+win rate
+profit factor
+drawdown
+invia feedback a decision engine
+
+📌 Questo è il vero “auto-adattamento”.
+
+🟫 7. FEEDBACK LOOP (EVOLUZIONE)
+
+📁 feedback_loop.py
+
+👉 Ruolo:
+
+modifica i pesi del decision engine
+esempio:
+se news causa perdite → riduce peso news
+se trend funziona → aumenta peso trend
+
+📌 Qui nasce il comportamento “V14 intelligente”.
+
+⚫ 8. NEWS ENGINE
+
+📁 news.py
+
+👉 Ruolo:
+
+filtra eventi ad alta volatilità
+blocca trading in momenti pericolosi
+
+Output:
+
+news_impact = 0 / 1
+🟦 FLUSSO COMPLETO
+          ┌──────────────┐
+          │  MARKET DATA │
+          └──────┬───────┘
+                 ↓
+        ┌──────────────────┐
+        │ decision.py V14  │
+        └──────┬───────────┘
+               ↓
+     ┌─────────────────────┐
+     │ risk_manager.py     │
+     └──────┬──────────────┘
+            ↓
+     ai_signal.txt (BRIDGE)
+            ↓
+     ┌─────────────────────┐
+     │  MT4 EA EXECUTION   │
+     └──────┬──────────────┘
+            ↓
+     trades_log.txt
+            ↓
+     performance_tracker.py
+            ↓
+     feedback_loop.py
+            ↓
+     decision.py (aggiornato)
+
+
+AI_BRIDGE/
+│
+├── core/
+│   ├── engine.py
+│   ├── orchestrator.py
+│   ├── state_manager.py
+│   ├── evolution_engine.py
+│   ├── self_repair.py
+│   ├── strategy_manager.py
+│   ├── mutation_engine.py
+│   ├── confidence_engine.py
+│   ├── memory_engine.py
+│   └── watchdog.py
+│
+├── strategies/
+│   ├── active/
+│   ├── testing/
+│   ├── archived/
+│   └── rejected/
+│
+├── data/
+│   ├── trades/
+│   ├── logs/
+│   ├── snapshots/
+│   ├── memory/
+│   └── telemetry/
+│
+├── configs/
+│   ├── risk/
+│   ├── ai/
+│   ├── evolution/
+│   └── market/
+│
+├── mt4/
+│   ├── experts/
+│   ├── files/
+│   └── bridge/
+│
+├── dashboard/
+│
+├── sandbox/
+│   ├── simulations/
+│   └── backtests/
+│
+└── main.py
+
+
+Ok, questo è un buon momento per fermarsi e guardare il sistema “dall’alto”, senza farsi trascinare dall’entusiasmo tecnico.
+
+Ti faccio una radiografia onesta.
+
+---
+
+# 🧠 1) COSA HAI ORA (STATO ATTUALE DEL SISTEMA)
+
+Hai costruito un’architettura multi-livello:
+
+## 🔷 CORE AI (decision layer)
+
+* Cognitive Orchestrator
+* Decision Contract (validazione)
+* Risk Governor (parziale)
+* Auto-healing (correzioni runtime)
+
+👉 Questo è il “cervello logico”
+
+---
+
+## 🧠 STRATEGY INTELLIGENCE
+
+* StrategyBrainPool (multi-brain system)
+* selezione tra strategie diverse
+* scoring basato su performance
+* aggiornamento dinamico
+
+👉 Questo è il “consiglio dei cervelli”
+
+---
+
+## 📈 LEARNING LAYER
+
+* LearningLoop (memoria comportamentale)
+* OptimizationEngine (non ancora centrale ma presente)
+* MetaLearningEngine:
+
+  * pruning strategie deboli
+  * mutazione strategie forti
+
+👉 Questo è il “sistema evolutivo”
+
+---
+
+## ⚙️ EXECUTION LAYER
+
+* AdaptiveExecutionEngine
+
+  * lot dinamico
+  * filtro spread
+  * controllo volatilità
+  * kill switch
+  * risk scaling
+
+👉 Questo è il “risk desk”
+
+---
+
+## 🔌 MARKET CONNECTIVITY
+
+* MT4 Stream Server (Python TCP)
+* MT4 EA streaming client
+* feedback loop MT4 → Python
+
+👉 Questo è il “ponte verso il mercato”
+
+---
+
+## 🔁 FEEDBACK LOOP
+
+* MT4 trade results
+* logging profit/loss
+* aggiornamento strategie
+
+👉 Questo è il “ciclo di apprendimento reale”
+
+---
+
+# 🟢 2) PUNTI DI FORZA (VERI)
+
+## 🧠 1. ARCHITETTURA A STRATI (BUONA)
+
+Non è un bot monolitico.
+
+👉 È separato in:
+
+* decisione
+* strategia
+* esecuzione
+* feedback
+
+✔ questo è corretto a livello ingegneristico
+
+---
+
+## 🔁 2. FEEDBACK REALE DAL MERCATO
+
+Questo è il vero valore.
+
+✔ non è simulazione
+✔ usa PnL reale MT4
+✔ aggiorna strategie
+
+👉 questo è il cuore di un sistema adattivo
+
+---
+
+## ⚙️ 3. EXECUTION ADATTIVA
+
+Hai introdotto:
+
+* rischio dinamico
+* volatilità
+* spread filter
+
+✔ questo è già livello “pro retail”
+
+---
+
+## 🧬 4. META-LEARNING
+
+Hai introdotto:
+
+* evoluzione strategie
+* pruning
+* mutazione
+
+✔ questo è concetto da sistemi quant semplificati
+
+---
+
+# 🔴 3) PUNTI DEBOLI (IMPORTANTI, NON IGNORARLI)
+
+## ❌ 1. MT4 NON È DAVVERO STREAMING ROBUSTO
+
+Il tuo “low latency bridge”:
+
+* socket MT4 è fragile
+* non garantisce delivery
+* non è asincrono reale
+
+👉 rischio:
+
+* perdita segnali
+* desync tra AI e trade reali
+
+---
+
+## ❌ 2. PARSING JSON IN MT4 È MOLTO DEBOLE
+
+Stai usando:
+
+```text
+StringFind(json, "... ")
+```
+
+👉 problema:
+
+* non è parsing strutturato
+* fragile a cambi formato
+* non scalabile
+
+---
+
+## ❌ 3. MANCANZA DI ORDER MANAGEMENT SERIO
+
+Non hai ancora:
+
+* tracking ordini aperti
+* gestione parziale
+* trailing stop evoluto
+* gestione multi-position logic
+
+👉 questo è CRITICO per reale operatività
+
+---
+
+## ❌ 4. FEEDBACK LOOP NON È SINCRONO
+
+Problema:
+
+* MT4 scrive risultati
+* Python li legge “a batch”
+
+👉 quindi:
+non è veramente real-time learning
+
+---
+
+## ❌ 5. MANCANZA DI STATE MACHINE CENTRALE
+
+Non hai un vero:
+
+> “system state controller”
+
+Esempio:
+
+* trading mode ON/OFF
+* risk state
+* drawdown state
+* strategy regime switching
+
+---
+
+## ❌ 6. OVER-ENGINEERING AI LAYER
+
+Qui devo essere diretto:
+
+👉 hai MOLTA AI logica
+👉 ma ancora poca infrastruttura finanziaria reale
+
+Nel trading vero è il contrario:
+
+* 70% execution/risk
+* 30% AI
+
+tu sei invertito
+
+---
+
+# 📊 4) COSA MANCA PER ESSERE “OPERATIVO SERIO MT4”
+
+Ti elenco il minimo indispensabile reale:
+
+---
+
+## 🧩 A) ORDER MANAGEMENT SYSTEM (CRITICO)
+
+Serve un modulo che:
+
+* traccia ogni trade aperto
+* associa ID strategia → trade
+* gestisce exit intelligenti
+* aggiorna stato posizione
+
+---
+
+## 🧩 B) RELIABLE MESSAGE LAYER
+
+Devi sostituire socket MT4 fragile con:
+
+* ZeroMQ (ideale)
+* oppure WebSocket bridge esterno
+* oppure file + checksum (fallback robusto)
+
+---
+
+## 🧩 C) STATE ENGINE
+
+Serve un cervello centrale tipo:
+
+* MARKET REGIME (trend/range/high vol)
+* RISK STATE (safe / caution / danger)
+* EXECUTION STATE (active / paused)
+
+---
+
+## 🧩 D) PORTFOLIO LAYER
+
+Ora lavori “trade per trade”
+
+Serve:
+
+* esposizione totale
+* correlazione
+* rischio cumulativo
+
+---
+
+## 🧩 E) REAL STRATEGY PARAMETERIZATION
+
+Le strategie devono avere:
+
+* parametri dinamici
+* non solo “brain labels”
+
+---
+
+# 🧠 5) SELF-ARCHITECT SYSTEM (QUELLO CHE HAI CHIESTO)
+
+Ora parte interessante.
+
+---
+
+# 🧬 COSA È
+
+Un sistema che:
+
+* modifica il proprio codice
+* crea nuovi moduli Python
+* elimina moduli obsoleti
+* riscrive logica interna
+
+---
+
+# 🟢 PRO
+
+## 1. AUTO-ADATTAMENTO STRUTTURALE
+
+Non solo strategie → ma architettura
+
+👉 teoricamente:
+
+* più flessibile
+* più evolutivo
+
+---
+
+## 2. EVOLUZIONE NON LINEARE
+
+Può:
+
+* cambiare approccio completamente
+* creare nuovi tipi di strategie
+
+---
+
+## 3. OTTIMIZZAZIONE A LUNGO TERMINE
+
+Può trovare:
+
+* architetture migliori nel tempo
+
+---
+
+# 🔴 CONTRO (IMPORTANTISSIMI)
+
+## ❌ 1. RISCHIO TOTALE DI INSTABILITÀ
+
+Il sistema può:
+
+* rompere se stesso
+* generare moduli incompatibili
+* creare loop logici errati
+
+👉 rischio reale: system collapse
+
+---
+
+## ❌ 2. IMPOSSIBILE DEBUGGARE
+
+Se si auto-modifica:
+
+* non sai più “chi ha cambiato cosa”
+* perdi tracciabilità
+
+---
+
+## ❌ 3. OVERFITTING ARCHITETTURALE
+
+Può “ottimizzarsi” verso:
+
+* strategie instabili ma profittevoli a breve
+
+---
+
+## ❌ 4. NON È ACCETTATO IN SISTEMI FINANZIARI REALI
+
+Nessun hedge fund serio:
+
+* lascia il sistema riscrivere codice liberamente
+
+---
+
+## ❌ 5. PROBLEMA DI SICUREZZA
+
+Un self-architect system:
+
+* è potenzialmente non controllabile
+* può generare comportamenti non previsti
+
+---
+
+# ⚖️ VERDETTO ONESTO
+
+## Il tuo sistema attuale è:
+
+👉 🟢 MOLTO BUONO COME LABORATORIO EVOLUTIVO
+👉 🟡 INTERMEDIO AVANZATO COME TRADING ENGINE
+👉 🔴 NON ANCORA ROBUSTO PER LIVE CAPITAL SERIO
+
+---
+
+# 🧭 CONSIGLIO STRATEGICO (IMPORTANTE)
+
+Se vuoi andare “pro” davvero:
+
+### NON fare subito self-architect
+
+Prima devi chiudere:
+
+1. Order Management System
+2. State Engine
+3. Reliable messaging (ZeroMQ o simile)
+4. Portfolio risk layer
+
+---
+
+# 🚀 SE VUOI PROSSIMO STEP
+
+Posso guidarti in 2 direzioni:
+
+## 🟢 HARDENING (consigliato)
+
+👉 rendere il sistema realmente stabile per trading live
+
+## 🔵 SELF-ARCHITECT (avanzato e rischioso)
+
+👉 sistema che riscrive se stesso
+
+---
+
+Dimmi solo:
+
+👉 “hardening” oppure “self-architect”
+
+        ┌──────────────────────┐
+        │   AI BRAIN SYSTEM    │
+        └─────────┬────────────┘
+                  │
+        ┌─────────▼────────────┐
+        │  EXECUTION CONTROLLER │  ← NUOVO (CORE HARDENING)
+        └─────────┬────────────┘
+                  │
+        ┌─────────▼────────────┐
+        │  MT4 RELIABLE BRIDGE  │  ← FILE ATOMIC + CHECKSUM
+        └─────────┬────────────┘
+                  │
+        ┌─────────▼────────────┐
+        │      MT4 EA          │
+        └─────────┬────────────┘
+                  │
+        ┌─────────▼────────────┐
+        │  ORDER TRACKER LOG   │  ← NUOVO
+        └─────────┬────────────┘
+                  │
+        ┌─────────▼────────────┐
+        │ FEEDBACK VALIDATOR   │  ← NUOVO
+        └──────────────────────┘
+
+
+
+                 ┌─────────────────────┐
+                 │   AI DECISION CORE  │
+                 └─────────┬───────────┘
+                           │
+                (EVENT STREAM - ZMQ / REDIS)
+                           │
+        ┌──────────────────▼──────────────────┐
+        │        EVENT BUS LAYER              │
+        └───────────┬───────────┬────────────┘
+                    │           │
+     ┌──────────────▼───┐   ┌──▼─────────────┐
+     │ EXECUTION NODE    │   │ RISK ENGINE     │
+     │ (MT4 / BRIDGE)    │   │ (GLOBAL)        │
+     └──────────────┬───┘   └──┬─────────────┘
+                    │           │
+              ┌─────▼───────────▼─────┐
+              │   PORTFOLIO STATE DB  │
+              └───────────────────────┘
+
+
+                    ┌─────────────────────┐
+                    │   AI STRATEGY CORE  │
+                    └─────────┬───────────┘
+                              │
+                    ┌─────────▼───────────┐
+                    │ DECISION ENGINE      │
+                    └─────────┬───────────┘
+                              │
+                    ┌─────────▼───────────┐
+                    │ GLOBAL RISK ENGINE   │
+                    └─────────┬───────────┘
+                              │
+                  ╔═══════════▼════════════╗
+                  ║    EVENT BUS (ZMQ)     ║
+                  ╚═══════════▲════════════╝
+                              │
+        ┌─────────────────────┼─────────────────────┐
+        │                     │                     │
+┌───────▼────────┐  ┌────────▼────────┐  ┌────────▼────────┐
+│ MT4 EXEC NODE   │  │ PAPER EXEC NODE │  │ BACKTEST NODE   │
+└───────┬────────┘  └────────┬────────┘  └────────┬────────┘
+        │                    │                    │
+        └────────────────────┼────────────────────┘
+                             │
+                  ┌──────────▼──────────┐
+                  │ PORTFOLIO DATABASE  │
+                  └─────────────────────┘
+
+
+
+🏗️ AI_BRIDGE — NEXT GEN STACK
+🎯 COSA COSTRUIAMO
+
+Useremo:
+
+Tecnologia	Ruolo
+Docker	containerizzazione
+Redis	event/state cache
+PostgreSQL	database persistente
+FastAPI	dashboard/API
+ZeroMQ	messaging
+MT4	execution endpoint
+🧠 ARCHITETTURA TARGET
+                ┌─────────────────────┐
+                │ FASTAPI DASHBOARD   │
+                └─────────┬───────────┘
+                          │
+        ┌─────────────────▼─────────────────┐
+        │         REDIS EVENT BUS           │
+        └───────────────┬───────────────────┘
+                        │
+        ┌───────────────▼───────────────────┐
+        │      AI ORCHESTRATOR CORE         │
+        └───────────────┬───────────────────┘
+                        │
+         ┌──────────────▼──────────────┐
+         │     EXECUTION NODES         │
+         └──────────────┬──────────────┘
+                        │
+                    MT4 / MT5
+
+        ┌──────────────────────────────┐
+        │      POSTGRESQL STORAGE      │
+        └──────────────────────────────┘

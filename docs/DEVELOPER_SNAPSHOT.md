@@ -6,7 +6,7 @@
 
 - Root: `/home/carlo/AI_Trading`
 - Branch: `feature/fast-track`
-- Last commit: `5a11083 Add developer snapshot automation`
+- Last commit: `aa29a6f Restore verify command`
 - Current milestone: `| M17 | Monitoring Evolution | ⏳ IN CORSO |`
 
 ## Files
