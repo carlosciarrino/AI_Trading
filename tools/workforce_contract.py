@@ -1,164 +1,150 @@
 #!/usr/bin/env python3
-
 from __future__ import annotations
 
 import json
 import sys
-from dataclasses import asdict, dataclass
-from enum import Enum
+import uuid
+from datetime import datetime, timezone
 from pathlib import Path
 
-
 ROOT = Path(__file__).resolve().parent.parent
-CONTRACTS = ROOT / "docs/research/AGENT_CONTRACTS.json"
+WORKFORCE = ROOT / "docs/workforce"
+CONTRACTS = WORKFORCE / "contracts"
+CONTRACTS.mkdir(parents=True, exist_ok=True)
+
+STAGES = (
+    "RESEARCHER",
+    "ANALYST",
+    "SECURITY",
+    "ARCHITECT",
+    "BUILDER",
+    "TESTER",
+    "REVIEWER",
+    "COMMIT",
+    "REPORT",
+)
+
+STATUSES = (
+    "PENDING",
+    "RUNNING",
+    "PASSED",
+    "FAILED",
+    "REVIEW_REQUIRED",
+    "HUMAN_REQUIRED",
+)
 
 
-class Status(str, Enum):
-    PASS = "PASS"
-    FAIL = "FAIL"
-    WARNING = "WARNING"
-    NOT_APPLICABLE = "NOT_APPLICABLE"
-    BLOCKED = "BLOCKED"
+def now() -> str:
+    return datetime.now(timezone.utc).isoformat()
 
 
-@dataclass(frozen=True)
-class AgentContract:
-    role: str
-    mission: str
-    inputs: list[str]
-    checklist: list[str]
-    forbidden_actions: list[str]
-    required_evidence: list[str]
-    pass_conditions: list[str]
-    fail_conditions: list[str]
-    escalation: list[str]
+def create(task: str) -> dict:
+    return {
+        "contract_version": "1.0",
+        "mission_id": str(uuid.uuid4()),
+        "task": task,
+        "created_at": now(),
+        "stage": "RESEARCHER",
+        "status": "PENDING",
+        "agent": None,
+        "input": {},
+        "output": {},
+        "evidence": [],
+        "validation": [],
+        "next_stage": "RESEARCHER",
+        "failure": None,
+        "retry": 0,
+        "commit": None,
+        "human_required": False,
+    }
 
 
-DEFAULT_CONTRACTS = [
-    AgentContract(
-        role="RESEARCH_AGENT",
-        mission="Find existing reusable projects matching task.",
-        inputs=["task", "repository", "constraints"],
-        checklist=[
-            "Identify candidate",
-            "Verify source repository",
-            "Verify license",
-            "Verify maintenance status",
-            "Verify architecture fit",
-            "Verify dependency fit",
-            "Record strengths",
-            "Record weaknesses",
-        ],
-        forbidden_actions=[
-            "Modify core_v2",
-            "Execute candidate code outside sandbox",
-            "Promote candidate",
-        ],
-        required_evidence=[
-            "repository URL",
-            "license evidence",
-            "candidate capabilities",
-            "fit assessment",
-        ],
-        pass_conditions=["All mandatory checks completed", "Evidence complete"],
-        fail_conditions=["Missing source evidence", "License incompatible"],
-        escalation=["Ambiguous license", "Architecture incompatibility"],
-    ),
-    AgentContract(
-        role="SECURITY_AGENT",
-        mission="Detect malicious, unsafe, hidden, or project-destructive behavior.",
-        inputs=["candidate repository", "security rules"],
-        checklist=[
-            "Scan hidden files",
-            "Scan symlinks",
-            "Scan executable files",
-            "Scan network commands",
-            "Scan shell execution",
-            "Scan privilege escalation",
-            "Scan destructive commands",
-            "Scan encoded payloads",
-            "Scan secrets",
-            "Inspect critical findings",
-        ],
-        forbidden_actions=[
-            "Modify candidate",
-            "Execute untrusted candidate code",
-            "Approve own findings",
-        ],
-        required_evidence=["file count", "findings", "critical findings", "decision"],
-        pass_conditions=["No unresolved critical findings"],
-        fail_conditions=["Critical unresolved finding"],
-        escalation=["Any uncertain security finding"],
-    ),
-    AgentContract(
-        role="VALIDATION_AGENT",
-        mission="Verify candidate behavior and integration suitability in sandbox.",
-        inputs=["security-approved candidate", "task contract"],
-        checklist=[
-            "Create isolated workspace",
-            "Run declared validation",
-            "Check baseline integrity",
-            "Check required behavior",
-            "Check regression risk",
-            "Produce reproducible evidence",
-        ],
-        forbidden_actions=[
-            "Modify protected core_v2",
-            "Promote candidate",
-            "Bypass security gate",
-        ],
-        required_evidence=["validation commands", "results", "integrity result"],
-        pass_conditions=["All mandatory validation passes"],
-        fail_conditions=["Validation failure", "Integrity failure"],
-        escalation=["Environment-dependent failure"],
-    ),
-    AgentContract(
-        role="SUPERVISOR",
-        mission="Coordinate workforce and enforce gates.",
-        inputs=["agent reports", "task contract"],
-        checklist=[
-            "Verify contract completeness",
-            "Verify required evidence",
-            "Verify Security Gate",
-            "Verify Validation Gate",
-            "Reject incomplete reports",
-            "Select qualified agent",
-            "Prepare promotion decision",
-        ],
-        forbidden_actions=[
-            "Bypass failed gate",
-            "Treat WARNING as PASS",
-            "Promote without evidence",
-        ],
-        required_evidence=["agent reports", "gate results", "final decision"],
-        pass_conditions=["All required gates PASS"],
-        fail_conditions=["Missing evidence", "Failed mandatory gate"],
-        escalation=["Strategic decision required"],
-    ),
-]
+def validate(data: dict) -> tuple[bool, list[str]]:
+    errors = []
 
-
-def save() -> None:
-    CONTRACTS.parent.mkdir(parents=True, exist_ok=True)
-    CONTRACTS.write_text(
-        json.dumps(
-            {"version": 1, "contracts": [asdict(c) for c in DEFAULT_CONTRACTS]},
-            indent=2,
-            ensure_ascii=False,
-        )
-        + "\n",
-        encoding="utf-8",
+    required = (
+        "contract_version",
+        "mission_id",
+        "task",
+        "created_at",
+        "stage",
+        "status",
+        "input",
+        "output",
+        "evidence",
+        "validation",
+        "next_stage",
+        "failure",
+        "retry",
+        "commit",
+        "human_required",
     )
+
+    for key in required:
+        if key not in data:
+            errors.append(f"MISSING:{key}")
+
+    if data.get("stage") not in STAGES:
+        errors.append(f"INVALID_STAGE:{data.get('stage')}")
+
+    if data.get("status") not in STATUSES:
+        errors.append(f"INVALID_STATUS:{data.get('status')}")
+
+    if not isinstance(data.get("evidence"), list):
+        errors.append("INVALID_EVIDENCE")
+
+    if not isinstance(data.get("validation"), list):
+        errors.append("INVALID_VALIDATION")
+
+    return not errors, errors
 
 
 def main() -> int:
-    save()
-    print("AI_BRIDGE V3 — AGENT CONTRACTS")
-    print(f"CONTRACTS: {len(DEFAULT_CONTRACTS)}")
-    print(f"OUTPUT: {CONTRACTS.relative_to(ROOT)}")
-    print("STATUS: PASS")
+    if len(sys.argv) < 2:
+        print("USAGE: workforce_contract.py <task> | --validate <file>")
+        return 2
+
+    if sys.argv[1] == "--validate":
+        if len(sys.argv) != 3:
+            print("USAGE: workforce_contract.py --validate <file>")
+            return 2
+
+        path = Path(sys.argv[2])
+        try:
+            data = json.loads(path.read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError) as exc:
+            print(f"STATUS: FAIL")
+            print(f"ERROR: {exc}")
+            return 1
+
+        ok, errors = validate(data)
+
+        print("AI_BRIDGE V3 — WORKFORCE CONTRACT")
+        print(f"FILE: {path}")
+        print(f"STATUS: {'PASS' if ok else 'FAIL'}")
+
+        for error in errors:
+            print(f"ERROR: {error}")
+
+        return 0 if ok else 1
+
+    task = " ".join(sys.argv[1:])
+    data = create(task)
+    path = CONTRACTS / f"{data['mission_id']}.json"
+    path.write_text(
+        json.dumps(data, indent=2, ensure_ascii=False) + "\n",
+        encoding="utf-8",
+    )
+
+    print("AI_BRIDGE V3 — WORKFORCE CONTRACT")
+    print(f"MISSION_ID: {data['mission_id']}")
+    print(f"TASK: {task}")
+    print("STAGE: RESEARCHER")
+    print("STATUS: PENDING")
+    print(f"CONTRACT: {path}")
+
     return 0
 
 
 if __name__ == "__main__":
-    sys.exit(main())
+    raise SystemExit(main())
