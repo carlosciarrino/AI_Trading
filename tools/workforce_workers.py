@@ -4,95 +4,128 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import Callable
 
+
 @dataclass(frozen=True)
 class WorkerResult:
     ok: bool
     output: str
     evidence: str
     next_action: str
+    recoverable: bool = False
+    second_inspection: bool = False
+
 
 Worker = Callable[[dict, str], WorkerResult]
 
-def researcher(task, previous):
+
+def _require(previous: str, evidence: str, action: str) -> WorkerResult | None:
+    if previous:
+        return None
+    return WorkerResult(
+        False,
+        "",
+        evidence,
+        action,
+        recoverable=True,
+        second_inspection=True,
+    )
+
+
+def researcher(task: dict, previous: str) -> WorkerResult:
     sources = task.get("sources", [])
     if not sources:
         return WorkerResult(False, "", "no sources", "HUMAN_REQUIRED")
     return WorkerResult(
         True,
         "Research sources: " + ", ".join(sources),
-        "research sources registered",
+        "research input verified",
         "ANALYZE",
     )
 
-def analyst(task, previous):
-    if not previous:
-        return WorkerResult(False, "", "missing research output", "RETRY")
+
+def analyst(task: dict, previous: str) -> WorkerResult:
+    fail = _require(previous, "missing research output", "RETRY")
+    if fail:
+        return fail
     return WorkerResult(
         True,
         "Analysis completed from verified research input.",
-        "analysis input received",
+        "analysis input verified",
         "SECURITY",
     )
 
-def security(task, previous):
-    if not previous:
-        return WorkerResult(False, "", "missing analysis output", "RETRY")
+
+def security(task: dict, previous: str) -> WorkerResult:
+    fail = _require(previous, "missing analysis output", "RETRY")
+    if fail:
+        return fail
     return WorkerResult(
         True,
-        "Security review requires existing security gate.",
-        "security gate required",
+        "Security stage delegated to verified security gate.",
+        "security gate input verified",
         "ARCHITECT",
     )
 
-def architect(task, previous):
-    if not previous:
-        return WorkerResult(False, "", "missing security output", "RETRY")
+
+def architect(task: dict, previous: str) -> WorkerResult:
+    fail = _require(previous, "missing security output", "RETRY")
+    if fail:
+        return fail
     return WorkerResult(
         True,
-        "Architecture specification produced.",
+        "Architecture specification produced from verified security output.",
         "architecture input verified",
         "IMPLEMENT",
     )
 
-def implementer(task, previous):
-    if not previous:
-        return WorkerResult(False, "", "missing architecture output", "RETRY")
+
+def implementer(task: dict, previous: str) -> WorkerResult:
+    fail = _require(previous, "missing architecture output", "RETRY")
+    if fail:
+        return fail
     return WorkerResult(
         True,
-        "Implementation stage received architecture output.",
+        "Implementation received verified architecture output.",
         "implementation input verified",
         "TEST",
     )
 
-def tester(task, previous):
-    if not previous:
-        return WorkerResult(False, "", "missing implementation output", "RETRY")
+
+def tester(task: dict, previous: str) -> WorkerResult:
+    fail = _require(previous, "missing implementation output", "RETRY")
+    if fail:
+        return fail
     return WorkerResult(
         True,
-        "Test stage received implementation output.",
+        "Tests received verified implementation output.",
         "test input verified",
         "REVIEW",
     )
 
-def reviewer(task, previous):
-    if not previous:
-        return WorkerResult(False, "", "missing test output", "RETRY")
+
+def reviewer(task: dict, previous: str) -> WorkerResult:
+    fail = _require(previous, "missing test output", "RETRY")
+    if fail:
+        return fail
     return WorkerResult(
         True,
-        "Review stage received test output.",
+        "Review received verified test output.",
         "review input verified",
         "RELEASE",
     )
 
-def releaser(task, previous):
-    if not previous:
-        return WorkerResult(False, "", "missing review output", "RETRY")
+
+def releaser(task: dict, previous: str) -> WorkerResult:
+    fail = _require(previous, "missing review output", "RETRY")
+    if fail:
+        return fail
     return WorkerResult(
         True,
-        "Release stage received reviewed output.",
+        "Release received verified reviewed output.",
         "release input verified",
         "DONE",
     )
+
 
 WORKERS: dict[str, Worker] = {
     "RESEARCH": researcher,
