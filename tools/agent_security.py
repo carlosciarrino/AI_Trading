@@ -6,99 +6,131 @@ import re
 import sys
 from pathlib import Path
 
-
 MAX_FILES = 10000
 
-ALLOWED_HIDDEN = {
+TEXT_SUFFIXES = {
+    ".py", ".sh", ".bash", ".zsh", ".js", ".ts",
+    ".json", ".yaml", ".yml", ".toml", ".txt",
+    ".md", ".html", ".css", ".ini", ".cfg",
+}
+
+SAFE_HIDDEN = {
     ".gitignore",
     ".dockerignore",
     ".gitkeep",
 }
 
-ALLOWED_HIDDEN_DIRS = {
+PATTERNS = (
+    ("rm_rf", re.compile(r"\brm\s+-rf\b")),
+    ("sudo", re.compile(r"\bsudo\b")),
+    ("curl", re.compile(r"\bcurl\b")),
+    ("wget", re.compile(r"\bwget\b")),
+    ("network", re.compile(r"\b(?:nc|socat|ssh|scp)\b")),
+    ("exec", re.compile(r"\bexec\s*\(")),
+    ("eval", re.compile(r"\beval\s*\(")),
+    ("chmod_777", re.compile(r"\bchmod\s+777\b")),
+    ("base64_decode", re.compile(r"\bbase64\s+-d\b")),
+    ("secret", re.compile(
+        r"\b(?:api[_-]?key|secret[_-]?key|password|token|private[_-]?key)\b",
+        re.IGNORECASE,
+    )),
+)
+
+CRITICAL_MARKERS = (
+    "credential exfiltration",
+    "steal credentials",
+    "send credentials",
+    "upload secrets",
+    "reverse shell",
+    "persistence",
+)
+
+SAFE_METADATA_PARTS = {
     ".git",
-    ".github",
 }
 
-CRITICAL = (
-    re.compile(r"\brm\s+-rf\b"),
-    re.compile(r"\bsudo\b"),
-    re.compile(r"chmod\s+777"),
-    re.compile(r"base64\s+-d"),
-)
-
-WARNING = (
-    re.compile(r"\bcurl\b"),
-    re.compile(r"\bwget\b"),
-    re.compile(r"\bnc\b"),
-    re.compile(r"\bsocat\b"),
-    re.compile(r"\bssh\b"),
-    re.compile(r"\bscp\b"),
-    re.compile(r"\beval\s*\("),
-    re.compile(r"\bexec\s*\("),
-)
-
-TEXT_SUFFIXES = {
-    ".py",
-    ".sh",
-    ".bash",
-    ".zsh",
-    ".js",
-    ".ts",
-    ".json",
-    ".yaml",
-    ".yml",
-    ".toml",
-    ".txt",
+BENIGN_PARTS = {
+    "test",
+    "tests",
+    "fixtures",
+    "docs",
+    "documentation",
 }
 
 
-def classify(path: Path, pattern: re.Pattern[str]) -> str:
-    name = path.as_posix()
+def classify(path: Path, kind: str, text: str) -> str:
+    parts = set(path.parts)
+    suffix = path.suffix.lower()
+    lowered = text.lower()
 
-    if (
-        name.startswith(".github/workflows/")
-        and pattern.pattern in {
-            r"\bcurl\b",
-            r"\bwget\b",
-            r"\bsudo\b",
-        }
-    ):
-        return "BENIGN_CONTEXT"
+    if any(part in SAFE_METADATA_PARTS for part in path.parts):
+        return "SAFE_METADATA"
 
-    if (
-        "/benchmarks/" in name
-        or "/benchmark" in name
-    ) and pattern.pattern in {
-        r"\bcurl\b",
-        r"\bwget\b",
-        r"\bexec\s*\(",
-    }:
-        return "BENIGN_CONTEXT"
+    if any(marker in lowered for marker in CRITICAL_MARKERS):
+        return "CRITICAL"
 
-    return "WARNING"
+    if kind == "path_escape":
+        return "CRITICAL"
+
+    if kind == "symlink":
+        return "REVIEW"
+
+    if kind == "chmod_777":
+        return "HIGH"
+
+    if kind == "secret":
+        return "HIGH"
+
+    if kind in {"rm_rf", "exec", "eval", "network"}:
+        if any(part in BENIGN_PARTS for part in path.parts):
+            return "BENIGN"
+        if suffix in {".md", ".txt", ".json", ".yaml", ".yml"}:
+            return "REVIEW"
+        return "HIGH"
+
+    if kind in {"sudo", "curl", "wget"}:
+        if ".github" in parts and "workflows" in parts:
+            return "REVIEW"
+        if "install" in path.name.lower() or "benchmark" in parts:
+            return "REVIEW"
+        return "BENIGN"
+
+    if any(part in BENIGN_PARTS for part in path.parts):
+        return "BENIGN"
+
+    return "REVIEW"
 
 
-def scan(root: Path) -> tuple[list[str], list[str], list[str]]:
-    critical: list[str] = []
-    warnings: list[str] = []
+def scan(root: Path) -> tuple[list[str], list[str], dict[str, int]]:
+    findings: list[str] = []
     files: list[str] = []
+    counts = {
+        "SAFE_METADATA": 0,
+        "BENIGN": 0,
+        "REVIEW": 0,
+        "HIGH": 0,
+        "CRITICAL": 0,
+    }
 
     root = root.resolve()
 
     for path in root.rglob("*"):
         if len(files) >= MAX_FILES:
-            critical.append("FILE_LIMIT_EXCEEDED")
+            findings.append("CRITICAL:FILE_LIMIT_EXCEEDED")
+            counts["CRITICAL"] += 1
             break
 
         try:
             rel = path.relative_to(root)
         except ValueError:
-            critical.append(f"PATH_ESCAPE:{path}")
+            findings.append(f"CRITICAL:PATH_ESCAPE:{path}")
+            counts["CRITICAL"] += 1
             continue
 
         if path.is_symlink():
-            critical.append(f"SYMLINK:{rel}")
+            classification = classify(rel, "symlink", "")
+            counts[classification] += 1
+            findings.append(f"{classification}:SYMLINK:{rel}")
             continue
 
         if not path.is_file():
@@ -106,30 +138,15 @@ def scan(root: Path) -> tuple[list[str], list[str], list[str]]:
 
         files.append(str(rel))
 
-        hidden_parts = [
-            part for part in rel.parts
-            if part.startswith(".")
-        ]
-
-        if hidden_parts:
-            if (
-                path.name not in ALLOWED_HIDDEN
-                and not any(
-                    part in ALLOWED_HIDDEN_DIRS
-                    for part in hidden_parts
+        if any(part.startswith(".") for part in rel.parts):
+            if path.name not in SAFE_HIDDEN:
+                classification = (
+                    "SAFE_METADATA"
+                    if ".git" in rel.parts
+                    else "REVIEW"
                 )
-            ):
-                if path.name.startswith(".") and path.name not in {
-                    ".env",
-                    ".env.local",
-                    ".env.production",
-                }:
-                    if rel.parent == Path("."):
-                        warnings.append(
-                            f"METADATA:{rel}"
-                        )
-                else:
-                    critical.append(f"HIDDEN_FILE:{rel}")
+                counts[classification] += 1
+                findings.append(f"{classification}:HIDDEN_FILE:{rel}")
 
         if path.suffix.lower() not in TEXT_SUFFIXES:
             continue
@@ -140,68 +157,62 @@ def scan(root: Path) -> tuple[list[str], list[str], list[str]]:
                 errors="replace",
             )
         except OSError:
-            critical.append(f"UNREADABLE:{rel}")
+            counts["REVIEW"] += 1
+            findings.append(f"REVIEW:UNREADABLE:{rel}")
             continue
 
-        for pattern in CRITICAL:
-            if pattern.search(text):
-                critical.append(
-                    f"CRITICAL:{rel}:{pattern.pattern}"
-                )
+        for kind, pattern in PATTERNS:
+            if not pattern.search(text):
+                continue
 
-        for pattern in WARNING:
-            if pattern.search(text):
-                classification = classify(rel, pattern)
-                if classification == "BENIGN_CONTEXT":
-                    warnings.append(
-                        f"BENIGN:{rel}:{pattern.pattern}"
-                    )
-                else:
-                    warnings.append(
-                        f"WARNING:{rel}:{pattern.pattern}"
-                    )
+            classification = classify(rel, kind, text)
+            counts[classification] += 1
+            findings.append(
+                f"{classification}:{rel}:{pattern.pattern}"
+            )
 
-    return files, critical, warnings
+    return files, findings, counts
 
 
 def main() -> int:
     if len(sys.argv) != 2:
-        print(
-            "usage: python3 tools/agent_security.py <target>",
-            file=sys.stderr,
-        )
+        print("USAGE: agent_security.py <target>")
         return 2
 
     target = Path(sys.argv[1])
 
     if not target.exists():
-        print(f"TARGET: FAIL\nERROR: NOT_FOUND:{target}")
+        print(f"TARGET_NOT_FOUND:{target}")
         return 2
 
-    files, critical, warnings = scan(target)
+    files, findings, counts = scan(target)
 
     print("AI_BRIDGE V3 — SECURITY GATE")
-    print(f"TARGET: PASS")
+    print("TARGET: PASS")
     print(f"FILES: {len(files)}")
-    print(f"CRITICAL: {len(critical)}")
-    print(f"WARNING: {len(warnings)}")
-    print(f"SECURITY: {'FAIL' if critical else 'PASS'}")
-    print(
-        f"DECISION: {'REJECT' if critical else 'ALLOW_SANDBOX'}"
-    )
+    print(f"CRITICAL: {counts['CRITICAL']}")
+    print(f"HIGH: {counts['HIGH']}")
+    print(f"REVIEW: {counts['REVIEW']}")
+    print(f"BENIGN: {counts['BENIGN']}")
+    print(f"SAFE_METADATA: {counts['SAFE_METADATA']}")
 
-    if critical:
-        print("\n===== CRITICAL =====")
-        for finding in critical:
-            print(finding)
+    for finding in findings:
+        print(finding)
 
-    if warnings:
-        print("\n===== WARNINGS =====")
-        for finding in warnings:
-            print(finding)
+    if counts["CRITICAL"] or counts["HIGH"]:
+        print("SECURITY: FAIL")
+        print("DECISION: REJECT")
+        return 1
 
-    return 1 if critical else 0
+    if counts["REVIEW"]:
+        print("SECURITY: REVIEW_REQUIRED")
+        print("DECISION: REVIEW")
+        return 3
+
+    print("SECURITY: PASS")
+    print("DECISION: ALLOW_SANDBOX")
+    return 0
 
 
 if __name__ == "__main__":
-    raise SystemExit(main())
+    sys.exit(main())

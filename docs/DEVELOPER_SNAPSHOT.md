@@ -6,7 +6,7 @@
 
 - Root: `/home/carlo/AI_Trading`
 - Branch: `feature/fast-track`
-- Last commit: `aa29a6f Restore verify command`
+- Last commit: `5cb5475 Enforce autonomous workforce operating contract`
 - Current milestone: `| M17 | Monitoring Evolution | ⏳ IN CORSO |`
 
 ## Files
