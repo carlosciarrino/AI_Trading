@@ -1,7 +1,7 @@
 {
-  "status": "READY",
+  "status": "COMPLETED",
   "cycle": 1696,
-  "stage": "ARCHITECTURE_IMPLEMENTATION",
+  "stage": "ARCHITECTURE_SELECTED",
   "human_required": false,
   "completed": [
     "RESEARCH",
@@ -20,5 +20,19 @@
   "architecture": "HYBRID",
   "architecture_base": "OpenHands SDK",
   "governance": "Liza-inspired",
-  "dispatch": "Looper-inspired"
+  "dispatch": "Looper-inspired",
+  "architecture_candidates": [
+    "openhands-sdk",
+    "mini-swe-agent",
+    "aider",
+    "liza",
+    "looper"
+  ],
+  "architecture_ranking": [
+    "aider",
+    "liza",
+    "looper",
+    "mini-swe-agent",
+    "openhands-sdk"
+  ]
 }

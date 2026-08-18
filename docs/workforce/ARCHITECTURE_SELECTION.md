@@ -1,103 +1,15 @@
-# AI_BRIDGE V3 — AGENT WORKFORCE ARCHITECTURE
+# AI_BRIDGE V3 — ARCHITECTURE SELECTION
 
-## Decision
+## Decision status
 
-Selected architecture: **HYBRID**
+- WF-002
+- Candidates: openhands-sdk, mini-swe-agent, aider, liza, looper
+- Ranking: aider (4), liza (4), looper (4), mini-swe-agent (4), openhands-sdk (4)
+- Provider independent: True
+- Autonomous execution: True
+- Human intervention: True
+- Sandbox/workspace: True
 
-### Execution substrate
-**OpenHands Software Agent SDK**
+## Selection rule
 
-Provides agent reasoning/action loop, context, tools, security analysis, workspaces, agent-server and automation-compatible runtime.
-
-### Governance/control plane
-**Liza-inspired governance pattern**
-
-AI_BRIDGE owns:
-- immutable task contracts
-- explicit state machine
-- deterministic gates
-- independent reviewer
-- audit trail
-- circuit breaker
-- bounded retries
-- HUMAN_REQUIRED escalation
-
-### Dispatch/orchestration pattern
-**Looper-inspired autonomous loop**
-
-AI_BRIDGE supervisor owns:
-`DISCOVER → ASSIGN → EXECUTE → VERIFY → REVIEW → MERGE/REJECT → NEXT`
-
-### Reference components
-
-**mini-swe-agent**
-- simplicity
-- small agent loop
-- interchangeable model/environment interfaces
-- sandbox execution patterns
-
-**Aider**
-- repository mapping
-- automatic lint/test cycle
-- Git integration
-
-Neither becomes AI_BRIDGE foundation.
-
-## Architectural rule
-
-Do not fork or recreate existing agent runtime capabilities when OpenHands already provides them.
-
-AI_BRIDGE remains owner of:
-- business/workforce policy
-- task contracts
-- persistent state
-- role assignment
-- verification gates
-- recovery
-- escalation
-- project memory
-- MT4/trading integration
-
-External projects provide execution primitives, not project authority.
-
-## Target topology
-
-Human
-  ↓
-AI_BRIDGE Control Plane
-  ↓
-Supervisor
-  ↓
-Task Queue / Persistent State
-  ↓
-Role Worker
-  ↓
-OpenHands Agent Runtime
-  ↓
-Sandbox / Workspace
-  ↓
-Deterministic Verification
-  ↓
-Independent Review
-  ↓
-Commit / Reject
-  ↓
-Next Task
-
-## Binding constraints
-
-1. Repository remains source of truth.
-2. Approved decisions persist immediately.
-3. One aggregated terminal command preferred.
-4. Human interaction only on HUMAN_REQUIRED or strategic approval.
-5. Bounded retries mandatory.
-6. False positives require second inspection.
-7. Every completed task produces evidence.
-8. No autonomous merge without deterministic gates.
-9. Unknown failure stops system; never infinite-loop.
-10. Architecture may improve only through explicit evidence-backed revision.
-
-## Status
-
-ARCHITECTURE_SELECTION: APPROVED
-NEXT: ARCHITECTURE_IMPLEMENTATION
+Use benchmark evidence first. No candidate becomes production architecture without isolated validation. Preserve provider-independent architecture. Human intervention only for HUMAN_REQUIRED conditions.
