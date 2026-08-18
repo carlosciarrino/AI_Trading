@@ -1,0 +1,27 @@
+{
+  "tasks": [
+    {
+      "id": "WF-001",
+      "title": "Research autonomous agent workforce architectures",
+      "sources": [
+        "OpenHands",
+        "Looper",
+        "Liza"
+      ],
+      "status": "COMPLETED"
+    },
+    {
+      "id": "WF-003",
+      "title": "Implement selected autonomous workforce architecture",
+      "sources": [
+        "OpenHands",
+        "Liza",
+        "Looper",
+        "mini-swe-agent",
+        "Aider"
+      ],
+      "architecture": "HYBRID",
+      "status": "READY"
+    }
+  ]
+}
