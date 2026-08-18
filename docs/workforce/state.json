@@ -1,7 +1,7 @@
 {
   "status": "COMPLETED",
   "cycle": 1696,
-  "stage": "ARCHITECTURE_SELECTED",
+  "stage": "ARCHITECTURE_IMPLEMENTED",
   "human_required": false,
   "completed": [
     "RESEARCH",
@@ -19,8 +19,8 @@
   "next_task": "WF-003",
   "architecture": "HYBRID",
   "architecture_base": "OpenHands SDK",
-  "governance": "Liza-inspired",
-  "dispatch": "Looper-inspired",
+  "governance": "DETERMINISTIC_SUPERVISOR",
+  "dispatch": "WORKFORCE_DISPATCHER",
   "architecture_candidates": [
     "openhands-sdk",
     "mini-swe-agent",
@@ -34,5 +34,9 @@
     "looper",
     "mini-swe-agent",
     "openhands-sdk"
-  ]
+  ],
+  "runtime": "OPENHANDS_SDK_COMPATIBLE",
+  "workflow": "LOOPER_INSPIRED",
+  "review": "LIZA_INSPIRED",
+  "next": "WF-004"
 }
