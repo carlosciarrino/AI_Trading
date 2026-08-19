@@ -32,3 +32,18 @@ mt4_shared/
 
 # Local developer backups
 .local_backups/
+
+# Workforce runtime / evidence
+docs/workforce/daemon.log
+docs/workforce/evidence/
+docs/workforce/state.json.pre_wf004_fix
+
+# Project archive
+project_source.tar.gz
+
+# Backup variants
+*.bak2
+
+# Nested external-agent repositories
+research/external_agents/liza/
+research/external_agents/looper/
