@@ -1,72 +1,75 @@
-# AI_BRIDGE - MT4 Bridge Layer
-
-from datetime import datetime
-import json
-import os
-
+import os, json, time, logging
+from pathlib import Path
 
 class MT4Bridge:
-    """
-    Bridge semplice tra AI_BRIDGE e MT4.
-    Usa file JSON come canale di comunicazione.
-    """
+    def __init__(self, config=None):
+        self.logger = logging.getLogger(__name__)
+        self.config = config or {}
+        self.shared_dir = Path(self.config.get('mt4_shared_dir', os.path.expanduser('~/mt4_shared')))
+        self.shared_dir.mkdir(exist_ok=True)
 
-    def __init__(self, bridge_path="mt4_bridge_signal.json"):
+    def connect(self):
+        self.logger.info("MT4 Bridge connected")
+        return True
 
-        self.bridge_path = bridge_path
+    def disconnect(self):
+        self.logger.info("MT4 Bridge disconnected")
+        return True
 
-    # =========================================
-    # SEND SIGNAL TO MT4
-    # =========================================
+    def get_positions(self):
+        """Legge le posizioni aperte dal file (simulato)"""
+        pos_file = self.shared_dir / 'positions.json'
+        if pos_file.exists():
+            with open(pos_file) as f:
+                try:
+                    return json.load(f)
+                except:
+                    return []
+        return []
 
-    def send_signal(self, decision):
+    def get_orders(self):
+        """Legge tutti gli ordini dal file"""
+        orders_file = self.shared_dir / 'orders.json'
+        if orders_file.exists():
+            with open(orders_file) as f:
+                try:
+                    return json.load(f)
+                except:
+                    return []
+        return []
 
-        signal = self._build_signal(decision)
-
-        with open(self.bridge_path, "w") as f:
-            json.dump(signal, f, indent=4)
-
-        print("[MT4_BRIDGE] Signal sent to MT4")
-
-        return signal
-
-    # =========================================
-    # BUILD SIGNAL FORMAT
-    # =========================================
-
-    def _build_signal(self, decision):
-
-        request = decision.get("request", {})
-
-        action = request.get("action", "NO_OP")
-
-        # mapping base
-        mt4_action = self._map_action(action)
-
-        signal = {
-            "timestamp": datetime.utcnow().isoformat(),
-            "symbol": request.get("metadata", {}).get("symbol", "EURUSD"),
-            "action": mt4_action,
-            "lot": request.get("metadata", {}).get("lot", 0.01),
-            "sl": request.get("metadata", {}).get("sl", 0),
-            "tp": request.get("metadata", {}).get("tp", 0),
-            "strategy": decision.get("decision", {}).get("strategy", "unknown"),
-            "allowed": decision.get("allowed", False)
+    def place_order(self, action, lots, price, sl, tp):
+        order = {
+            'action': action,
+            'lots': lots,
+            'price': price,
+            'sl': sl,
+            'tp': tp,
+            'time': time.time(),
+            'status': 'open',
+            'close_price': None,
+            'pnl': 0
         }
+        orders = self.get_orders()
+        orders.append(order)
+        with open(self.shared_dir / 'orders.json', 'w') as f:
+            json.dump(orders, f, indent=2)
+        self.logger.info(f"Order {action} {lots} @ {price}")
+        return {'order_id': len(orders)-1}
 
-        return signal
-
-    # =========================================
-    # ACTION MAPPING
-    # =========================================
-
-    def _map_action(self, action):
-
-        mapping = {
-            "BUY": "BUY",
-            "SELL": "SELL",
-            "EXECUTE_TRADE": "BUY",
-            "NO_OP": "HOLD"
-        }
-
-        return mapping.get(action, "HOLD")
+    def close_order(self, order_id, close_price):
+        orders = self.get_orders()
+        if order_id < len(orders):
+            orders[order_id]['status'] = 'closed'
+            orders[order_id]['close_price'] = close_price
+            entry = orders[order_id]['price']
+            lots = orders[order_id]['lots']
+            if orders[order_id]['action'] == 'buy':
+                pnl = (close_price - entry) * lots * 100000
+            else:
+                pnl = (entry - close_price) * lots * 100000
+            orders[order_id]['pnl'] = round(pnl, 2)
+            with open(self.shared_dir / 'orders.json', 'w') as f:
+                json.dump(orders, f, indent=2)
+            return True
+        return False
