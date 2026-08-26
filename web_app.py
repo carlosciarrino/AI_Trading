@@ -14,7 +14,12 @@ AGENTS = {
     "cycle_agent": {"name": "Agente Cicli", "task": "Analizza cicli storici e stagionalità del mercato."},
     "experience_agent": {"name": "Agente Esperienza", "task": "Impara dagli errori passati e aggiorna la memoria."},
     "strategy_tester_agent": {"name": "Strategy Tester", "task": "Testa nuove strategie su dati storici."},
-    "github_researcher": {"name": "GitHub Researcher", "task": "Cerca progetti utili su GitHub."}
+    "github_researcher": {"name": "GitHub Researcher", "task": "Cerca progetti utili su GitHub."},
+    "skill_researcher": {"name": "Skill Researcher", "task": "Cerca nuove competenze, framework o strategie online."},
+    "news_critical": {"name": "News Critical", "task": "Analizza condizioni socio-politiche globali."},
+    "ai_researcher_agent": {"name": "AI Researcher", "task": "Cerca nuove intelligenze artificiali disponibili."},
+    "ai_tester_agent": {"name": "AI Tester", "task": "Testa le nuove AI su compiti reali."},
+    "sync_agent": {"name": "Sync Agent", "task": "Sincronizza il progetto su GitHub e USB."}
 }
 
 AGENT_COMMANDS = {
@@ -26,7 +31,12 @@ AGENT_COMMANDS = {
     "cycle_agent": "cd /home/carlo/AI_Trading && source ~/AI_Trading_Agents/venv/bin/activate && python3 cycle_agent.py",
     "experience_agent": "cd /home/carlo/AI_Trading && source ~/AI_Trading_Agents/venv/bin/activate && python3 experience_agent.py",
     "strategy_tester_agent": "cd /home/carlo/AI_Trading && source ~/AI_Trading_Agents/venv/bin/activate && python3 strategy_tester_agent.py",
-    "github_researcher": "cd /home/carlo/AI_Trading && source ~/AI_Trading_Agents/venv/bin/activate && python3 github_researcher.py"
+    "github_researcher": "cd /home/carlo/AI_Trading && source ~/AI_Trading_Agents/venv/bin/activate && python3 github_researcher.py",
+    "skill_researcher": "cd /home/carlo/AI_Trading && source ~/AI_Trading_Agents/venv/bin/activate && python3 skill_researcher.py",
+    "news_critical": "cd /home/carlo/AI_Trading && source ~/AI_Trading_Agents/venv/bin/activate && python3 news_critical.py",
+    "ai_researcher_agent": "cd /home/carlo/AI_Trading && source ~/AI_Trading_Agents/venv/bin/activate && python3 ai_researcher_agent.py",
+    "ai_tester_agent": "cd /home/carlo/AI_Trading && source ~/AI_Trading_Agents/venv/bin/activate && python3 ai_tester_agent.py",
+    "sync_agent": "cd /home/carlo/AI_Trading && source ~/AI_Trading_Agents/venv/bin/activate && python3 sync_agent.py"
 }
 
 def get_status():
@@ -34,10 +44,7 @@ def get_status():
     sessions = out.stdout if out.returncode == 0 else ""
     status = {}
     for name, info in AGENTS.items():
-        if name in sessions:
-            status[name] = "active"
-        else:
-            status[name] = "stopped"
+        status[name] = "active" if name in sessions else "stopped"
     return status
 
 HTML = """
@@ -50,8 +57,6 @@ HTML = """
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body { font-family: 'Inter', sans-serif; background: #0b0e14; color: #e5e9f0; display: flex; height: 100vh; }
-        
-        /* Sidebar */
         .sidebar { width: 220px; background: #131722; border-right: 1px solid #2a2e39; padding: 20px; display: flex; flex-direction: column; flex-shrink: 0; }
         .logo { font-size: 20px; font-weight: 700; margin-bottom: 30px; display: flex; align-items: center; gap: 10px; }
         .logo span { background: #2962ff; padding: 4px 8px; border-radius: 6px; font-size: 14px; }
@@ -59,20 +64,14 @@ HTML = """
         .nav a { color: #78828c; text-decoration: none; padding: 10px 12px; border-radius: 8px; font-size: 14px; font-weight: 500; cursor: pointer; }
         .nav a:hover, .nav a.active { background: #2a2e39; color: #fff; }
         .footer { margin-top: auto; font-size: 12px; color: #4a5568; border-top: 1px solid #2a2e39; padding-top: 15px; }
-        
-        /* Main */
         .main { flex: 1; padding: 24px 32px; overflow-y: auto; }
         .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
         .header .status-box { display: flex; align-items: center; gap: 10px; background: #1e222d; padding: 8px 16px; border-radius: 20px; font-size: 14px; }
         .dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
         .dot.green { background: #00c853; }
         .dot.red { background: #ff1744; }
-        
-        /* Sections */
         .section { display: none; }
         .section.active { display: block; }
-        
-        /* Dashboard */
         .kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 30px; }
         .kpi-card { background: #131722; border: 1px solid #2a2e39; border-radius: 12px; padding: 20px; }
         .kpi-card .label { font-size: 13px; color: #78828c; }
@@ -85,8 +84,6 @@ HTML = """
         .pnl-pos { color: #00c853; font-weight: 600; }
         .pnl-neg { color: #ff1744; font-weight: 600; }
         .table-box { background: #131722; border: 1px solid #2a2e39; border-radius: 12px; padding: 20px; margin-bottom: 20px; }
-        
-        /* Trading */
         .chart-container { background: #131722; border: 1px solid #2a2e39; border-radius: 12px; padding: 16px; margin-bottom: 20px; }
         .chart-container iframe { width: 100%; height: 500px; border: none; border-radius: 8px; }
         .control-row { display: flex; gap: 12px; align-items: flex-end; margin-top: 12px; flex-wrap: wrap; }
@@ -95,8 +92,6 @@ HTML = """
         .btn { background: #2962ff; border: none; border-radius: 6px; padding: 10px 20px; color: #fff; font-weight: 600; cursor: pointer; }
         .btn-buy { background: #00c853; border: none; border-radius: 6px; padding: 10px 20px; color: #000; font-weight: 600; cursor: pointer; }
         .btn-sell { background: #ff1744; border: none; border-radius: 6px; padding: 10px 20px; color: #fff; font-weight: 600; cursor: pointer; }
-        
-        /* Agents */
         .agent-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 16px; }
         .agent-card { background: #131722; border: 1px solid #2a2e39; border-radius: 12px; padding: 20px; display: flex; flex-direction: column; }
         .agent-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
@@ -106,15 +101,11 @@ HTML = """
         .agent-actions { display: flex; gap: 8px; }
         .btn-start { background: #2962ff; border: none; border-radius: 6px; padding: 6px 12px; color: #fff; font-size: 12px; cursor: pointer; }
         .btn-stop { background: #ff1744; border: none; border-radius: 6px; padding: 6px 12px; color: #fff; font-size: 12px; cursor: pointer; }
-        
-        /* Config */
         .config-box { background: #131722; border: 1px solid #2a2e39; border-radius: 12px; padding: 24px; margin-bottom: 20px; }
         .config-box h3 { margin-bottom: 20px; border-bottom: 1px solid #2a2e39; padding-bottom: 10px; }
         .config-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
         .config-grid label { font-size: 13px; color: #78828c; display: block; margin-bottom: 6px; }
         .config-grid input, .config-grid select { width: 100%; background: #1e222d; border: 1px solid #2a2e39; border-radius: 6px; padding: 10px; color: #fff; }
-        
-        /* Log */
         .log-box { background: #000; padding: 16px; max-height: 300px; overflow-y: auto; font-family: monospace; font-size: 12px; color: #00c853; border-radius: 8px; }
     </style>
 </head>
@@ -131,7 +122,6 @@ HTML = """
 </div>
 
 <div class="main">
-    <!-- Sezione Dashboard -->
     <div id="dashboard" class="section active">
         <div class="header">
             <h1>📊 Dashboard</h1>
@@ -166,7 +156,6 @@ HTML = """
         </div>
     </div>
 
-    <!-- Sezione Trading -->
     <div id="trading" class="section">
         <div class="header"><h1>📈 Trading</h1></div>
         <div class="chart-container">
@@ -214,7 +203,6 @@ HTML = """
         </div>
     </div>
 
-    <!-- Sezione Agenti -->
     <div id="agents" class="section">
         <div class="header"><h1>🤖 Agenti Aziendali</h1></div>
         <div class="agent-grid" id="agent_grid">
@@ -231,7 +219,6 @@ HTML = """
         </div>
     </div>
 
-    <!-- Sezione Configura -->
     <div id="config" class="section">
         <div class="header"><h1>⚙️ Configurazione</h1></div>
         <div class="config-box">
@@ -280,7 +267,6 @@ HTML = """
             
             document.getElementById('kpi_open').innerText = data.open_count || 0;
             
-            // Aggiorna agenti
             for (const [id, status] of Object.entries(data.agents)) {
                 const span = document.getElementById('status_' + id);
                 if (span) {
