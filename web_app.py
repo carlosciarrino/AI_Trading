@@ -4,7 +4,6 @@ from datetime import datetime
 
 app = Flask(__name__)
 
-# Dizionario degli agenti con nome reale e compito
 AGENTS = {
     "ai_workforce": {"name": "Orchestratore", "task": "Prende decisioni di trading tramite AI e gestisce il flusso dati."},
     "dashboard": {"name": "Dashboard", "task": "Mostra lo stato dell'azienda all'utente."},
@@ -13,7 +12,7 @@ AGENTS = {
     "social_agent": {"name": "Agente Social", "task": "Analizza sentiment da social e news trending."},
     "cycle_agent": {"name": "Agente Cicli", "task": "Analizza cicli storici e stagionalità del mercato."},
     "experience_agent": {"name": "Agente Esperienza", "task": "Impara dagli errori passati e aggiorna la memoria."},
-    "strategy_tester_agent": {"name": "Strategy Tester", "task": "Testa nuove strategie su dati storici."},
+    "strategy_tester_agent": {"name": "Strategy Tester", "task": "Analizza link e testa strategie su dati storici."},
     "github_researcher": {"name": "GitHub Researcher", "task": "Cerca progetti utili su GitHub."},
     "skill_researcher": {"name": "Skill Researcher", "task": "Cerca nuove competenze, framework o strategie online."},
     "news_critical": {"name": "News Critical", "task": "Analizza condizioni socio-politiche globali."},
@@ -92,6 +91,8 @@ HTML = """
         .btn { background: #2962ff; border: none; border-radius: 6px; padding: 10px 20px; color: #fff; font-weight: 600; cursor: pointer; }
         .btn-buy { background: #00c853; border: none; border-radius: 6px; padding: 10px 20px; color: #000; font-weight: 600; cursor: pointer; }
         .btn-sell { background: #ff1744; border: none; border-radius: 6px; padding: 10px 20px; color: #fff; font-weight: 600; cursor: pointer; }
+        .btn-green { background: #00c853; border: none; border-radius: 6px; padding: 10px 20px; color: #000; font-weight: 600; cursor: pointer; }
+        .btn-orange { background: #ff9800; border: none; border-radius: 6px; padding: 10px 20px; color: #000; font-weight: 600; cursor: pointer; }
         .agent-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 16px; }
         .agent-card { background: #131722; border: 1px solid #2a2e39; border-radius: 12px; padding: 20px; display: flex; flex-direction: column; }
         .agent-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
@@ -234,6 +235,8 @@ HTML = """
             <p style="font-size:13px; color:#78828c; margin-bottom:15px;">Incolla un link e l'agente Strategy Tester lo analizzerà.</p>
             <input type="text" id="strategy_link" placeholder="Incolla link qui..." style="width:100%; background:#1e222d; border:1px solid #2a2e39; border-radius:6px; padding:10px; color:#fff; margin-bottom:15px;">
             <button class="btn" onclick="testStrategy()">🚀 Avvia Test</button>
+            <button class="btn-green" onclick="leggiReport()">📄 Leggi Report</button>
+            <button class="btn-orange" onclick="applicaStrategia()">✅ Applica</button>
         </div>
         <div class="config-box">
             <h3>Log di sistema</h3>
@@ -264,9 +267,7 @@ HTML = """
                 dot.className = 'dot red';
                 txt.innerText = 'Sistema Offline';
             }
-            
             document.getElementById('kpi_open').innerText = data.open_count || 0;
-            
             for (const [id, status] of Object.entries(data.agents)) {
                 const span = document.getElementById('status_' + id);
                 if (span) {
@@ -329,6 +330,28 @@ HTML = """
         .then(d => alert(d.message));
     }
 
+    function leggiReport() {
+        fetch('/leggi_report')
+        .then(r => r.text())
+        .then(text => { 
+            if (text.trim().length === 0) { alert('Nessun report disponibile. Testa prima una strategia.'); return; }
+            // Apre il report in una nuova finestra
+            const newWindow = window.open('', '_blank');
+            newWindow.document.write('<pre style="background:#0b0e14; color:#00c853; padding:20px; font-size:14px; white-space:pre-wrap;">' + text + '</pre>');
+        })
+        .catch(e => alert('Errore: ' + e));
+    }
+
+    function applicaStrategia() {
+        fetch('/applica_strategia', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({})
+        })
+        .then(r => r.json())
+        .then(d => alert(d.message));
+    }
+
     function refreshLog() {
         fetch('/log')
         .then(r => r.text())
@@ -382,7 +405,6 @@ def control():
     data = request.json
     name = data.get('name')
     action = data.get('action')
-    
     if action == 'start':
         if name in AGENT_COMMANDS:
             os.system(f"tmux new-session -d -s {name} \"{AGENT_COMMANDS[name]}\"")
@@ -423,6 +445,21 @@ def test_strategy():
     with open('/home/carlo/AI_Trading/strategia_da_testare.txt', 'w') as f:
         f.write(link)
     return jsonify({'message': f'Strategia inviata al tester: {link}'})
+
+@app.route('/leggi_report')
+def leggi_report():
+    try:
+        with open('/home/carlo/AI_Trading/report_strategia.txt', 'r') as f:
+            return f.read()
+    except:
+        return ""
+
+@app.route('/applica_strategia', methods=['POST'])
+def applica_strategia():
+    # Crea il segnale per l'agente di backtest
+    with open('/home/carlo/AI_Trading/segnali/backtest_richiesto.txt', 'w') as f:
+        f.write("1")
+    return jsonify({'message': 'Backtest avviato. L\'agente tester lavorerà di notte.'})
 
 @app.route('/log')
 def log_api():

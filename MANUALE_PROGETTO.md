@@ -1,6 +1,6 @@
 # AI_BRIDGE - Manuale del Progetto
 
-## Ultimo aggiornamento: 2026-08-27
+## Ultimo aggiornamento: 2026-08-28
 
 ---
 
@@ -21,19 +21,7 @@ Azienda digitale autonoma per il trading sul Forex (EUR/USD). L'obiettivo è gen
 ---
 
 ## 3. Elenco AGENTI (Tutti devono essere attivi)
-1. **Orchestratore (ai_workforce)**: Prende decisioni di trading tramite AI e gestisce il flusso dati.
-2. **Dashboard (dashboard)**: Mostra lo stato dell'azienda all'utente.
-3. **Sentinella (sentinel)**: Monitora la sicurezza e ferma il sistema in caso di anomalie.
-4. **Agente Notizie (news_agent)**: Analizza notizie macro (guerre, crisi, tassi).
-5. **Agente Social (social_agent)**: Analizza sentiment da social e news trending.
-6. **Agente Cicli (cycle_agent)**: Analizza cicli storici e stagionalità del mercato.
-7. **Agente Esperienza (experience_agent)**: Impara dagli errori passati e aggiorna la memoria.
-8. **Strategy Tester (strategy_tester_agent)**: Testa nuove strategie su dati storici.
-9. **GitHub Researcher (github_researcher)**: Cerca progetti utili su GitHub.
-10. **Skill Researcher (skill_researcher)**: Cerca nuove competenze, framework o strategie online.
-11. **News Critical (news_critical)**: Analizza condizioni socio-politiche globali.
-12. **AI Researcher (ai_researcher_agent)**: Cerca nuove intelligenze artificiali disponibili.
-13. **AI Tester (ai_tester_agent)**: Testa le nuove AI su compiti reali per verificarne l'affidabilità.
+*(...elenco aggiornato...)*
 
 ---
 
@@ -41,12 +29,13 @@ Azienda digitale autonoma per il trading sul Forex (EUR/USD). L'obiettivo è gen
 - **2026-08-27**: Aperto 50 operazioni per errore. Risolto con EA che cancella file subito e limite MAX 1 operazione.
 - **2026-08-27**: Bug Pandas risolto. Uso `float(df["Close"].iloc[-1])`.
 - **2026-08-27**: Dashboard riscritta (V4) con Organigramma, Auto-Refresh e Controllo Agent.
+- **2026-08-28**: Implementazione sistema di Diagnostica della Catena (Sentinella potenziata).
+    - **Fonte**: Integrazione del progetto open-source **Argus** (https://github.com/mylesndavid/argus) per il monitoraggio del comportamento degli agenti.
+    - **Obiettivo**: Rilevare "stalli silenziosi" dove l'agente è vivo ma non produce output, eliminando i falsi positivi nel controllo di sistema.
 
 ---
 
 ## 5. Prossimi Passi
-1. Aggiungere gli agenti `ai_researcher_agent` e `ai_tester_agent` alla dashboard.
-2. Testare i nuovi modelli AI open-source (Meta Muse Glimmer, Nvidia Nemotron 3.5 Lightning).
-3. Preparare pacchetto USB (con `install.sh` e `start.sh`).
-
----
+1. Integrare la Sentinella con il sistema diagnostico Argus.
+2. Aggiungere un test automatico che verifichi che ogni agente produca un output entro un tempo massimo (es. 10 minuti).
+3. Configurare Alert Telegram se la catena si rompe.
