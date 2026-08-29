@@ -31,6 +31,7 @@ def download_video(link):
     audio_file = os.path.join(temp_dir, "audio.m4a")
     cmd = [
         "yt-dlp",
+        "--no-warnings",          # <-- aggiunto per silenziare avvisi Python
         "-f", "bestaudio",
         "--extract-audio",
         "--audio-format", "m4a",
