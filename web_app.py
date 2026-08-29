@@ -69,6 +69,7 @@ HTML = """
         .dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
         .dot.green { background: #00c853; }
         .dot.red { background: #ff1744; }
+        .btn-emergency { background: #ff1744; color: white; border: none; padding: 10px 20px; border-radius: 8px; font-weight: bold; cursor: pointer; }
         .section { display: none; }
         .section.active { display: block; }
         .kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 30px; }
@@ -91,8 +92,6 @@ HTML = """
         .btn { background: #2962ff; border: none; border-radius: 6px; padding: 10px 20px; color: #fff; font-weight: 600; cursor: pointer; }
         .btn-buy { background: #00c853; border: none; border-radius: 6px; padding: 10px 20px; color: #000; font-weight: 600; cursor: pointer; }
         .btn-sell { background: #ff1744; border: none; border-radius: 6px; padding: 10px 20px; color: #fff; font-weight: 600; cursor: pointer; }
-        .btn-green { background: #00c853; border: none; border-radius: 6px; padding: 10px 20px; color: #000; font-weight: 600; cursor: pointer; }
-        .btn-orange { background: #ff9800; border: none; border-radius: 6px; padding: 10px 20px; color: #000; font-weight: 600; cursor: pointer; }
         .agent-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 16px; }
         .agent-card { background: #131722; border: 1px solid #2a2e39; border-radius: 12px; padding: 20px; display: flex; flex-direction: column; }
         .agent-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
@@ -126,7 +125,10 @@ HTML = """
     <div id="dashboard" class="section active">
         <div class="header">
             <h1>📊 Dashboard</h1>
-            <div class="status-box"><span class="dot green" id="status_dot"></span><span id="status_text">Caricamento...</span></div>
+            <div style="display:flex; gap:10px;">
+                <div class="status-box"><span class="dot green" id="status_dot"></span><span id="status_text">Caricamento...</span></div>
+                <button class="btn-emergency" onclick="emergencyStop()">🛑 STOP TUTTO</button>
+            </div>
         </div>
         <div class="kpi-grid">
             <div class="kpi-card"><div class="label">Capitale</div><div class="value">10.000,00</div></div>
@@ -227,6 +229,13 @@ HTML = """
             <div class="config-grid">
                 <div><label>Timeframe</label><select id="tf_select"><option value="5min">5 min</option><option value="15min" selected>15 min</option><option value="1h">1 ora</option></select></div>
                 <div><label>Lotto</label><input type="number" id="lot_input" value="0.01" step="0.01"></div>
+                <div><label>Orario di Trading</label><select id="session_select">
+                    <option value="all">Tutte le sessioni</option>
+                    <option value="london">Londra</option>
+                    <option value="newyork">New York</option>
+                    <option value="tokyo">Tokyo</option>
+                    <option value="london_newyork">Londra + New York</option>
+                </select></div>
             </div>
             <button class="btn" style="margin-top:20px;" onclick="saveConfig()">💾 Salva Config</button>
         </div>
@@ -281,6 +290,14 @@ HTML = """
         });
     }
 
+    function emergencyStop() {
+        if (confirm('SEI SICURO DI VOLER FERMARE TUTTO? Questa azione chiude tutte le operazioni e spegne il sistema.')) {
+            fetch('/emergency', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({}) })
+            .then(r => r.json())
+            .then(d => { alert(d.message); location.reload(); });
+        }
+    }
+
     function controlAgent(id, action) {
         fetch('/control', {
             method: 'POST',
@@ -292,7 +309,7 @@ HTML = """
     }
 
     function updateChart() {
-        alert('Aggiornamento grafico in modalità demo. Seleziona parametri specifici per URL TradingView.');
+        alert('Aggiornamento grafico in modalità demo.');
     }
 
     function placeOrder(action) {
@@ -309,10 +326,11 @@ HTML = """
     }
 
     function saveConfig() {
+        const session = document.getElementById('session_select').value;
         fetch('/config', {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({timeframe: document.getElementById('tf_select').value, lot: parseFloat(document.getElementById('lot_input').value)})
+            body: JSON.stringify({timeframe: document.getElementById('tf_select').value, lot: parseFloat(document.getElementById('lot_input').value), session: session})
         })
         .then(r => r.json())
         .then(d => alert(d.message));
@@ -334,20 +352,14 @@ HTML = """
         fetch('/leggi_report')
         .then(r => r.text())
         .then(text => { 
-            if (text.trim().length === 0) { alert('Nessun report disponibile. Testa prima una strategia.'); return; }
-            // Apre il report in una nuova finestra
+            if (text.trim().length === 0) { alert('Nessun report disponibile.'); return; }
             const newWindow = window.open('', '_blank');
             newWindow.document.write('<pre style="background:#0b0e14; color:#00c853; padding:20px; font-size:14px; white-space:pre-wrap;">' + text + '</pre>');
-        })
-        .catch(e => alert('Errore: ' + e));
+        });
     }
 
     function applicaStrategia() {
-        fetch('/applica_strategia', {
-            method: 'POST',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({})
-        })
+        fetch('/applica_strategia', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({}) })
         .then(r => r.json())
         .then(d => alert(d.message));
     }
@@ -414,6 +426,11 @@ def control():
         return jsonify({'message': f'{name} fermato'})
     return jsonify({'message': 'Azione non valida'})
 
+@app.route('/emergency', methods=['POST'])
+def emergency():
+    os.system("tmux kill-server 2>/dev/null")
+    return jsonify({'message': '🛑 SISTEMA FERMATO. Tutte le operazioni sono state chiuse.'})
+
 @app.route('/place_order', methods=['POST'])
 def place_order():
     return jsonify({'message': 'Ordine manuale inviato (placeholder)'})
@@ -426,7 +443,7 @@ def config():
             with open(config_path) as f:
                 return jsonify(json.load(f))
         except:
-            return jsonify({'timeframe': '15min', 'lot': 0.01})
+            return jsonify({'timeframe': '15min', 'lot': 0.01, 'session': 'all'})
     data = request.json
     try:
         with open(config_path) as f:
@@ -456,7 +473,6 @@ def leggi_report():
 
 @app.route('/applica_strategia', methods=['POST'])
 def applica_strategia():
-    # Crea il segnale per l'agente di backtest
     with open('/home/carlo/AI_Trading/segnali/backtest_richiesto.txt', 'w') as f:
         f.write("1")
     return jsonify({'message': 'Backtest avviato. L\'agente tester lavorerà di notte.'})

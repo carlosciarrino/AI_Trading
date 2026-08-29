@@ -7,24 +7,23 @@ OLLAMA_URL = "http://localhost:11434/api/generate"
 MODEL = "qwen2.5:0.5b"
 MAX_OPEN_ORDERS = 1
 
-# Orari di trading (UTC - 2 = ora italiana)
-LONDRA_APERTURA = 8  # 8:00 UTC
-LONDRA_CHIUSURA = 17
-NEW_YORK_APERTURA = 13
-NEW_YORK_CHIUSURA = 22
-TOKYO_APERTURA = 0
-TOKYO_CHIUSURA = 9
-
 def load_config():
     with open(CONFIG_PATH) as f:
         return json.load(f)
 
-def is_trading_hours():
+def is_trading_hours(session):
     now_utc = datetime.now(timezone.utc).hour
-    # Londra e New York sono le sessioni principali
-    if LONDRA_APERTURA <= now_utc < LONDRA_CHIUSURA or NEW_YORK_APERTURA <= now_utc < NEW_YORK_CHIUSURA:
+    if session == "all":
         return True
-    return False
+    if session == "london":
+        return 8 <= now_utc < 17
+    if session == "newyork":
+        return 13 <= now_utc < 22
+    if session == "tokyo":
+        return 0 <= now_utc < 9
+    if session == "london_newyork":
+        return (8 <= now_utc < 17) or (13 <= now_utc < 22)
+    return True
 
 def count_open_orders():
     try:
@@ -35,7 +34,7 @@ def count_open_orders():
         return 0
 
 def get_signal():
-    prompt = f"Sei un analista finanziario. Dammi un segnale per EURUSD su timeframe 15min. Rispondi solo con: BUY, SELL o HOLD."
+    prompt = "Sei un analista finanziario. Dammi un segnale per EURUSD su timeframe 15min. Rispondi solo con: BUY, SELL o HOLD."
     try:
         r = requests.post(OLLAMA_URL, json={"model": MODEL, "prompt": prompt, "stream": False, "options": {"num_predict": 10}}, timeout=600)
         r.raise_for_status()
@@ -48,12 +47,13 @@ def get_signal():
         return "HOLD"
 
 def main():
-    print("Orchestratore avviato (con gestione orari)", flush=True)
+    config = load_config()
+    session = config.get("session", "all")
+    print(f"Orchestratore avviato. Sessione selezionata: {session}", flush=True)
     while True:
-        # Se non è orario di trading, non fare nulla
-        if not is_trading_hours():
+        if not is_trading_hours(session):
             print(f"Fuori orario di trading. Attendo... (UTC: {datetime.now(timezone.utc).hour})", flush=True)
-            time.sleep(600)  # Controlla ogni 10 minuti
+            time.sleep(600)
             continue
         
         open_count = count_open_orders()
@@ -67,7 +67,6 @@ def main():
         
         if signal in ("BUY", "SELL"):
             action = "buy" if signal == "BUY" else "sell"
-            # Invia ordine al bridge MT4 (placeholder)
             print(f"Ordine {action} inviato", flush=True)
         else:
             print("HOLD", flush=True)
