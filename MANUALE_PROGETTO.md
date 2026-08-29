@@ -89,3 +89,12 @@
 Nel terminale, eseguire questi comandi UNO ALLA VOLTA:
 ```bash
 tmux kill-server 2>/dev/null
+## 10. MEMORIA DEI FALLIMENTI E ORARI AGENTI
+
+### 10.1 Tentativi falliti
+Consultare `FAILED_ATTEMPTS.md` per test già eseguiti e motivi del fallimento.
+- **OmniRoute/LiteLLM:** bloccato da Python 3.10. Restiamo su Ollama.
+
+### 10.2 Agenti notturni
+- `youtube_agent.py` e `indicator_tester_agent.py` eseguono solo tra le 22:00 e le 06:00 (ora locale).
+- Ottimizzazione CPU: lavorano quando il sistema è inattivo.
