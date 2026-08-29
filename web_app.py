@@ -107,6 +107,11 @@ HTML = """
         .config-grid label { font-size: 13px; color: #78828c; display: block; margin-bottom: 6px; }
         .config-grid input, .config-grid select { width: 100%; background: #1e222d; border: 1px solid #2a2e39; border-radius: 6px; padding: 10px; color: #fff; }
         .log-box { background: #000; padding: 16px; max-height: 300px; overflow-y: auto; font-family: monospace; font-size: 12px; color: #00c853; border-radius: 8px; }
+        .btn-orange { background: #ff9800; border: none; border-radius: 6px; padding: 10px 20px; color: #000; font-weight: 600; cursor: pointer; }
+        .btn-green { background: #4caf50; border: none; border-radius: 6px; padding: 10px 20px; color: #fff; font-weight: 600; cursor: pointer; }
+        .video-status { background: #1e222d; padding: 12px; border-radius: 8px; margin-top: 10px; font-size: 13px; }
+        .video-status .ok { color: #4caf50; }
+        .video-status .ko { color: #ff1744; }
     </style>
 </head>
 <body>
@@ -239,14 +244,27 @@ HTML = """
             </div>
             <button class="btn" style="margin-top:20px;" onclick="saveConfig()">💾 Salva Config</button>
         </div>
+
         <div class="config-box">
-            <h3>Testa una strategia da link (YouTube/Social)</h3>
+            <h3>🎥 Analizza video (YouTube/Instagram/Facebook/TikTok)</h3>
+            <p style="font-size:13px; color:#78828c; margin-bottom:15px;">Incolla il link e premi "Analizza Ora". L'agente scaricherà e trascriverà il video, poi lo analizzerà con AI.</p>
+            <div class="control-row">
+                <input type="text" id="video_link_input" placeholder="https://..." style="flex:1; background:#1e222d; border:1px solid #2a2e39; border-radius:6px; padding:10px; color:#fff;">
+                <button class="btn" onclick="analyzeVideo()">▶️ Analizza Ora</button>
+                <button class="btn-green" onclick="leggiReportVideo()">📄 Report</button>
+            </div>
+            <div id="video_status" class="video-status">Stato: in attesa di analisi</div>
+        </div>
+
+        <div class="config-box">
+            <h3>📋 Strategy Tester (link generico)</h3>
             <p style="font-size:13px; color:#78828c; margin-bottom:15px;">Incolla un link e l'agente Strategy Tester lo analizzerà.</p>
             <input type="text" id="strategy_link" placeholder="Incolla link qui..." style="width:100%; background:#1e222d; border:1px solid #2a2e39; border-radius:6px; padding:10px; color:#fff; margin-bottom:15px;">
             <button class="btn" onclick="testStrategy()">🚀 Avvia Test</button>
             <button class="btn-green" onclick="leggiReport()">📄 Leggi Report</button>
             <button class="btn-orange" onclick="applicaStrategia()">✅ Applica</button>
         </div>
+
         <div class="config-box">
             <h3>Log di sistema</h3>
             <div class="log-box" id="log_box">{{ log }}</div>
@@ -336,6 +354,47 @@ HTML = """
         .then(d => alert(d.message));
     }
 
+    function analyzeVideo() {
+        const link = document.getElementById('video_link_input').value;
+        if (!link) { alert('Inserisci un link valido'); return; }
+        document.getElementById('video_status').innerHTML = 'Stato: 🔄 Analisi in corso...';
+        fetch('/analyze_video', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({link: link})
+        })
+        .then(r => r.json())
+        .then(d => {
+            alert(d.message);
+            aggiornaStatoVideo();
+        })
+        .catch(err => {
+            document.getElementById('video_status').innerHTML = 'Stato: ❌ Errore durante l\'analisi';
+        });
+    }
+
+    function aggiornaStatoVideo() {
+        fetch('/video_status')
+        .then(r => r.json())
+        .then(data => {
+            if (data.report) {
+                document.getElementById('video_status').innerHTML = 'Stato: ✅ Ultima analisi completata alle ' + data.timestamp;
+            } else {
+                document.getElementById('video_status').innerHTML = 'Stato: ⏳ Nessun report disponibile';
+            }
+        });
+    }
+
+    function leggiReportVideo() {
+        fetch('/leggi_report_video')
+        .then(r => r.text())
+        .then(text => { 
+            if (text.trim().length === 0) { alert('Nessun report video disponibile.'); return; }
+            const newWindow = window.open('', '_blank');
+            newWindow.document.write('<pre style="background:#0b0e14; color:#00c853; padding:20px; font-size:14px; white-space:pre-wrap;">' + text + '</pre>');
+        });
+    }
+
     function testStrategy() {
         const link = document.getElementById('strategy_link').value;
         if (!link) { alert('Inserisci un link'); return; }
@@ -370,6 +429,8 @@ HTML = """
         .then(text => document.getElementById('log_box').innerText = text);
     }
 
+    // Aggiorna stato video all'avvio
+    aggiornaStatoVideo();
     setInterval(fetchStatus, 5000);
     fetchStatus();
 </script>
@@ -484,6 +545,44 @@ def log_api():
             return f.read()[-2000:]
     except:
         return ""
+
+# ----- NUOVE ROTTE PER VIDEO ANALYZER -----
+@app.route('/analyze_video', methods=['POST'])
+def analyze_video():
+    data = request.json
+    link = data.get('link')
+    if not link:
+        return jsonify({'message': 'Link mancante'}), 400
+    # Scrivi link in video_link.txt
+    with open('/home/carlo/AI_Trading/video_link.txt', 'w') as f:
+        f.write(link)
+    # Avvia lo script multidigest.py in background (senza attendere)
+    subprocess.Popen(["python3", "/home/carlo/AI_Trading/multidigest.py"],
+                     stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL,
+                     cwd="/home/carlo/AI_Trading")
+    return jsonify({'message': f'Analisi avviata per: {link}'})
+
+@app.route('/video_status')
+def video_status():
+    report_path = '/home/carlo/AI_Trading/report_multivideo.txt'
+    try:
+        with open(report_path, 'r') as f:
+            content = f.read()
+        # Estrai timestamp dalla prima riga
+        lines = content.split('\n')
+        ts = lines[0].replace('REPORT MULTI-VIDEO - ', '').strip()
+        return jsonify({'report': content[:500], 'timestamp': ts})
+    except:
+        return jsonify({'report': None, 'timestamp': None})
+
+@app.route('/leggi_report_video')
+def leggi_report_video():
+    try:
+        with open('/home/carlo/AI_Trading/report_multivideo.txt', 'r') as f:
+            return f.read()
+    except:
+        return ""
+# ----- FINE NUOVE ROTTE -----
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=False)
