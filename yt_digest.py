@@ -24,27 +24,27 @@ def read_link():
         return None
 
 def download_video(link):
-    """Scarica audio con yt-dlp, restituisce percorso del file .m4a."""
+    """Scarica audio con yt-dlp e salva come audio.m4a."""
     temp_dir = os.path.join(BASE_DIR, "temp_video")
     os.makedirs(temp_dir, exist_ok=True)
     
+    audio_file = os.path.join(temp_dir, "audio.m4a")
     cmd = [
         "yt-dlp",
         "-f", "bestaudio",
         "--extract-audio",
         "--audio-format", "m4a",
-        "--output", os.path.join(temp_dir, "%(title)s.%(ext)s"),
+        "--output", audio_file,
         link
     ]
     
     print(f"Download in corso da: {link}", flush=True)
     try:
         subprocess.run(cmd, check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-        # Cerca il primo file .m4a nella cartella
-        for f in os.listdir(temp_dir):
-            if f.endswith(".m4a"):
-                return os.path.join(temp_dir, f)
-        return None
+        if os.path.exists(audio_file):
+            return audio_file
+        else:
+            return None
     except subprocess.CalledProcessError as e:
         print(f"Errore yt-dlp: {e.stderr.decode()}", flush=True)
         return None
