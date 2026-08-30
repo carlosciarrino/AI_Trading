@@ -207,12 +207,7 @@ HTML = """
         </div>
     </div>
 </div>
-<div class="config-box">
-    <h3>🔍 Audit Azienda</h3>
-    <button class="btn" onclick="runAudit()">🔎 Esegui Audit</button>
-    <button class="btn" style="background:#4caf50;" onclick="leggiAudit()">📄 Leggi Report</button>
-    <div id="audit_result" style="margin-top:10px; color:#00c853; font-family:monospace; white-space:pre-wrap; background:#000; padding:10px; border-radius:4px;"></div>
-</div>
+
 <script>
     // Funzioni di navigazione
     function showSection(id) {
@@ -529,25 +524,6 @@ def leggi_report_video():
             return f.read()
     except:
         return ""
-@app.route('/run_audit', methods=['POST'])
-def run_audit():
-    import subprocess
-    result = subprocess.run(["python3", "/home/carlo/AI_Trading/audit_agent.py"], capture_output=True, text=True, cwd="/home/carlo/AI_Trading")
-    if result.returncode == 0:
-        try:
-            with open('/home/carlo/AI_Trading/audit_report.txt', 'r') as f:
-                return f.read()
-        except:
-            return "Report generato ma non leggibile."
-    else:
-        return f"Errore: {result.stderr}"
 
-@app.route('/leggi_audit')
-def leggi_audit():
-    try:
-        with open('/home/carlo/AI_Trading/audit_report.txt', 'r') as f:
-            return f.read()
-    except:
-        return "Nessun report audit disponibile."
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=False)

@@ -36,11 +36,11 @@ def download_video(link):
     os.makedirs(temp_dir, exist_ok=True)
     audio_file = os.path.join(temp_dir, "audio.m4a")
     
-    # Usa cookie dal browser (es. firefox, chrome)
+    # Comando con cookie da Firefox (cambia in "chrome" se necessario)
     cmd = [
         "yt-dlp",
+        "--cookies-from-browser", "firefox",
         "--no-warnings",
-        "--cookies-from-browser", "firefox",   # Cambia in "chrome" se usi Chrome
         "-f", "bestaudio",
         "--extract-audio",
         "--audio-format", "m4a",
@@ -53,10 +53,6 @@ def download_video(link):
         subprocess.run(cmd, check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         if os.path.exists(audio_file):
             return audio_file
-        # Fallback: cerca qualsiasi .m4a
-        for f in os.listdir(temp_dir):
-            if f.endswith(".m4a"):
-                return os.path.join(temp_dir, f)
         return None
     except subprocess.CalledProcessError as e:
         print(f"Errore yt-dlp: {e.stderr.decode()}", flush=True)
@@ -64,9 +60,8 @@ def download_video(link):
         cmd_no_cookie = [c for c in cmd if "--cookies-from-browser" not in c]
         try:
             subprocess.run(cmd_no_cookie, check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-            for f in os.listdir(temp_dir):
-                if f.endswith(".m4a"):
-                    return os.path.join(temp_dir, f)
+            if os.path.exists(audio_file):
+                return audio_file
         except:
             pass
         return None
@@ -197,3 +192,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
