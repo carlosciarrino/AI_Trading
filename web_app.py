@@ -112,6 +112,7 @@ HTML = """
         .video-status { background: #1e222d; padding: 12px; border-radius: 8px; margin-top: 10px; font-size: 13px; }
         .video-status .ok { color: #4caf50; }
         .video-status .ko { color: #ff1744; }
+        #status_log { font-size: 12px; color: #888; margin-top: 10px; }
     </style>
 </head>
 <body>
@@ -130,11 +131,13 @@ HTML = """
     <div id="dashboard" class="section active">
         <div class="header">
             <h1>📊 Dashboard</h1>
-            <div style="display:flex; gap:10px;">
+            <div style="display:flex; gap:10px; align-items:center;">
+                <button class="btn" onclick="fetchStatus()">🔄 Aggiorna stato</button>
                 <div class="status-box"><span class="dot green" id="status_dot"></span><span id="status_text">Caricamento...</span></div>
                 <button class="btn-emergency" onclick="emergencyStop()">🛑 STOP TUTTO</button>
             </div>
         </div>
+        <div id="status_log" style="color:#78828c; font-size:13px; margin-bottom:16px;">📡 Ultimo aggiornamento: --</div>
         <div class="kpi-grid">
             <div class="kpi-card"><div class="label">Capitale</div><div class="value">10.000,00</div></div>
             <div class="kpi-card"><div class="label">Operazioni Aperte</div><div class="value" id="kpi_open">0</div></div>
@@ -282,9 +285,12 @@ HTML = """
     }
 
     function fetchStatus() {
+        const logDiv = document.getElementById('status_log');
+        logDiv.innerText = '📡 Richiesta in corso...';
         fetch('/status')
-        .then(r => r.json())
+        .then(response => response.json())
         .then(data => {
+            logDiv.innerText = '📡 Aggiornato: ' + new Date().toLocaleTimeString();
             const dot = document.getElementById('status_dot');
             const txt = document.getElementById('status_text');
             if (data.system_online) {
@@ -305,6 +311,9 @@ HTML = """
                     }
                 }
             }
+        })
+        .catch(err => {
+            logDiv.innerText = '❌ Errore: ' + err;
         });
     }
 
@@ -429,10 +438,10 @@ HTML = """
         .then(text => document.getElementById('log_box').innerText = text);
     }
 
-    // Aggiorna stato video all'avvio
-    aggiornaStatoVideo();
-    setInterval(fetchStatus, 5000);
+    // Avvia il polling automatico e aggiorna subito
+    setInterval(fetchStatus, 10000);
     fetchStatus();
+    aggiornaStatoVideo();
 </script>
 </body>
 </html>
@@ -553,10 +562,8 @@ def analyze_video():
     link = data.get('link')
     if not link:
         return jsonify({'message': 'Link mancante'}), 400
-    # Scrivi link in video_link.txt
     with open('/home/carlo/AI_Trading/video_link.txt', 'w') as f:
         f.write(link)
-    # Avvia lo script multidigest.py in background (senza attendere)
     subprocess.Popen(["python3", "/home/carlo/AI_Trading/multidigest.py"],
                      stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL,
                      cwd="/home/carlo/AI_Trading")
@@ -568,7 +575,6 @@ def video_status():
     try:
         with open(report_path, 'r') as f:
             content = f.read()
-        # Estrai timestamp dalla prima riga
         lines = content.split('\n')
         ts = lines[0].replace('REPORT MULTI-VIDEO - ', '').strip()
         return jsonify({'report': content[:500], 'timestamp': ts})
