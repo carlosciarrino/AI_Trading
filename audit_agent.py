@@ -10,6 +10,14 @@ REPORT_FILE = os.path.join(BASE, "audit_report.txt")
 JSON_REPORT = os.path.join(BASE, "audit_status.json")
 ORDERS_FILE = os.path.expanduser("~/mt4_shared/orders.json")
 
+# Lista di TUTTI gli agenti noti (nome esatto della sessione tmux)
+ALL_AGENTS = [
+    "ai_workforce", "dashboard", "sentinel", "news_agent", "social_agent",
+    "cycle_agent", "experience_agent", "strategy_tester_agent", "github_researcher",
+    "skill_researcher", "news_critical", "ai_researcher_agent", "ai_tester_agent",
+    "sync_agent", "supervisor", "tool_updater", "yt_digest"
+]
+
 CRITICAL_AGENTS = ["ai_workforce", "news_agent", "social_agent", "cycle_agent"]
 
 def check_tmux():
@@ -45,23 +53,26 @@ def run_audit():
     orders = check_orders()
     reports = check_reports()
 
-    # Verifica agenti critici
+    # Stato di tutti gli agenti
+    all_status = {}
+    for a in ALL_AGENTS:
+        all_status[a] = "active" if a in sessions else "stopped"
+
+    # Stato critici
     critical_status = {}
     for a in CRITICAL_AGENTS:
-        critical_status[a] = "active" if a in sessions else "stopped"
+        critical_status[a] = all_status.get(a, "stopped")
 
-    # Determina se c'è un problema
-    has_issue = any(v == "stopped" for v in critical_status.values()) or orders["open"] > 0
+    has_issue = any(v == "stopped" for v in critical_status.values())
 
-    # Costruisci report JSON
     data = {
         "timestamp": datetime.now().isoformat(),
         "sessions": sessions,
         "orders": orders,
         "reports": reports,
+        "agents": all_status,             # tutti
         "critical": critical_status,
-        "has_issue": has_issue,
-        "critical_agents": CRITICAL_AGENTS
+        "has_issue": has_issue
     }
 
     with open(JSON_REPORT, "w") as f:
@@ -78,6 +89,10 @@ def run_audit():
     lines.append("\n[REPORT]")
     for f, st in reports.items():
         lines.append(f"  {f}: {st}")
+    lines.append("\n[TUTTI GLI AGENTI]")
+    for a, st in all_status.items():
+        icon = "✅" if st == "active" else "❌"
+        lines.append(f"  {a}: {icon} {st.upper()}")
     lines.append("\n[AGENTI CRITICI]")
     for a, st in critical_status.items():
         icon = "✅" if st == "active" else "⚠️"

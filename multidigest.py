@@ -13,6 +13,10 @@ REPORT_FILE = os.path.join(BASE_DIR, "report_multivideo.txt")
 OLLAMA_URL = "http://localhost:11434/api/generate"
 MODEL = "qwen2.5:0.5b"
 
+# Percorso assoluto di panoscribe (se installato)
+PANOSCRIBE_BIN = "/home/carlo/AI_Trading_Agents_py311/bin/panoscribe"
+PANOSCRIBE_AVAILABLE = os.path.exists(PANOSCRIBE_BIN)
+
 try:
     import spacy
     nlp = spacy.load("it_core_news_sm")
@@ -31,15 +35,40 @@ def read_link():
     except:
         return None
 
-def download_video(link):
+def analyze_with_panoscribe(link):
+    """Usa panoscribe con --no-ocr per trascrivere solo audio."""
+    temp_dir = os.path.join(BASE_DIR, "temp_video")
+    os.makedirs(temp_dir, exist_ok=True)
+    output_json = os.path.join(temp_dir, "panoscribe_output.json")
+    
+    cmd = [
+        PANOSCRIBE_BIN,
+        "transcribe", link,
+        "--format", "json",
+        "--output", output_json,
+        "--no-ocr",          # disabilita OCR (risolve errore latino)
+        "--model", "tiny"    # più veloce per test, togli per qualità
+    ]
+    try:
+        subprocess.run(cmd, check=True, timeout=600)
+        if os.path.exists(output_json):
+            with open(output_json, "r") as f:
+                data = json.load(f)
+            # Estrai il testo dalla chiave "text" (trascrizione completa)
+            transcription = data.get("text", "")
+            return transcription.strip()
+    except Exception as e:
+        print(f"Errore panoscribe: {e}")
+    return None
+
+def analyze_with_fallback(link):
+    """Metodo fallback: yt-dlp + whisper."""
+    # Usa il vecchio codice (yt-dlp + whisper)
     temp_dir = os.path.join(BASE_DIR, "temp_video")
     os.makedirs(temp_dir, exist_ok=True)
     audio_file = os.path.join(temp_dir, "audio.m4a")
-    
-    # Comando con cookie da Firefox (cambia in "chrome" se necessario)
     cmd = [
         "yt-dlp",
-        "--cookies-from-browser", "firefox",
         "--no-warnings",
         "-f", "bestaudio",
         "--extract-audio",
@@ -47,35 +76,25 @@ def download_video(link):
         "--output", audio_file,
         link
     ]
-    
-    print(f"Download da: {link}", flush=True)
     try:
         subprocess.run(cmd, check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-        if os.path.exists(audio_file):
-            return audio_file
-        return None
-    except subprocess.CalledProcessError as e:
-        print(f"Errore yt-dlp: {e.stderr.decode()}", flush=True)
-        # Tentativo senza cookie (solo YouTube)
-        cmd_no_cookie = [c for c in cmd if "--cookies-from-browser" not in c]
-        try:
-            subprocess.run(cmd_no_cookie, check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-            if os.path.exists(audio_file):
-                return audio_file
-        except:
-            pass
-        return None
-
-def transcribe_audio(audio_path):
-    try:
+        if not os.path.exists(audio_file):
+            return None
+        # Whisper
         import whisper
-        print("Caricamento whisper tiny...", flush=True)
         model = whisper.load_model("tiny")
-        result = model.transcribe(audio_path)
+        result = model.transcribe(audio_file)
         return result["text"]
     except Exception as e:
-        print(f"Errore whisper: {e}", flush=True)
-        return ""
+        print(f"Errore fallback: {e}")
+    finally:
+        # pulizia
+        try:
+            import shutil
+            shutil.rmtree(temp_dir)
+        except:
+            pass
+    return None
 
 def extract_patterns(text):
     if nlp is None:
@@ -136,9 +155,10 @@ def generate_report(link, transcription, patterns, analysis):
 ========================================
 LINK: {link}
 PIATTAFORMA: {urlparse(link).netloc}
+STRUMENTO: panoscribe (no-ocr)
 
---- TRASCRIZIONE (estratto) ---
-{transcription[:500]}{'...' if len(transcription)>500 else ''}
+--- TRASCRIZIONE COMPLETA ---
+{transcription}
 
 --- PATTERN (SpaCy) ---
 {patterns}
@@ -166,19 +186,19 @@ def main():
         print("Nessun link in video_link.txt", flush=True)
         return
 
-    audio_path = download_video(link)
-    if not audio_path:
-        print("Download fallito. Verifica cookie o link.", flush=True)
-        return
-
-    print("Trascrizione...", flush=True)
-    transcription = transcribe_audio(audio_path)
+    transcription = None
+    if PANOSCRIBE_AVAILABLE:
+        print("Analisi con panoscribe...", flush=True)
+        transcription = analyze_with_panoscribe(link)
     if not transcription:
-        print("Trascrizione vuota.", flush=True)
-        cleanup(os.path.dirname(audio_path))
+        print("Fallback con yt-dlp+whisper...", flush=True)
+        transcription = analyze_with_fallback(link)
+
+    if not transcription:
+        print("Trascrizione fallita.", flush=True)
         return
 
-    print(f"Trascrizione: {len(transcription)} caratteri.", flush=True)
+    print(f"Trascrizione ottenuta ({len(transcription)} caratteri).", flush=True)
     patterns = extract_patterns(transcription)
     analysis = analyze_with_ollama(transcription, patterns)
 
@@ -187,9 +207,8 @@ def main():
         f.write(report)
 
     print(f"Report salvato: {REPORT_FILE}", flush=True)
-    cleanup(os.path.dirname(audio_path))
+    cleanup(os.path.join(BASE_DIR, "temp_video"))
     print("=== FATTO ===", flush=True)
 
 if __name__ == "__main__":
     main()
-

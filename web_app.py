@@ -4,6 +4,7 @@ from datetime import datetime
 
 app = Flask(__name__)
 
+# ELENCO COMPLETO DEGLI AGENTI (aggiornato con tutti quelli noti)
 AGENTS = {
     "ai_workforce": {"name": "Orchestratore", "task": "Prende decisioni di trading tramite AI e gestisce il flusso dati."},
     "dashboard": {"name": "Dashboard", "task": "Mostra lo stato dell'azienda all'utente."},
@@ -18,7 +19,10 @@ AGENTS = {
     "news_critical": {"name": "News Critical", "task": "Analizza condizioni socio-politiche globali."},
     "ai_researcher_agent": {"name": "AI Researcher", "task": "Cerca nuove intelligenze artificiali disponibili."},
     "ai_tester_agent": {"name": "AI Tester", "task": "Testa le nuove AI su compiti reali."},
-    "sync_agent": {"name": "Sync Agent", "task": "Sincronizza il progetto su GitHub e USB."}
+    "sync_agent": {"name": "Sync Agent", "task": "Sincronizza il progetto su GitHub e USB."},
+    "supervisor": {"name": "Supervisor", "task": "Riavvia automaticamente gli agenti critici se si fermano."},
+    "tool_updater": {"name": "Tool Updater", "task": "Cerca nuovi strumenti di trascrizione e analisi video."},
+    "yt_digest": {"name": "YT Digest", "task": "Analizza video notturni con panoscribe."}
 }
 
 AGENT_COMMANDS = {
@@ -35,7 +39,10 @@ AGENT_COMMANDS = {
     "news_critical": "cd /home/carlo/AI_Trading && source ~/AI_Trading_Agents/venv/bin/activate && python3 news_critical.py",
     "ai_researcher_agent": "cd /home/carlo/AI_Trading && source ~/AI_Trading_Agents/venv/bin/activate && python3 ai_researcher_agent.py",
     "ai_tester_agent": "cd /home/carlo/AI_Trading && source ~/AI_Trading_Agents/venv/bin/activate && python3 ai_tester_agent.py",
-    "sync_agent": "cd /home/carlo/AI_Trading && source ~/AI_Trading_Agents/venv/bin/activate && python3 sync_agent.py"
+    "sync_agent": "cd /home/carlo/AI_Trading && source ~/AI_Trading_Agents/venv/bin/activate && python3 sync_agent.py",
+    "supervisor": "cd /home/carlo/AI_Trading && source ~/AI_Trading_Agents/venv/bin/activate && python3 supervisor_agent.py",
+    "tool_updater": "cd /home/carlo/AI_Trading && source ~/AI_Trading_Agents/venv/bin/activate && python3 tool_updater_agent.py",
+    "yt_digest": "cd /home/carlo/AI_Trading && source ~/AI_Trading_Agents/venv/bin/activate && python3 yt_digest.py"
 }
 
 def get_status():
@@ -49,7 +56,7 @@ def get_status():
 # ----- AUDIT BACKGROUND -----
 AUDIT_INTERVAL = 300
 AUDIT_JSON = os.path.expanduser("~/AI_Trading/audit_status.json")
-audit_data = {"has_issue": False, "critical": {}, "timestamp": ""}
+audit_data = {"has_issue": False, "agents": {}, "critical": {}, "timestamp": ""}
 
 def run_audit_loop():
     global audit_data
@@ -128,14 +135,14 @@ HTML = """
         </div>
         <div id="status_log" style="color:#78828c; margin:16px 0;">📡 Ultimo aggiornamento: --</div>
 
-        <!-- Audit box -->
+        <!-- Audit box con TUTTI gli agenti -->
         <div class="audit-box">
             <h3>🔍 Stato Agenti (Audit automatico)</h3>
             <div style="font-size:13px; color:#78828c;">
                 Ultimo controllo: {{ audit_data.timestamp if audit_data.timestamp else 'Nessun controllo effettuato.' }}
             </div>
             <div style="display:flex; gap:16px; flex-wrap:wrap; margin-top:8px;">
-                {% for agent, status in audit_data.critical.items() %}
+                {% for agent, status in audit_data.agents.items() %}
                 <div class="agent-status-badge">
                     <span style="color:{{ '#00c853' if status == 'active' else '#ff1744' }};">●</span>
                     {{ agent }}: {{ status }}
@@ -234,8 +241,11 @@ HTML = """
         <div class="config-box">
             <h3>🎥 Analizza video (YouTube/Instagram/Facebook/TikTok)</h3>
             <input type="text" id="video_link_input" placeholder="Incolla link qui..." style="width:100%; padding:10px; margin-bottom:10px;">
-            <button class="btn" onclick="analyzeVideo()">▶️ Analizza Ora</button>
-            <button class="btn" style="background:#4caf50;" onclick="leggiReportVideo()">📄 Report</button>
+            <div style="display:flex; gap:8px; flex-wrap:wrap;">
+                <button class="btn" onclick="analyzeVideo()">▶️ Analizza Ora</button>
+                <button class="btn" style="background:#ff9800;" onclick="testVideoForce()">▶️ Test Forza</button>
+                <button class="btn" style="background:#4caf50;" onclick="leggiReportVideo()">📄 Report</button>
+            </div>
             <div id="video_status" style="margin-top:10px; color:#78828c;">Stato: in attesa di analisi</div>
         </div>
 
@@ -363,6 +373,25 @@ HTML = """
         });
     }
 
+    function testVideoForce() {
+        const link = document.getElementById('video_link_input').value;
+        if (!link) { alert('Inserisci un link'); return; }
+        document.getElementById('video_status').innerHTML = 'Stato: 🔄 Test forzato in corso...';
+        fetch('/test_video_force', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({link: link})
+        })
+        .then(r => r.json())
+        .then(d => {
+            alert(d.message);
+            setTimeout(fetchVideoStatus, 2000);
+        })
+        .catch(err => {
+            document.getElementById('video_status').innerHTML = 'Stato: ❌ Errore';
+        });
+    }
+
     function fetchVideoStatus() {
         fetch('/video_status')
         .then(r => r.json())
@@ -419,7 +448,6 @@ HTML = """
         .then(text => document.getElementById('log_box').innerText = text);
     }
 
-    // AUDIT
     function runAudit() {
         const div = document.getElementById('audit_result');
         div.innerText = '⏳ Esecuzione audit...';
@@ -477,7 +505,18 @@ def index():
             log = f.read()[-2000:]
     except:
         pass
-    return render_template_string(HTML, orders=orders, log=log, now=datetime.now().strftime('%Y-%m-%d %H:%M:%S'), agents=AGENTS, audit_data=audit_data)
+    # Leggi audit_status.json e forza audit se has_issue
+    try:
+        with open(AUDIT_JSON, 'r') as f:
+            fresh_audit = json.load(f)
+        if fresh_audit.get('has_issue', False):
+            subprocess.run(["python3", "/home/carlo/AI_Trading/audit_agent.py"],
+                           capture_output=True, cwd="/home/carlo/AI_Trading")
+            with open(AUDIT_JSON, 'r') as f:
+                fresh_audit = json.load(f)
+    except:
+        fresh_audit = audit_data
+    return render_template_string(HTML, orders=orders, log=log, now=datetime.now().strftime('%Y-%m-%d %H:%M:%S'), agents=AGENTS, audit_data=fresh_audit)
 
 @app.route('/status')
 def status():
@@ -577,6 +616,21 @@ def analyze_video():
                          stdout=log, stderr=log,
                          cwd="/home/carlo/AI_Trading")
     return jsonify({'message': f'Analisi avviata per: {link}. Controlla report_multivideo.txt tra qualche minuto.'})
+
+@app.route('/test_video_force', methods=['POST'])
+def test_video_force():
+    link = request.json.get('link')
+    if not link:
+        return jsonify({'message': 'Link mancante'}), 400
+    with open('/home/carlo/AI_Trading/video_link.txt', 'w') as f:
+        f.write(link)
+    subprocess.Popen(
+        ["python3", "/home/carlo/AI_Trading/multidigest.py", "--force"],
+        stdout=subprocess.DEVNULL,
+        stderr=subprocess.DEVNULL,
+        cwd="/home/carlo/AI_Trading"
+    )
+    return jsonify({'message': f'Test forzato avviato per {link}'})
 
 @app.route('/video_status')
 def video_status():
