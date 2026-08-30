@@ -1,5 +1,5 @@
 from flask import Flask, render_template_string, jsonify, request
-import json, os, subprocess
+import json, os, subprocess, threading, time
 from datetime import datetime
 
 app = Flask(__name__)
@@ -46,6 +46,27 @@ def get_status():
         status[name] = "active" if name in sessions else "stopped"
     return status
 
+# ----- AUDIT BACKGROUND -----
+AUDIT_INTERVAL = 300
+AUDIT_JSON = os.path.expanduser("~/AI_Trading/audit_status.json")
+audit_data = {"has_issue": False, "critical": {}, "timestamp": ""}
+
+def run_audit_loop():
+    global audit_data
+    while True:
+        try:
+            subprocess.run(["python3", "/home/carlo/AI_Trading/audit_agent.py"],
+                           capture_output=True, cwd="/home/carlo/AI_Trading")
+            if os.path.exists(AUDIT_JSON):
+                with open(AUDIT_JSON, "r") as f:
+                    audit_data = json.load(f)
+        except Exception as e:
+            print(f"Audit error: {e}")
+        time.sleep(AUDIT_INTERVAL)
+
+threading.Thread(target=run_audit_loop, daemon=True).start()
+# ----- FINE AUDIT -----
+
 HTML = """
 <!DOCTYPE html>
 <html>
@@ -73,6 +94,9 @@ HTML = """
         .config-box { background:#131722; padding:20px; margin-bottom:20px; border-radius:8px; border:1px solid #2a2e39; }
         input, select { background:#1e222d; border:1px solid #2a2e39; padding:8px; color:#fff; border-radius:4px; }
         .log-box { background:#000; padding:16px; max-height:300px; overflow-y:auto; font-family:monospace; font-size:12px; color:#00c853; border-radius:8px; }
+        .alert-banner { background:#ff1744; color:#fff; padding:12px 20px; text-align:center; font-weight:bold; border-radius:8px; margin-bottom:20px; }
+        .audit-box { background:#131722; padding:16px; border-radius:8px; border:1px solid #2a2e39; margin-bottom:20px; }
+        .agent-status-badge { display:inline-block; background:#1e222d; padding:6px 12px; border-radius:20px; margin-right:8px; }
     </style>
 </head>
 <body>
@@ -88,6 +112,12 @@ HTML = """
 </div>
 
 <div class="main">
+    {% if audit_data.has_issue %}
+    <div class="alert-banner">
+        ⚠️ ALLARME: uno o più agenti critici sono FERMI! Controlla la sezione Agenti.
+    </div>
+    {% endif %}
+
     <!-- DASHBOARD -->
     <div id="section-dashboard" class="section active">
         <h1>📊 Dashboard</h1>
@@ -97,6 +127,23 @@ HTML = """
             <button class="btn btn-emergency" onclick="emergencyStop()">🛑 STOP TUTTO</button>
         </div>
         <div id="status_log" style="color:#78828c; margin:16px 0;">📡 Ultimo aggiornamento: --</div>
+
+        <!-- Audit box -->
+        <div class="audit-box">
+            <h3>🔍 Stato Agenti (Audit automatico)</h3>
+            <div style="font-size:13px; color:#78828c;">
+                Ultimo controllo: {{ audit_data.timestamp if audit_data.timestamp else 'Nessun controllo effettuato.' }}
+            </div>
+            <div style="display:flex; gap:16px; flex-wrap:wrap; margin-top:8px;">
+                {% for agent, status in audit_data.critical.items() %}
+                <div class="agent-status-badge">
+                    <span style="color:{{ '#00c853' if status == 'active' else '#ff1744' }};">●</span>
+                    {{ agent }}: {{ status }}
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
         <div style="display:flex; gap:20px;">
             <div style="background:#131722; padding:20px; border-radius:8px; flex:1;"><div>Capitale</div><div style="font-size:24px;">10.000,00</div></div>
             <div style="background:#131722; padding:20px; border-radius:8px; flex:1;"><div>Operazioni Aperte</div><div style="font-size:24px;" id="kpi_open">0</div></div>
@@ -201,26 +248,26 @@ HTML = """
         </div>
 
         <div class="config-box">
+            <h3>🔍 Audit Azienda</h3>
+            <button class="btn" onclick="runAudit()">🔎 Esegui Audit</button>
+            <button class="btn" style="background:#4caf50;" onclick="leggiAudit()">📄 Leggi Report</button>
+            <div id="audit_result" style="margin-top:10px; color:#00c853; font-family:monospace; white-space:pre-wrap; background:#000; padding:10px; border-radius:4px;"></div>
+        </div>
+
+        <div class="config-box">
             <h3>Log di sistema</h3>
             <div class="log-box" id="log_box">{{ log }}</div>
             <button class="btn" style="margin-top:10px;" onclick="refreshLog()">Aggiorna Log</button>
         </div>
     </div>
 </div>
-<div class="config-box">
-    <h3>🔍 Audit Azienda</h3>
-    <button class="btn" onclick="runAudit()">🔎 Esegui Audit</button>
-    <button class="btn" style="background:#4caf50;" onclick="leggiAudit()">📄 Leggi Report</button>
-    <div id="audit_result" style="margin-top:10px; color:#00c853; font-family:monospace; white-space:pre-wrap; background:#000; padding:10px; border-radius:4px;"></div>
-</div>
+
 <script>
-    // Funzioni di navigazione
     function showSection(id) {
         document.querySelectorAll('.section').forEach(el => el.classList.remove('active'));
         document.getElementById('section-' + id).classList.add('active');
     }
 
-    // Funzione per aggiornare lo stato
     function fetchStatus() {
         const logDiv = document.getElementById('status_log');
         logDiv.innerText = '📡 Richiesta in corso...';
@@ -254,7 +301,6 @@ HTML = """
         });
     }
 
-    // STOP TUTTO
     function emergencyStop() {
         if (confirm('SEI SICURO?')) {
             fetch('/emergency', { method: 'POST' })
@@ -263,7 +309,6 @@ HTML = """
         }
     }
 
-    // Controllo agente
     function controlAgent(id, action) {
         fetch('/control', {
             method: 'POST',
@@ -274,7 +319,6 @@ HTML = """
         .then(d => { alert(d.message); fetchStatus(); });
     }
 
-    // Ordine
     function placeOrder(action) {
         const lots = parseFloat(document.getElementById('order_lots').value);
         const sl = parseFloat(document.getElementById('order_sl').value);
@@ -288,7 +332,6 @@ HTML = """
         .then(d => alert(d.message));
     }
 
-    // Salva config
     function saveConfig() {
         const session = document.getElementById('session_select').value;
         fetch('/config', {
@@ -304,7 +347,6 @@ HTML = """
         .then(d => alert(d.message));
     }
 
-    // Analizza video
     function analyzeVideo() {
         const link = document.getElementById('video_link_input').value;
         if (!link) { alert('Inserisci un link'); return; }
@@ -343,7 +385,6 @@ HTML = """
         });
     }
 
-    // Strategy Tester
     function testStrategy() {
         const link = document.getElementById('strategy_link').value;
         if (!link) { alert('Inserisci un link'); return; }
@@ -378,6 +419,32 @@ HTML = """
         .then(text => document.getElementById('log_box').innerText = text);
     }
 
+    // AUDIT
+    function runAudit() {
+        const div = document.getElementById('audit_result');
+        div.innerText = '⏳ Esecuzione audit...';
+        fetch('/run_audit', { method: 'POST' })
+        .then(r => r.text())
+        .then(text => {
+            div.innerText = text;
+        })
+        .catch(err => {
+            div.innerText = '❌ Errore: ' + err;
+        });
+    }
+
+    function leggiAudit() {
+        const div = document.getElementById('audit_result');
+        fetch('/leggi_audit')
+        .then(r => r.text())
+        .then(text => {
+            div.innerText = text;
+        })
+        .catch(err => {
+            div.innerText = '❌ Errore: ' + err;
+        });
+    }
+
     // Avvio automatico
     document.addEventListener('DOMContentLoaded', function() {
         fetchStatus();
@@ -410,7 +477,7 @@ def index():
             log = f.read()[-2000:]
     except:
         pass
-    return render_template_string(HTML, orders=orders, log=log, now=datetime.now().strftime('%Y-%m-%d %H:%M:%S'), agents=AGENTS)
+    return render_template_string(HTML, orders=orders, log=log, now=datetime.now().strftime('%Y-%m-%d %H:%M:%S'), agents=AGENTS, audit_data=audit_data)
 
 @app.route('/status')
 def status():
@@ -505,10 +572,11 @@ def analyze_video():
         return jsonify({'message': 'Link mancante'}), 400
     with open('/home/carlo/AI_Trading/video_link.txt', 'w') as f:
         f.write(link)
-    subprocess.Popen(["python3", "/home/carlo/AI_Trading/multidigest.py"],
-                     stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL,
-                     cwd="/home/carlo/AI_Trading")
-    return jsonify({'message': f'Analisi avviata per: {link}'})
+    with open('/home/carlo/video_analysis.log', 'w') as log:
+        subprocess.Popen(["python3", "/home/carlo/AI_Trading/multidigest.py"],
+                         stdout=log, stderr=log,
+                         cwd="/home/carlo/AI_Trading")
+    return jsonify({'message': f'Analisi avviata per: {link}. Controlla report_multivideo.txt tra qualche minuto.'})
 
 @app.route('/video_status')
 def video_status():
@@ -529,10 +597,11 @@ def leggi_report_video():
             return f.read()
     except:
         return ""
+
 @app.route('/run_audit', methods=['POST'])
 def run_audit():
-    import subprocess
-    result = subprocess.run(["python3", "/home/carlo/AI_Trading/audit_agent.py"], capture_output=True, text=True, cwd="/home/carlo/AI_Trading")
+    result = subprocess.run(["python3", "/home/carlo/AI_Trading/audit_agent.py"],
+                            capture_output=True, text=True, cwd="/home/carlo/AI_Trading")
     if result.returncode == 0:
         try:
             with open('/home/carlo/AI_Trading/audit_report.txt', 'r') as f:
@@ -549,5 +618,6 @@ def leggi_audit():
             return f.read()
     except:
         return "Nessun report audit disponibile."
+
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=False)
