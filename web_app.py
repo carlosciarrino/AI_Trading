@@ -551,8 +551,21 @@ def emergency():
 
 @app.route('/place_order', methods=['POST'])
 def place_order():
-    return jsonify({'message': 'Ordine manuale inviato (placeholder)'})
-
+    data = request.json
+    action = data.get('action')
+    lots = data.get('lots', 0.01)
+    sl = data.get('sl', 0)
+    tp = data.get('tp', 0)
+    
+    if action not in ['buy', 'sell']:
+        return jsonify({'message': 'Azione non valida'}), 400
+    
+    # Scrivi il comando nel file per MT4
+    cmd_path = os.path.expanduser('~/Scrivania/XM MT4/MQL4/Files/AI_BRIDGE_CMD.txt')
+    with open(cmd_path, 'w') as f:
+        f.write(action + "\n")
+    
+    return jsonify({'message': f'Ordine {action} inviato a MT4'})
 @app.route('/config', methods=['GET', 'POST'])
 def config():
     config_path = '/home/carlo/AI_Trading/config.json'
