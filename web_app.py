@@ -4,7 +4,6 @@ from datetime import datetime
 
 app = Flask(__name__)
 
-# ELENCO COMPLETO DEGLI AGENTI (aggiornato con tutti quelli noti)
 AGENTS = {
     "ai_workforce": {"name": "Orchestratore", "task": "Prende decisioni di trading tramite AI e gestisce il flusso dati."},
     "dashboard": {"name": "Dashboard", "task": "Mostra lo stato dell'azienda all'utente."},
@@ -53,7 +52,6 @@ def get_status():
         status[name] = "active" if name in sessions else "stopped"
     return status
 
-# ----- AUDIT BACKGROUND -----
 AUDIT_INTERVAL = 300
 AUDIT_JSON = os.path.expanduser("~/AI_Trading/audit_status.json")
 audit_data = {"has_issue": False, "agents": {}, "critical": {}, "timestamp": ""}
@@ -72,7 +70,6 @@ def run_audit_loop():
         time.sleep(AUDIT_INTERVAL)
 
 threading.Thread(target=run_audit_loop, daemon=True).start()
-# ----- FINE AUDIT -----
 
 HTML = """
 <!DOCTYPE html>
@@ -125,7 +122,6 @@ HTML = """
     </div>
     {% endif %}
 
-    <!-- DASHBOARD -->
     <div id="section-dashboard" class="section active">
         <h1>📊 Dashboard</h1>
         <div style="display:flex; gap:20px; flex-wrap:wrap;">
@@ -135,7 +131,6 @@ HTML = """
         </div>
         <div id="status_log" style="color:#78828c; margin:16px 0;">📡 Ultimo aggiornamento: --</div>
 
-        <!-- Audit box con TUTTI gli agenti -->
         <div class="audit-box">
             <h3>🔍 Stato Agenti (Audit automatico)</h3>
             <div style="font-size:13px; color:#78828c;">
@@ -180,7 +175,6 @@ HTML = """
         </div>
     </div>
 
-    <!-- TRADING -->
     <div id="section-trading" class="section">
         <h1>📈 Trading</h1>
         <div style="background:#131722; padding:20px; border-radius:8px;">
@@ -199,7 +193,6 @@ HTML = """
         </div>
     </div>
 
-    <!-- AGENTI -->
     <div id="section-agents" class="section">
         <h1>🤖 Agenti</h1>
         <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(300px,1fr)); gap:16px;">
@@ -219,7 +212,6 @@ HTML = """
         </div>
     </div>
 
-    <!-- CONFIG -->
     <div id="section-config" class="section">
         <h1>⚙️ Configura</h1>
         <div class="config-box">
@@ -473,7 +465,6 @@ HTML = """
         });
     }
 
-    // Avvio automatico
     document.addEventListener('DOMContentLoaded', function() {
         fetchStatus();
         fetchVideoStatus();
@@ -505,7 +496,6 @@ def index():
             log = f.read()[-2000:]
     except:
         pass
-    # Leggi audit_status.json e forza audit se has_issue
     try:
         with open(AUDIT_JSON, 'r') as f:
             fresh_audit = json.load(f)
@@ -554,18 +544,15 @@ def place_order():
     data = request.json
     action = data.get('action')
     lots = data.get('lots', 0.01)
-    sl = data.get('sl', 0)
-    tp = data.get('tp', 0)
-    
+    sl = data.get('sl', 0.0)
+    tp = data.get('tp', 0.0)
     if action not in ['buy', 'sell']:
         return jsonify({'message': 'Azione non valida'}), 400
-    
-    # Scrivi il comando nel file per MT4
+    cmd = f"{action} {lots} {sl} {tp}"
     cmd_path = os.path.expanduser('~/Scrivania/XM MT4/MQL4/Files/AI_BRIDGE_CMD.txt')
     with open(cmd_path, 'w') as f:
-        f.write(action + "\n")
-    
-    return jsonify({'message': f'Ordine {action} inviato a MT4'})
+        f.write(cmd + "\n")
+    return jsonify({'message': f'Ordine {action} inviato (lotto {lots}, SL {sl}, TP {tp})'})
 @app.route('/config', methods=['GET', 'POST'])
 def config():
     config_path = '/home/carlo/AI_Trading/config.json'
