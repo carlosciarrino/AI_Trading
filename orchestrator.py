@@ -40,10 +40,7 @@ def count_open_orders():
         return 0
 
 def get_signal():
-    # 1. Leggi i contesti
     scores = {}
-    
-    # News
     try:
         with open('/home/carlo/AI_Trading/news_context.txt', 'r') as f:
             text = f.read().lower()
@@ -55,8 +52,6 @@ def get_signal():
                 scores['news'] = 0.0
     except:
         scores['news'] = 0.0
-    
-    # Social sentiment
     try:
         with open('/home/carlo/AI_Trading/social_context.txt', 'r') as f:
             text = f.read().lower()
@@ -68,8 +63,6 @@ def get_signal():
                 scores['social'] = 0.0
     except:
         scores['social'] = 0.0
-    
-    # Cicli stagionali
     try:
         with open('/home/carlo/AI_Trading/cycles_context.txt', 'r') as f:
             text = f.read().lower()
@@ -92,8 +85,6 @@ def get_signal():
                 scores['cycle'] = 0.0
     except:
         scores['cycle'] = 0.0
-    
-    # Volumi
     try:
         with open('/home/carlo/AI_Trading/volume_context.txt', 'r') as f:
             text = f.read()
@@ -105,8 +96,6 @@ def get_signal():
                 scores['volume'] = 0.0
     except:
         scores['volume'] = 0.0
-    
-    # Esperienza (memoria errori)
     try:
         with open('/home/carlo/AI_Trading/experiences.json', 'r') as f:
             exp = json.load(f)
@@ -117,8 +106,7 @@ def get_signal():
                 scores['experience'] = 0.0
     except:
         scores['experience'] = 0.0
-    
-    # Pesi
+
     weights = {
         'news': 0.2,
         'social': 0.2,
@@ -126,21 +114,16 @@ def get_signal():
         'volume': 0.25,
         'experience': 0.2
     }
-    
-    # Calcola media ponderata
     total = 0.0
     weight_sum = 0.0
     for key in scores:
         total += scores[key] * weights[key]
         weight_sum += weights[key]
-    
     final_score = total / weight_sum if weight_sum > 0 else 0.0
     print(f"Punteggio combinato: {final_score:.3f}", flush=True)
-    
-    # Soglie
-    if final_score > 0.2:
+    if final_score > 0.01:
         return "BUY"
-    elif final_score < -0.2:
+    elif final_score < -0.01:
         return "SELL"
     else:
         return "HOLD"
@@ -184,33 +167,28 @@ def main():
     session = config.get("session", "all")
     print(f"Orchestratore avviato. Sessione: {session}", flush=True)
     while True:
-        # Controllo Time-Stop
         check_time_stop()
-        
         if not is_trading_hours(session):
             print(f"Fuori orario. UTC: {datetime.now(timezone.utc).hour}", flush=True)
             time.sleep(600)
             continue
-        
         open_count = count_open_orders()
         if open_count >= MAX_OPEN_ORDERS:
             print("Limite operazioni raggiunto.", flush=True)
             time.sleep(600)
             continue
-        
         signal = get_signal()
         print(f"Segnale AI: {signal}", flush=True)
-        
         if signal in ("BUY", "SELL"):
             action = "buy" if signal == "BUY" else "sell"
-            
-            # Calcola ATR per SL/TP dinamici
             try:
                 df = yf.download("EURUSD=X", period="1d", interval="15m", progress=False)
+                if df.empty:
+                    raise ValueError("Nessun dato scaricato")
                 df['ATR'] = df['High'].rolling(14).max() - df['Low'].rolling(14).min()
                 atr = df['ATR'].iloc[-1]
-                sl_distance = atr * 1.0   # 1x ATR
-                tp_distance = atr * 1.5   # 1.5x ATR
+                sl_distance = atr * 1.0
+                tp_distance = atr * 1.5
                 price = df['Close'].iloc[-1]
                 if signal == "BUY":
                     sl = price - sl_distance
@@ -225,13 +203,11 @@ def main():
             except Exception as e:
                 print(f"Errore calcolo ATR, uso default: {e}", flush=True)
                 cmd = action
-            
             cmd_path = os.path.join(MT4_FILES, "AI_BRIDGE_CMD.txt")
             with open(cmd_path, "w") as f:
                 f.write(f"{cmd}\n")
         else:
             print("HOLD", flush=True)
-        
         time.sleep(600)
 
 if __name__ == "__main__":
