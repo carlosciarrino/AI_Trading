@@ -196,6 +196,15 @@ def main():
                 else:
                     sl = price + sl_distance
                     tp = price - tp_distance
+                # Estrai il valore scalare (se è una Series)
+                if hasattr(sl, 'iloc'):
+                    sl = float(sl.iloc[0])
+                else:
+                    sl = float(sl)
+                if hasattr(tp, 'iloc'):
+                    tp = float(tp.iloc[0])
+                else:
+                    tp = float(tp)
                 sl = round(sl, 5)
                 tp = round(tp, 5)
                 cmd = f"{action} 0.01 {sl} {tp}"
