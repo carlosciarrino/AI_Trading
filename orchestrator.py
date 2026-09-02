@@ -5,7 +5,7 @@ from datetime import datetime, timezone, timedelta
 CONFIG_PATH = os.path.expanduser("~/AI_Trading/config.json")
 OLLAMA_URL = "http://localhost:11434/api/generate"
 MODEL = "qwen2.5:0.5b"
-MAX_OPEN_ORDERS = 1
+MAX_OPEN_ORDERS = 10
 MT4_FILES = os.path.expanduser("~/Scrivania/XM MT4/MQL4/Files")
 ORDERS_JSON = os.path.expanduser("~/mt4_shared/orders.json")
 OPEN_TIME_FILE = os.path.expanduser("~/mt4_shared/open_time.json")
