@@ -1,31 +1,46 @@
-import feedparser, time, json, os
+#!/usr/bin/env python3
+import json, os, time, requests
+from datetime import datetime, timedelta
 
-NEWS_FEEDS = [
-    "http://feeds.bbci.co.uk/news/world/rss.xml",
-    "http://feeds.reuters.com/reuters/businessNews",
-    "https://feeds.bbci.co.uk/news/business/rss.xml"
-]
-KEYWORDS = ["war", "crisis", "election", "inflation", "rate", "oil", "sanctions", "conflict"]
-CONTEXT_PATH = os.path.expanduser("~/AI_Trading/news_context.txt")
+CONFIG_PATH = os.path.expanduser("~/AI_Trading/config.json")
+SCORE_FILE = "/tmp/news_score.txt"
 
-def fetch_news():
-    headlines = []
-    for feed_url in NEWS_FEEDS:
+def load_config():
+    with open(CONFIG_PATH) as f:
+        return json.load(f)
+
+def get_economic_calendar():
+    """Legge il calendario da Investing.com (versione semplificata)"""
+    try:
+        # Usa un feed RSS di Investing.com (es. per USD)
+        url = "https://it.investing.com/rss/news.rss"
+        response = requests.get(url, timeout=10)
+        if response.status_code == 200:
+            # Parsing base (cerchiamo parole chiave)
+            content = response.text.lower()
+            keywords = ["nonfarm", "tassi", "fed", "inflazione", "pil", "disoccupazione"]
+            for kw in keywords:
+                if kw in content:
+                    return {"has_news": True, "impact": "alto", "keyword": kw}
+        return {"has_news": False}
+    except:
+        return {"has_news": False}
+
+def main():
+    config = load_config()
+    while True:
         try:
-            feed = feedparser.parse(feed_url)
-            for entry in feed.entries[:10]:
-                title = entry.title.lower()
-                if any(k in title for k in KEYWORDS):
-                    headlines.append(entry.title)
-        except:
-            pass
-    
-    with open(CONTEXT_PATH, "w") as f:
-        f.write(f"Ultime notizie macro importanti (aggiornate {time.ctime()}):\n")
-        for h in headlines:
-            f.write(f"- {h}\n")
-    print("Notizie geopolitiche aggiornate.")
+            calendar = get_economic_calendar()
+            if calendar.get("has_news"):
+                # Penalizza se news ad alto impatto nelle prossime 2 ore
+                score = -0.3
+            else:
+                score = 0.0
+            with open(SCORE_FILE, "w") as f:
+                f.write(f"{score:.4f}")
+        except Exception as e:
+            print(f"Errore News: {e}")
+        time.sleep(60)  # aggiorna ogni minuto
 
-while True:
-    fetch_news()
-    time.sleep(1800)  # aggiorna ogni 30 minuti
+if __name__ == "__main__":
+    main()

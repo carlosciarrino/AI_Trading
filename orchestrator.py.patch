@@ -1,0 +1,29 @@
+# --- AGGIUNTE ALL'ORCHESTRATORE ---
+
+# Trailing stop dinamico (da applicare ogni ciclo)
+def apply_trailing_stop(open_orders, current_price, atr):
+    for order in open_orders:
+        if order['action'] == 'buy':
+            new_sl = current_price - atr * 0.5
+            if new_sl > order['sl']:
+                order['sl'] = new_sl
+                # Aggiorna SL su MT4
+        elif order['action'] == 'sell':
+            new_sl = current_price + atr * 0.5
+            if new_sl < order['sl']:
+                order['sl'] = new_sl
+
+# Chiusura anticipata su inversione (se prezzo supera livello chiave)
+def check_reversal(open_orders, current_price, key_level):
+    for order in open_orders:
+        if order['action'] == 'buy' and current_price < key_level:
+            return True  # chiudi tutti
+        elif order['action'] == 'sell' and current_price > key_level:
+            return True
+    return False
+
+# Controllo distanza tra ordini (evita accumulo)
+def check_distance(last_order_price, current_price, atr):
+    if abs(current_price - last_order_price) < 1.5 * atr:
+        return False  # non aprire nuovo ordine
+    return True
