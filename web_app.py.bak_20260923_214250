@@ -6,7 +6,7 @@ app = Flask(__name__)
 
 AGENTS = {
     "ai_workforce": {"name": "Orchestratore", "task": "Prende decisioni di trading tramite AI e gestisce il flusso dati."},
-    "web_app": {"name": "Dashboard", "task": "Mostra lo stato dell'azienda all'utente."},
+    "dashboard": {"name": "Dashboard", "task": "Mostra lo stato dell'azienda all'utente."},
     "sentinel": {"name": "Sentinella", "task": "Monitora la sicurezza e ferma il sistema in caso di anomalie."},
     "news_agent": {"name": "Agente Notizie", "task": "Analizza notizie macro (guerre, crisi, tassi)."},
     "social_agent": {"name": "Agente Social", "task": "Analizza sentiment da social e news trending."},
@@ -21,13 +21,7 @@ AGENTS = {
     "sync_agent": {"name": "Sync Agent", "task": "Sincronizza il progetto su GitHub e USB."},
     "supervisor": {"name": "Supervisor", "task": "Riavvia automaticamente gli agenti critici se si fermano."},
     "tool_updater": {"name": "Tool Updater", "task": "Cerca nuovi strumenti di trascrizione e analisi video."},
-    "yt_digest": {"name": "YT Digest", "task": "Analizza video notturni con panoscribe."},
-    "volume_agent": {"name": "Agente Volumi", "task": "Picchi volume."},
-    "kronos_agent": {"name": "Kronos", "task": "Previsione AI."},
-    "nzt_agent": {"name": "NZT", "task": "Range Francoforte."},
-    "market_anomaly": {"name": "Market Anomaly", "task": "Pattern anomali."},
-    "signal_observer": {"name": "Signal Observer", "task": "Verifica segnali."},
-    "strategy_validator": {"name": "Strategy Validator", "task": "Filtra strategie."}
+    "yt_digest": {"name": "YT Digest", "task": "Analizza video notturni con panoscribe."}
 }
 
 AGENT_COMMANDS = {
