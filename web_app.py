@@ -1,272 +1,192 @@
-from flask import Flask, render_template_string, jsonify, request
-import json, os, subprocess, threading, time
+from flask import Flask, render_template_string, jsonify, request, send_from_directory
+import json, os, subprocess, yfinance as yf
 from datetime import datetime
 
 app = Flask(__name__)
 
-AGENTS = {
-    "ai_workforce": {"name": "Orchestratore", "task": "Prende decisioni di trading tramite AI e gestisce il flusso dati."},
-    "web_app": {"name": "Dashboard", "task": "Mostra lo stato dell'azienda all'utente."},
-    "sentinel": {"name": "Sentinella", "task": "Monitora la sicurezza e ferma il sistema in caso di anomalie."},
-    "news_agent": {"name": "Agente Notizie", "task": "Analizza notizie macro (guerre, crisi, tassi)."},
-    "social_agent": {"name": "Agente Social", "task": "Analizza sentiment da social e news trending."},
-    "cycle_agent": {"name": "Agente Cicli", "task": "Analizza cicli storici e stagionalità del mercato."},
-    "experience_agent": {"name": "Agente Esperienza", "task": "Impara dagli errori passati e aggiorna la memoria."},
-    "strategy_tester_agent": {"name": "Strategy Tester", "task": "Analizza link e testa strategie su dati storici."},
-    "github_researcher": {"name": "GitHub Researcher", "task": "Cerca progetti utili su GitHub."},
-    "skill_researcher": {"name": "Skill Researcher", "task": "Cerca nuove competenze, framework o strategie online."},
-    "news_critical": {"name": "News Critical", "task": "Analizza condizioni socio-politiche globali."},
-    "ai_researcher_agent": {"name": "AI Researcher", "task": "Cerca nuove intelligenze artificiali disponibili."},
-    "ai_tester_agent": {"name": "AI Tester", "task": "Testa le nuove AI su compiti reali."},
-    "sync_agent": {"name": "Sync Agent", "task": "Sincronizza il progetto su GitHub e USB."},
-    "supervisor": {"name": "Supervisor", "task": "Riavvia automaticamente gli agenti critici se si fermano."},
-    "tool_updater": {"name": "Tool Updater", "task": "Cerca nuovi strumenti di trascrizione e analisi video."},
-    "yt_digest": {"name": "YT Digest", "task": "Analizza video notturni con panoscribe."},
-    "volume_agent": {"name": "Agente Volumi", "task": "Picchi volume."},
-    "kronos_agent": {"name": "Kronos", "task": "Previsione AI."},
-    "nzt_agent": {"name": "NZT", "task": "Range Francoforte."},
-    "market_anomaly": {"name": "Market Anomaly", "task": "Pattern anomali."},
-    "signal_observer": {"name": "Signal Observer", "task": "Verifica segnali."},
-    "strategy_validator": {"name": "Strategy Validator", "task": "Filtra strategie."}
-}
-
-AGENT_COMMANDS = {
-    "ai_workforce": "cd /home/carlo/AI_Trading && source ~/AI_Trading_Agents/venv/bin/activate && python3 orchestrator.py > /home/carlo/orchestrator.log 2>&1",
-    "dashboard": "cd /home/carlo/AI_Trading && source ~/AI_Trading_Agents/venv/bin/activate && python3 web_app.py",
-    "sentinel": "cd /home/carlo/AI_Trading && source ~/AI_Trading_Agents/venv/bin/activate && python3 sentinel.py",
-    "news_agent": "cd /home/carlo/AI_Trading && source ~/AI_Trading_Agents/venv/bin/activate && python3 news_agent.py",
-    "social_agent": "cd /home/carlo/AI_Trading && source ~/AI_Trading_Agents/venv/bin/activate && python3 social_agent.py",
-    "cycle_agent": "cd /home/carlo/AI_Trading && source ~/AI_Trading_Agents/venv/bin/activate && python3 cycle_agent.py",
-    "experience_agent": "cd /home/carlo/AI_Trading && source ~/AI_Trading_Agents/venv/bin/activate && python3 experience_agent.py",
-    "strategy_tester_agent": "cd /home/carlo/AI_Trading && source ~/AI_Trading_Agents/venv/bin/activate && python3 strategy_tester_agent.py",
-    "github_researcher": "cd /home/carlo/AI_Trading && source ~/AI_Trading_Agents/venv/bin/activate && python3 github_researcher.py",
-    "skill_researcher": "cd /home/carlo/AI_Trading && source ~/AI_Trading_Agents/venv/bin/activate && python3 skill_researcher.py",
-    "news_critical": "cd /home/carlo/AI_Trading && source ~/AI_Trading_Agents/venv/bin/activate && python3 news_critical.py",
-    "ai_researcher_agent": "cd /home/carlo/AI_Trading && source ~/AI_Trading_Agents/venv/bin/activate && python3 ai_researcher_agent.py",
-    "ai_tester_agent": "cd /home/carlo/AI_Trading && source ~/AI_Trading_Agents/venv/bin/activate && python3 ai_tester_agent.py",
-    "sync_agent": "cd /home/carlo/AI_Trading && source ~/AI_Trading_Agents/venv/bin/activate && python3 sync_agent.py",
-    "supervisor": "cd /home/carlo/AI_Trading && source ~/AI_Trading_Agents/venv/bin/activate && python3 supervisor_agent.py",
-    "tool_updater": "cd /home/carlo/AI_Trading && source ~/AI_Trading_Agents/venv/bin/activate && python3 tool_updater_agent.py",
-    "yt_digest": "cd /home/carlo/AI_Trading && source ~/AI_Trading_Agents/venv/bin/activate && python3 yt_digest.py"
-}
-
-def get_status():
-    out = subprocess.run(["tmux", "ls"], capture_output=True, text=True)
-    sessions = out.stdout if out.returncode == 0 else ""
-    status = {}
-    for name, info in AGENTS.items():
-        status[name] = "active" if name in sessions else "stopped"
-    return status
-
-AUDIT_INTERVAL = 300
-AUDIT_JSON = os.path.expanduser("~/AI_Trading/audit_status.json")
-audit_data = {"has_issue": False, "agents": {}, "critical": {}, "timestamp": ""}
-
-def run_audit_loop():
-    global audit_data
-    while True:
-        try:
-            subprocess.run(["python3", "/home/carlo/AI_Trading/audit_agent.py"],
-                           capture_output=True, cwd="/home/carlo/AI_Trading")
-            if os.path.exists(AUDIT_JSON):
-                with open(AUDIT_JSON, "r") as f:
-                    audit_data = json.load(f)
-        except Exception as e:
-            print(f"Audit error: {e}")
-        time.sleep(AUDIT_INTERVAL)
-
-threading.Thread(target=run_audit_loop, daemon=True).start()
-
 HTML = """
 <!DOCTYPE html>
-<html>
+<html lang="it">
 <head>
     <meta charset="UTF-8">
-    <title>AI_BRIDGE V5</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI_BRIDGE V3 · Control Panel</title>
     <style>
-        body { font-family: sans-serif; background: #0b0e14; color: #e5e9f0; margin:0; }
-        .sidebar { width: 200px; background: #131722; position: fixed; height:100%; padding:20px; }
-        .main { margin-left: 220px; padding:20px; }
-        .nav a { display:block; padding:10px; color:#78828c; text-decoration:none; cursor:pointer; }
-        .nav a:hover { background:#2a2e39; color:#fff; }
-        .section { display:none; }
-        .section.active { display:block; }
-        .btn { background: #2962ff; border:none; padding:8px 16px; border-radius:4px; color:#fff; cursor:pointer; }
-        .btn-emergency { background: #ff1744; }
-        .dot { display:inline-block; width:10px; height:10px; border-radius:50%; }
-        .dot.green { background: #00c853; }
-        .dot.red { background: #ff1744; }
-        .status-box { display:inline-block; background:#1e222d; padding:6px 12px; border-radius:20px; }
-        table { width:100%; border-collapse:collapse; }
-        th, td { padding:8px; border-bottom:1px solid #2a2e39; text-align:left; }
-        .buy { color:#00c853; }
-        .sell { color:#ff1744; }
-        .config-box { background:#131722; padding:20px; margin-bottom:20px; border-radius:8px; border:1px solid #2a2e39; }
-        input, select { background:#1e222d; border:1px solid #2a2e39; padding:8px; color:#fff; border-radius:4px; }
-        .log-box { background:#000; padding:16px; max-height:300px; overflow-y:auto; font-family:monospace; font-size:12px; color:#00c853; border-radius:8px; }
-        .alert-banner { background:#ff1744; color:#fff; padding:12px 20px; text-align:center; font-weight:bold; border-radius:8px; margin-bottom:20px; }
-        .audit-box { background:#131722; padding:16px; border-radius:8px; border:1px solid #2a2e39; margin-bottom:20px; }
-        .agent-status-badge { display:inline-block; background:#1e222d; padding:6px 12px; border-radius:20px; margin-right:8px; }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background: #0b0e14; color: #e5e9f0; display: flex; min-height: 100vh; }
+        .sidebar { width: 240px; background: #131722; border-right: 1px solid #2a2e39; padding: 24px 16px; display: flex; flex-direction: column; flex-shrink: 0; height: 100vh; position: sticky; top: 0; }
+        .sidebar .logo { font-size: 20px; font-weight: 700; margin-bottom: 32px; display: flex; align-items: center; gap: 10px; }
+        .sidebar .logo span { background: linear-gradient(135deg, #2962ff, #7c3aed); padding: 6px 10px; border-radius: 8px; font-size: 14px; }
+        .sidebar nav a { color: #78828c; text-decoration: none; padding: 10px 14px; border-radius: 8px; font-size: 14px; font-weight: 500; display: block; cursor: pointer; }
+        .sidebar nav a:hover, .sidebar nav a.active { background: #2a2e39; color: #e5e9f0; }
+        .sidebar .footer { margin-top: auto; font-size: 12px; color: #4a5568; border-top: 1px solid #2a2e39; padding-top: 16px; }
+        .main { flex: 1; padding: 24px 32px; overflow-y: auto; }
+        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .header h1 { font-size: 24px; font-weight: 600; }
+        .header .status { display: flex; align-items: center; gap: 12px; background: #1e222d; padding: 8px 18px; border-radius: 40px; font-size: 14px; }
+        .header .status .dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
+        .header .status .dot.online { background: #00c853; }
+        .header .status .dot.offline { background: #ff1744; }
+        #verification-banner { margin-bottom: 20px; padding: 12px 20px; border-radius: 8px; display: none; font-size: 14px; }
+        .kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px; margin-bottom: 28px; }
+        .kpi-card { background: #131722; border: 1px solid #2a2e39; border-radius: 12px; padding: 16px 20px; }
+        .kpi-card .label { font-size: 13px; color: #78828c; text-transform: uppercase; }
+        .kpi-card .value { font-size: 24px; font-weight: 700; margin-top: 4px; }
+        .controls { display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 28px; }
+        .controls button { border: none; padding: 10px 24px; border-radius: 40px; font-weight: 600; font-size: 14px; cursor: pointer; }
+        .controls .start { background: #00c853; color: #0b0e14; }
+        .controls .stop { background: #ff1744; color: #fff; }
+        .controls .restart { background: #2962ff; color: #fff; }
+        .section { display: none; margin-bottom: 28px; }
+        .section.active { display: block; }
+        .config-area { background: #131722; border: 1px solid #2a2e39; border-radius: 12px; padding: 20px 24px; display: flex; flex-wrap: wrap; align-items: flex-end; gap: 16px; }
+        .config-area label { font-size: 13px; color: #78828c; display: flex; flex-direction: column; gap: 4px; }
+        .config-area select, .config-area input { background: #1e222d; border: 1px solid #2a2e39; border-radius: 8px; padding: 8px 14px; color: #e5e9f0; font-size: 14px; }
+        .config-area .save-btn { background: #2962ff; border: none; border-radius: 40px; padding: 10px 24px; color: #fff; font-weight: 600; cursor: pointer; }
+        .chart-container { background: #131722; border: 1px solid #2a2e39; border-radius: 12px; padding: 16px 20px; margin-bottom: 28px; }
+        .order-panel { background: #131722; border: 1px solid #2a2e39; border-radius: 12px; padding: 20px 24px; display: flex; flex-wrap: wrap; align-items: flex-end; gap: 16px; }
+        .order-panel label { font-size: 13px; color: #78828c; display: flex; flex-direction: column; gap: 4px; }
+        .order-panel select, .order-panel input { background: #1e222d; border: 1px solid #2a2e39; border-radius: 8px; padding: 8px 14px; color: #e5e9f0; font-size: 14px; width: 120px; }
+        .order-panel .btn-buy { background: #00c853; color: #0b0e14; border: none; border-radius: 40px; padding: 10px 24px; font-weight: 600; cursor: pointer; }
+        .order-panel .btn-sell { background: #ff1744; color: #fff; border: none; border-radius: 40px; padding: 10px 24px; font-weight: 600; cursor: pointer; }
+        .table-wrap { background: #131722; border: 1px solid #2a2e39; border-radius: 12px; padding: 16px 20px; margin-bottom: 28px; overflow-x: auto; }
+        .table-wrap h3 { font-size: 16px; font-weight: 600; margin-bottom: 12px; }
+        table { width: 100%; border-collapse: collapse; font-size: 14px; }
+        th { text-align: left; padding: 10px 8px; color: #78828c; border-bottom: 1px solid #2a2e39; }
+        td { padding: 10px 8px; border-bottom: 1px solid #1e222d; }
+        .buy { color: #00c853; font-weight: 600; }
+        .sell { color: #ff1744; font-weight: 600; }
+        .pnl-positive { color: #00c853; font-weight: 600; }
+        .pnl-negative { color: #ff1744; font-weight: 600; }
+        .log-box { background: #0b0e14; border: 1px solid #2a2e39; border-radius: 12px; padding: 16px 20px; max-height: 200px; overflow-y: auto; font-family: monospace; font-size: 12px; color: #78828c; white-space: pre-wrap; }
+        @media (max-width: 768px) { .sidebar { display: none; } .main { padding: 16px; } .kpi-grid { grid-template-columns: 1fr 1fr; } .order-panel { flex-direction: column; align-items: stretch; } .order-panel input { width: 100%; } }
     </style>
+    <script src="https://cdn.plot.ly/plotly-2.27.1.min.js"></script>
 </head>
 <body>
 <div class="sidebar">
-    <h2>▲ AI_BRIDGE</h2>
-    <nav class="nav">
-        <a onclick="showSection('dashboard')">📊 Dashboard</a>
+    <div class="logo"><span>▲</span> AI_BRIDGE</div>
+    <nav>
+        <a class="active" onclick="showSection('dashboard')">📊 Dashboard</a>
         <a onclick="showSection('trading')">📈 Trading</a>
-        <a onclick="showSection('agents')">🤖 Agenti</a>
         <a onclick="showSection('config')">⚙️ Configura</a>
+        <a onclick="showSection('log')">📜 Log</a>
     </nav>
-    <div style="margin-top:40px; font-size:12px; color:#4a5568;">v5.0 · {{ now }}</div>
+    <div class="footer">v3.0 · {{ now }}</div>
 </div>
-
 <div class="main">
-    {% if audit_data.has_issue %}
-    <div class="alert-banner">
-        ⚠️ ALLARME: uno o più agenti critici sono FERMI! Controlla la sezione Agenti.
+    <div class="header">
+        <h1 id="section-title">📊 Dashboard</h1>
+        <div class="status"><span class="dot online" id="status_dot"></span><span id="status_text">Online</span><span style="color:#4a5568;">|</span><span id="last_update">{{ now }}</span></div>
     </div>
-    {% endif %}
 
+    <!-- Banner Verifica -->
+    <div id="verification-banner">
+        <strong>Stato Verifica:</strong> <span id="verification-text">Nessuna verifica recente</span>
+    </div>
+
+    <!-- Sezione Dashboard -->
     <div id="section-dashboard" class="section active">
-        <h1>📊 Dashboard</h1>
-        <div style="display:flex; gap:20px; flex-wrap:wrap;">
-            <button class="btn" onclick="fetchStatus()">🔄 Aggiorna stato</button>
-            <div class="status-box"><span class="dot green" id="status_dot"></span> <span id="status_text">Caricamento...</span></div>
-            <button class="btn btn-emergency" onclick="emergencyStop()">🛑 STOP TUTTO</button>
+        <div class="kpi-grid">
+            <div class="kpi-card"><div class="label">Capitale</div><div class="value" id="kpi_capital">100.000,00</div></div>
+            <div class="kpi-card"><div class="label">PNL Giorno</div><div class="value" id="kpi_pnl">+0,00</div></div>
+            <div class="kpi-card"><div class="label">Operazioni Aperte</div><div class="value" id="kpi_open">0</div></div>
+            <div class="kpi-card"><div class="label">Drawdown Max</div><div class="value" id="kpi_dd">0,00%</div></div>
         </div>
-        <div id="status_log" style="color:#78828c; margin:16px 0;">📡 Ultimo aggiornamento: --</div>
-
-        <div class="audit-box">
-            <h3>🔍 Stato Agenti (Audit automatico)</h3>
-            <div style="font-size:13px; color:#78828c;">
-                Ultimo controllo: {{ audit_data.timestamp if audit_data.timestamp else 'Nessun controllo effettuato.' }}
-            </div>
-            <div style="display:flex; gap:16px; flex-wrap:wrap; margin-top:8px;">
-                {% for agent, status in audit_data.agents.items() %}
-                <div class="agent-status-badge">
-                    <span style="color:{{ '#00c853' if status == 'active' else '#ff1744' }};">●</span>
-                    {{ agent }}: {{ status }}
-                </div>
-                {% endfor %}
-            </div>
+        <div class="controls">
+            <button class="start" onclick="sendCommand('start')">▶ Avvia</button>
+            <button class="stop" onclick="sendCommand('stop')">⏹ Ferma</button>
+            <button class="restart" onclick="sendCommand('restart')">🔄 Riavvia</button>
         </div>
-
-        <div style="display:flex; gap:20px;">
-            <div style="background:#131722; padding:20px; border-radius:8px; flex:1;"><div>Capitale</div><div style="font-size:24px;">10.000,00</div></div>
-            <div style="background:#131722; padding:20px; border-radius:8px; flex:1;"><div>Operazioni Aperte</div><div style="font-size:24px;" id="kpi_open">0</div></div>
-            <div style="background:#131722; padding:20px; border-radius:8px; flex:1;"><div>PNL Giorno</div><div style="font-size:24px;">+0,00</div></div>
-        </div>
-        <div style="background:#131722; padding:20px; border-radius:8px; margin-top:20px;">
-            <h3>📋 Operazioni Aperte</h3>
-            <table>
-                <tr><th>Azione</th><th>Lotti</th><th>Prezzo</th><th>SL</th><th>TP</th><th>Orario</th><th>PNL</th></tr>
-                {% for o in orders if o.status == "open" %}
-                <tr><td class="{{ o.action }}">{{ o.action }}</td><td>{{ o.lots }}</td><td>{{ o.price }}</td><td>{{ o.sl }}</td><td>{{ o.tp }}</td><td>{{ o.time|int|timestamp }}</td><td>{{ o.pnl|default(0) }}</td></tr>
-                {% else %}
-                <tr><td colspan="7" style="color:#4a5568;">Nessuna operazione aperta</td></tr>
-                {% endfor %}
-            </table>
-        </div>
-        <div style="background:#131722; padding:20px; border-radius:8px; margin-top:20px;">
-            <h3>📊 Operazioni Chiuse</h3>
-            <table>
-                <tr><th>Azione</th><th>Lotti</th><th>Prezzo</th><th>Chiusura</th><th>PNL</th><th>Orario</th></tr>
-                {% for o in orders if o.status == "closed" %}
-                <tr><td class="{{ o.action }}">{{ o.action }}</td><td>{{ o.lots }}</td><td>{{ o.price }}</td><td>{{ o.close_price }}</td><td class="{{ 'pnl-pos' if o.pnl > 0 else 'pnl-neg' }}">{{ o.pnl }}</td><td>{{ o.time|int|timestamp }}</td></tr>
-                {% else %}
-                <tr><td colspan="6" style="color:#4a5568;">Nessuna operazione chiusa</td></tr>
-                {% endfor %}
-            </table>
-        </div>
+        <div class="table-wrap"><h3>📋 Operazioni Aperte</h3><table><tr><th>Stato</th><th>Azione</th><th>Lotti</th><th>Prezzo</th><th>SL</th><th>TP</th><th>Orario</th><th>PNL</th></tr>{% for o in orders if o.status == "open" %}<tr><td>{{ o.status }}</td><td class="{{ o.action }}">{{ o.action }}</td><td>{{ o.lots }}</td><td>{{ o.price }}</td><td>{{ o.sl }}</td><td>{{ o.tp }}</td><td>{{ o.time|int|timestamp }}</td><td>{{ o.pnl|default(0) }}</td></tr>{% else %}<tr><td colspan="8" style="text-align:center;color:#4a5568;">Nessuna operazione aperta</td></tr>{% endfor %}</table></div>
+        <div class="table-wrap"><h3>📊 Operazioni Chiuse</h3><table><tr><th>Azione</th><th>Lotti</th><th>Prezzo</th><th>Chiusura</th><th>PNL</th><th>Orario</th></tr>{% for o in orders if o.status == "closed" %}<tr><td class="{{ o.action }}">{{ o.action }}</td><td>{{ o.lots }}</td><td>{{ o.price }}</td><td>{{ o.close_price }}</td><td class="pnl-{{ 'positive' if o.pnl > 0 else 'negative' }}">{{ o.pnl }}</td><td>{{ o.time|int|timestamp }}</td></tr>{% else %}<tr><td colspan="6" style="text-align:center;color:#4a5568;">Nessuna operazione chiusa</td></tr>{% endfor %}</table></div>
     </div>
 
+    <!-- Sezione Trading -->
     <div id="section-trading" class="section">
-        <h1>📈 Trading</h1>
-        <div style="background:#131722; padding:20px; border-radius:8px;">
-            <iframe src="https://s.tradingview.com/widgetembed/?symbol=FX_IDC%3AEURUSD&interval=D&theme=dark&style=1&locale=it&hidesidetoolbar=1" style="width:100%; height:400px; border:none; border-radius:8px;"></iframe>
-        </div>
-        <div style="background:#131722; padding:20px; border-radius:8px; margin-top:20px;">
-            <h3>Piazzare ordine manuale</h3>
-            <div style="display:flex; gap:12px; flex-wrap:wrap; align-items:flex-end;">
-                <label>Azione<select id="order_action"><option value="buy">BUY</option><option value="sell">SELL</option></select></label>
-                <label>Lotti <input type="number" id="order_lots" value="0.01" step="0.01"></label>
-                <label>SL <input type="number" id="order_sl" step="0.00001" value="1.0"></label>
-                <label>TP <input type="number" id="order_tp" step="0.00001" value="1.0"></label>
-                <button class="btn" onclick="placeOrder('buy')">Piazza BUY</button>
-                <button class="btn" style="background:#ff1744;" onclick="placeOrder('sell')">Piazza SELL</button>
+        <div class="chart-container">
+            <h3>📈 Grafico {{ selected_symbol }}</h3>
+            <div id="candlestick-chart" style="height:400px;"></div>
+            <div style="display:flex; gap:16px; margin-top:12px; flex-wrap:wrap;">
+                <label>Simbolo
+                    <select id="chart_symbol" onchange="loadChart()">
+                        <option value="EURUSD=X" selected>EUR/USD</option>
+                        <option value="GBPUSD=X">GBP/USD</option>
+                        <option value="GC=F">XAU/USD (Oro)</option>
+                        <option value="^IXIC">NAS100</option>
+                    </select>
+                </label>
+                <label>Timeframe
+                    <select id="chart_interval" onchange="loadChart()">
+                        <option value="1m">1 min</option>
+                        <option value="5m">5 min</option>
+                        <option value="15m" selected>15 min</option>
+                        <option value="30m">30 min</option>
+                        <option value="1h">1 ora</option>
+                        <option value="4h">4 ore</option>
+                        <option value="1d">Daily</option>
+                    </select>
+                </label>
+                <label>Periodo
+                    <select id="chart_period" onchange="loadChart()">
+                        <option value="30d">1 mese</option>
+                        <option value="90d">3 mesi</option>
+                        <option value="180d">6 mesi</option>
+                        <option value="1y">1 anno</option>
+                    </select>
+                </label>
+                <button onclick="loadChart()" style="background:#2962ff;border:none;border-radius:40px;padding:10px 24px;color:#fff;font-weight:600;cursor:pointer;">Aggiorna</button>
             </div>
+        </div>
+        <div class="order-panel">
+            <h3 style="width:100%;">📝 Piazzare ordine manuale</h3>
+            <label>Azione
+                <select id="order_action">
+                    <option value="buy">BUY</option>
+                    <option value="sell">SELL</option>
+                </select>
+            </label>
+            <label>Lotti
+                <input type="number" id="order_lots" value="0.01" step="0.01" min="0.01">
+            </label>
+            <label>Prezzo
+                <input type="number" id="order_price" step="0.00001" value="1.0">
+            </label>
+            <label>SL
+                <input type="number" id="order_sl" step="0.00001" value="0.999">
+            </label>
+            <label>TP
+                <input type="number" id="order_tp" step="0.00001" value="1.001">
+            </label>
+            <button class="btn-buy" onclick="placeOrder('buy')">▶ Piazza BUY</button>
+            <button class="btn-sell" onclick="placeOrder('sell')">▶ Piazza SELL</button>
+            <span id="order_result" style="color:#78828c;font-size:13px;"></span>
         </div>
     </div>
 
-    <div id="section-agents" class="section">
-        <h1>🤖 Agenti</h1>
-        <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(300px,1fr)); gap:16px;">
-            {% for id, info in agents.items() %}
-            <div style="background:#131722; padding:16px; border-radius:8px; border:1px solid #2a2e39;">
-                <div style="display:flex; justify-content:space-between;">
-                    <h3>{{ info.name }}</h3>
-                    <span id="status_{{ id }}"><span class="dot"></span> Caricamento...</span>
-                </div>
-                <div style="color:#78828c; font-size:13px;">{{ info.task }}</div>
-                <div style="margin-top:10px;">
-                    <button class="btn" onclick="controlAgent('{{ id }}','start')">Avvia</button>
-                    <button class="btn" style="background:#ff1744;" onclick="controlAgent('{{ id }}','stop')">Ferma</button>
-                </div>
-            </div>
-            {% endfor %}
-        </div>
-    </div>
-
+    <!-- Sezione Configura -->
     <div id="section-config" class="section">
-        <h1>⚙️ Configura</h1>
-        <div class="config-box">
-            <h3>Parametri di trading</h3>
-            <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px;">
-                <div><label>Timeframe</label><select id="tf_select"><option value="5min">5 min</option><option value="15min" selected>15 min</option><option value="1h">1 ora</option></select></div>
-                <div><label>Lotto</label><input type="number" id="lot_input" value="0.01" step="0.01"></div>
-                <div><label>Orario di Trading</label><select id="session_select">
-                    <option value="all">Tutte le sessioni</option>
-                    <option value="london">Londra</option>
-                    <option value="newyork">New York</option>
-                    <option value="tokyo">Tokyo</option>
-                    <option value="london_newyork">Londra + New York</option>
-                </select></div>
-            </div>
-            <button class="btn" style="margin-top:20px;" onclick="saveConfig()">💾 Salva Config</button>
+        <div class="config-area">
+            <label>Timeframe
+                <select id="tf_select">
+                    <option value="5min">5 min</option>
+                    <option value="15min" selected>15 min</option>
+                    <option value="1h">1 ora</option>
+                    <option value="4h">4 ore</option>
+                </select>
+            </label>
+            <label>Lotto
+                <input type="number" id="lot_input" step="0.01" value="0.01">
+            </label>
+            <button class="save-btn" onclick="saveConfig()">💾 Salva</button>
+            <span id="config_msg" style="color:#78828c;font-size:13px;"></span>
         </div>
+    </div>
 
-        <div class="config-box">
-            <h3>🎥 Analizza video (YouTube/Instagram/Facebook/TikTok)</h3>
-            <input type="text" id="video_link_input" placeholder="Incolla link qui..." style="width:100%; padding:10px; margin-bottom:10px;">
-            <div style="display:flex; gap:8px; flex-wrap:wrap;">
-                <button class="btn" onclick="analyzeVideo()">▶️ Analizza Ora</button>
-                <button class="btn" style="background:#ff9800;" onclick="testVideoForce()">▶️ Test Forza</button>
-                <button class="btn" style="background:#4caf50;" onclick="leggiReportVideo()">📄 Report</button>
-            </div>
-            <div id="video_status" style="margin-top:10px; color:#78828c;">Stato: in attesa di analisi</div>
-        </div>
-
-        <div class="config-box">
-            <h3>📋 Strategy Tester (link generico)</h3>
-            <input type="text" id="strategy_link" placeholder="Incolla link qui..." style="width:100%; padding:10px; margin-bottom:10px;">
-            <button class="btn" onclick="testStrategy()">🚀 Avvia Test</button>
-            <button class="btn" style="background:#4caf50;" onclick="leggiReport()">📄 Leggi Report</button>
-            <button class="btn" style="background:#ff9800;" onclick="applicaStrategia()">✅ Applica</button>
-        </div>
-
-        <div class="config-box">
-            <h3>🔍 Audit Azienda</h3>
-            <button class="btn" onclick="runAudit()">🔎 Esegui Audit</button>
-            <button class="btn" style="background:#4caf50;" onclick="leggiAudit()">📄 Leggi Report</button>
-            <div id="audit_result" style="margin-top:10px; color:#00c853; font-family:monospace; white-space:pre-wrap; background:#000; padding:10px; border-radius:4px;"></div>
-        </div>
-
-        <div class="config-box">
-            <h3>Log di sistema</h3>
-            <div class="log-box" id="log_box">{{ log }}</div>
-            <button class="btn" style="margin-top:10px;" onclick="refreshLog()">Aggiorna Log</button>
-        </div>
+    <!-- Sezione Log -->
+    <div id="section-log" class="section">
+        <div class="log-box" id="log_box">{{ log }}</div>
+        <button onclick="refreshLog()" style="margin-top:12px; background:#2a2e39; border:none; border-radius:40px; padding:8px 24px; color:#e5e9f0; cursor:pointer;">🔄 Aggiorna Log</button>
     </div>
 </div>
 
@@ -274,208 +194,158 @@ HTML = """
     function showSection(id) {
         document.querySelectorAll('.section').forEach(el => el.classList.remove('active'));
         document.getElementById('section-' + id).classList.add('active');
+        document.querySelectorAll('.sidebar nav a').forEach(el => el.classList.remove('active'));
+        document.querySelector('.sidebar nav a[onclick*="' + id + '"]').classList.add('active');
+        document.getElementById('section-title').innerText = document.querySelector('.sidebar nav a[onclick*="' + id + '"]').innerText;
+        if (id === 'trading') { loadChart(); }
+        if (id === 'log') { refreshLog(); }
     }
 
-    function fetchStatus() {
-        const logDiv = document.getElementById('status_log');
-        logDiv.innerText = '📡 Richiesta in corso...';
-        fetch('/status')
-        .then(r => r.json())
-        .then(data => {
-            logDiv.innerText = '📡 Aggiornato: ' + new Date().toLocaleTimeString();
-            const dot = document.getElementById('status_dot');
-            const txt = document.getElementById('status_text');
-            if (data.system_online) {
-                dot.className = 'dot green';
-                txt.innerText = 'Sistema Online';
-            } else {
-                dot.className = 'dot red';
-                txt.innerText = 'Sistema Offline';
-            }
-            document.getElementById('kpi_open').innerText = data.open_count || 0;
-            for (const [id, status] of Object.entries(data.agents)) {
-                const span = document.getElementById('status_' + id);
-                if (span) {
-                    if (status === 'active') {
-                        span.innerHTML = '<span class="dot green"></span> Attivo';
-                    } else {
-                        span.innerHTML = '<span class="dot red"></span> Fermo';
-                    }
-                }
-            }
-        })
-        .catch(err => {
-            logDiv.innerText = '❌ Errore: ' + err;
-        });
-    }
-
-    function emergencyStop() {
-        if (confirm('SEI SICURO?')) {
-            fetch('/emergency', { method: 'POST' })
-            .then(r => r.json())
-            .then(d => { alert(d.message); location.reload(); });
-        }
-    }
-
-    function controlAgent(id, action) {
-        fetch('/control', {
+    function loadChart() {
+        const symbol = document.getElementById('chart_symbol').value;
+        const interval = document.getElementById('chart_interval').value;
+        const period = document.getElementById('chart_period').value;
+        fetch('/chart_data', {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({name: id, action: action})
+            body: JSON.stringify({symbol: symbol, period: period, interval: interval})
         })
         .then(r => r.json())
-        .then(d => { alert(d.message); fetchStatus(); });
+        .then(data => {
+            if (data.error) {
+                document.getElementById('candlestick-chart').innerHTML = '<p style="color:#ff1744;">' + data.error + '</p>';
+                return;
+            }
+            const trace = {
+                x: data.map(d => d.Date),
+                open: data.map(d => d.Open),
+                high: data.map(d => d.High),
+                low: data.map(d => d.Low),
+                close: data.map(d => d.Close),
+                type: 'candlestick',
+                increasing: {line: {color: '#00c853'}},
+                decreasing: {line: {color: '#ff1744'}}
+            };
+            const layout = {
+                template: 'plotly_dark',
+                xaxis: {title: 'Data', type: 'date'},
+                yaxis: {title: 'Prezzo'},
+                margin: {l: 40, r: 20, t: 20, b: 40},
+                paper_bgcolor: '#0b0e14',
+                plot_bgcolor: '#0b0e14'
+            };
+            Plotly.newPlot('candlestick-chart', [trace], layout);
+        })
+        .catch(e => {
+            document.getElementById('candlestick-chart').innerHTML = '<p style="color:#ff1744;">Errore: ' + e + '</p>';
+        });
     }
 
     function placeOrder(action) {
         const lots = parseFloat(document.getElementById('order_lots').value);
+        const price = parseFloat(document.getElementById('order_price').value);
         const sl = parseFloat(document.getElementById('order_sl').value);
         const tp = parseFloat(document.getElementById('order_tp').value);
+        if (!lots || !price) { alert('Inserisci lotti e prezzo'); return; }
+        document.getElementById('order_result').innerText = '⏳ Invio ordine...';
         fetch('/place_order', {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({action: action, lots: lots, sl: sl, tp: tp})
+            body: JSON.stringify({action: action, lots: lots, price: price, sl: sl, tp: tp})
         })
         .then(r => r.json())
-        .then(d => alert(d.message));
+        .then(data => {
+            document.getElementById('order_result').innerText = data.message;
+        })
+        .catch(e => document.getElementById('order_result').innerText = '❌ Errore: ' + e);
     }
 
     function saveConfig() {
-        const session = document.getElementById('session_select').value;
+        const data = {
+            timeframe: document.getElementById('tf_select').value,
+            lot: parseFloat(document.getElementById('lot_input').value)
+        };
         fetch('/config', {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({
-                timeframe: document.getElementById('tf_select').value,
-                lot: parseFloat(document.getElementById('lot_input').value),
-                session: session
-            })
+            body: JSON.stringify(data)
         })
         .then(r => r.json())
-        .then(d => alert(d.message));
+        .then(d => document.getElementById('config_msg').innerText = '✅ ' + d.message)
+        .catch(e => document.getElementById('config_msg').innerText = '❌ Errore');
     }
 
-    function analyzeVideo() {
-        const link = document.getElementById('video_link_input').value;
-        if (!link) { alert('Inserisci un link'); return; }
-        document.getElementById('video_status').innerHTML = 'Stato: 🔄 Analisi in corso...';
-        fetch('/analyze_video', {
+    function sendCommand(cmd) {
+        fetch('/command', {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({link: link})
+            body: JSON.stringify({cmd: cmd})
         })
         .then(r => r.json())
-        .then(d => {
-            alert(d.message);
-            fetchVideoStatus();
-        });
-    }
-
-    function testVideoForce() {
-        const link = document.getElementById('video_link_input').value;
-        if (!link) { alert('Inserisci un link'); return; }
-        document.getElementById('video_status').innerHTML = 'Stato: 🔄 Test forzato in corso...';
-        fetch('/test_video_force', {
-            method: 'POST',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({link: link})
-        })
-        .then(r => r.json())
-        .then(d => {
-            alert(d.message);
-            setTimeout(fetchVideoStatus, 2000);
-        })
-        .catch(err => {
-            document.getElementById('video_status').innerHTML = 'Stato: ❌ Errore';
-        });
-    }
-
-    function fetchVideoStatus() {
-        fetch('/video_status')
-        .then(r => r.json())
-        .then(data => {
-            if (data.report) {
-                document.getElementById('video_status').innerHTML = 'Stato: ✅ Ultima analisi alle ' + data.timestamp;
-            } else {
-                document.getElementById('video_status').innerHTML = 'Stato: ⏳ Nessun report';
-            }
-        });
-    }
-
-    function leggiReportVideo() {
-        fetch('/leggi_report_video')
-        .then(r => r.text())
-        .then(text => {
-            if (text.trim().length === 0) { alert('Nessun report'); return; }
-            const win = window.open('', '_blank');
-            win.document.write('<pre style="background:#0b0e14; color:#00c853; padding:20px;">' + text + '</pre>');
-        });
-    }
-
-    function testStrategy() {
-        const link = document.getElementById('strategy_link').value;
-        if (!link) { alert('Inserisci un link'); return; }
-        fetch('/test_strategy', {
-            method: 'POST',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({link: link})
-        })
-        .then(r => r.json())
-        .then(d => alert(d.message));
-    }
-
-    function leggiReport() {
-        fetch('/leggi_report')
-        .then(r => r.text())
-        .then(text => {
-            if (text.trim().length === 0) { alert('Nessun report'); return; }
-            const win = window.open('', '_blank');
-            win.document.write('<pre style="background:#0b0e14; color:#00c853; padding:20px;">' + text + '</pre>');
-        });
-    }
-
-    function applicaStrategia() {
-        fetch('/applica_strategia', { method: 'POST' })
-        .then(r => r.json())
-        .then(d => alert(d.message));
+        .then(d => alert(d.message))
+        .catch(e => alert('Errore: ' + e));
     }
 
     function refreshLog() {
         fetch('/log')
-        .then(r => r.text())
-        .then(text => document.getElementById('log_box').innerText = text);
+            .then(r => r.text())
+            .then(text => document.getElementById('log_box').innerText = text)
+            .catch(e => console.error(e));
     }
 
-    function runAudit() {
-        const div = document.getElementById('audit_result');
-        div.innerText = '⏳ Esecuzione audit...';
-        fetch('/run_audit', { method: 'POST' })
-        .then(r => r.text())
-        .then(text => {
-            div.innerText = text;
-        })
-        .catch(err => {
-            div.innerText = '❌ Errore: ' + err;
-        });
+    function loadOrders() {
+        fetch('/orders')
+            .then(r => r.json())
+            .then(data => {
+                document.getElementById('kpi_open').innerText = data.open || 0;
+            })
+            .catch(e => console.error(e));
     }
 
-    function leggiAudit() {
-        const div = document.getElementById('audit_result');
-        fetch('/leggi_audit')
-        .then(r => r.text())
-        .then(text => {
-            div.innerText = text;
-        })
-        .catch(err => {
-            div.innerText = '❌ Errore: ' + err;
-        });
+    function loadVerificationStatus() {
+        fetch('/verification_status')
+            .then(r => r.json())
+            .then(data => {
+                const banner = document.getElementById('verification-banner');
+                const text = document.getElementById('verification-text');
+                if (!data || !data.timestamp) {
+                    banner.style.display = 'none';
+                    return;
+                }
+                banner.style.display = 'block';
+                const date = new Date(data.timestamp).toLocaleString('it-IT');
+                if (data.success) {
+                    banner.style.background = '#0d3d1e';
+                    banner.style.color = '#00c853';
+                    text.innerText = `✅ ${data.file} - PASS (${date})`;
+                } else {
+                    banner.style.background = '#3d0d0d';
+                    banner.style.color = '#ff1744';
+                    text.innerText = `❌ ${data.file} - FAIL (${date}): ${(data.output_tail || '').substring(0, 200)}`;
+                }
+            })
+            .catch(e => console.error(e));
     }
 
-    document.addEventListener('DOMContentLoaded', function() {
-        fetchStatus();
-        fetchVideoStatus();
-        setInterval(fetchStatus, 10000);
+    setInterval(() => {
+        fetch('/status')
+            .then(r => r.json())
+            .then(data => {
+                const dot = document.getElementById('status_dot');
+                const txt = document.getElementById('status_text');
+                if (data.status === 'online') { dot.className = 'dot online'; txt.innerText = 'Online'; }
+                else { dot.className = 'dot offline'; txt.innerText = 'Offline'; }
+            });
+        loadOrders();
+        loadVerificationStatus();
+    }, 5000);
+
+    fetch('/config').then(r => r.json()).then(cfg => {
+        if (cfg.timeframe) document.getElementById('tf_select').value = cfg.timeframe;
+        if (cfg.lot) document.getElementById('lot_input').value = cfg.lot;
     });
+
+    loadVerificationStatus();
 </script>
 </body>
 </html>
@@ -502,104 +372,55 @@ def index():
             log = f.read()[-2000:]
     except:
         pass
-    try:
-        with open(AUDIT_JSON, 'r') as f:
-            fresh_audit = json.load(f)
-        if fresh_audit.get('has_issue', False):
-            subprocess.run(["python3", "/home/carlo/AI_Trading/audit_agent.py"],
-                           capture_output=True, cwd="/home/carlo/AI_Trading")
-            with open(AUDIT_JSON, 'r') as f:
-                fresh_audit = json.load(f)
-    except:
-        fresh_audit = audit_data
-    return render_template_string(HTML, orders=orders, log=log, now=datetime.now().strftime('%Y-%m-%d %H:%M:%S'), agents=AGENTS, audit_data=fresh_audit)
+    return render_template_string(HTML, orders=orders, log=log, now=datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
 
-@app.route('/status')
-def status():
-    status = get_status()
-    open_count = 0
-    try:
-        with open(os.path.expanduser('~/mt4_shared/orders.json')) as f:
-            orders = json.load(f)
-        open_count = len([o for o in orders if o.get('status') == 'open'])
-    except:
-        pass
-    return jsonify({'system_online': any(v == 'active' for v in status.values()), 'agents': status, 'open_count': open_count})
-
-@app.route('/control', methods=['POST'])
-def control():
+@app.route('/chart_data', methods=['POST'])
+def chart_data():
     data = request.json
-    name = data.get('name')
-    action = data.get('action')
-    if action == 'start':
-        if name in AGENT_COMMANDS:
-            os.system(f"tmux new-session -d -s {name} \"{AGENT_COMMANDS[name]}\"")
-            return jsonify({'message': f'{name} avviato'})
-    else:
-        os.system(f"tmux kill-session -t {name} 2>/dev/null")
-        return jsonify({'message': f'{name} fermato'})
-    return jsonify({'message': 'Azione non valida'})
-
-@app.route('/emergency', methods=['POST'])
-def emergency():
-    os.system("tmux kill-server 2>/dev/null")
-    return jsonify({'message': '🛑 SISTEMA FERMATO'})
+    symbol = data.get('symbol', 'EURUSD=X')
+    period = data.get('period', '30d')
+    interval = data.get('interval', '1d')
+    try:
+        df = yf.download(symbol, period=period, interval=interval, multi_level_index=False)
+        if df.empty:
+            return jsonify({'error': 'Nessun dato'})
+        df = df[['Open','High','Low','Close']].tail(100)
+        df = df.reset_index()
+        records = df.to_dict(orient='records')
+        for r in records:
+            if 'Date' in r:
+                r['Date'] = r['Date'].strftime('%Y-%m-%d %H:%M')
+        return jsonify(records)
+    except Exception as e:
+        return jsonify({'error': str(e)})
 
 @app.route('/place_order', methods=['POST'])
 def place_order():
     data = request.json
     action = data.get('action')
-    lots = data.get('lots', 0.01)
-    sl = data.get('sl', 0.0)
-    tp = data.get('tp', 0.0)
-    if action not in ['buy', 'sell']:
-        return jsonify({'message': 'Azione non valida'}), 400
-    cmd = f"{action} {lots} {sl} {tp}"
-    cmd_path = os.path.expanduser('~/Scrivania/XM MT4/MQL4/Files/AI_BRIDGE_CMD.txt')
-    with open(cmd_path, 'w') as f:
-        f.write(cmd + "\n")
-    return jsonify({'message': f'Ordine {action} inviato (lotto {lots}, SL {sl}, TP {tp})'})
-@app.route('/config', methods=['GET', 'POST'])
-def config():
-    config_path = '/home/carlo/AI_Trading/config.json'
-    if request.method == 'GET':
-        try:
-            with open(config_path) as f:
-                return jsonify(json.load(f))
-        except:
-            return jsonify({'timeframe': '15min', 'lot': 0.01, 'session': 'all'})
-    data = request.json
+    lots = data.get('lots')
+    price = data.get('price')
+    sl = data.get('sl')
+    tp = data.get('tp')
     try:
-        with open(config_path) as f:
-            cfg = json.load(f)
-    except:
-        cfg = {}
-    cfg.update(data)
-    with open(config_path, 'w') as f:
-        json.dump(cfg, f, indent=2)
-    return jsonify({'message': 'Config salvata'})
+        from core.mt4_bridge import MT4Bridge
+        bridge = MT4Bridge()
+        bridge.connect()
+        bridge.place_order(action, lots, price, sl, tp)
+        bridge.disconnect()
+        return jsonify({'status': 'ok', 'message': f'Ordine {action} {lots} @ {price} inviato'})
+    except Exception as e:
+        return jsonify({'status': 'error', 'message': str(e)})
 
-@app.route('/test_strategy', methods=['POST'])
-def test_strategy():
-    data = request.json
-    link = data.get('link')
-    with open('/home/carlo/AI_Trading/strategia_da_testare.txt', 'w') as f:
-        f.write(link)
-    return jsonify({'message': f'Strategia inviata al tester: {link}'})
-
-@app.route('/leggi_report')
-def leggi_report():
+@app.route('/orders')
+def orders_api():
     try:
-        with open('/home/carlo/AI_Trading/report_strategia.txt', 'r') as f:
-            return f.read()
+        with open(os.path.expanduser('~/mt4_shared/orders.json')) as f:
+            orders = json.load(f)
+        open_orders = [o for o in orders if o.get('status') == 'open']
+        return jsonify({'open': len(open_orders)})
     except:
-        return ""
-
-@app.route('/applica_strategia', methods=['POST'])
-def applica_strategia():
-    with open('/home/carlo/AI_Trading/segnali/backtest_richiesto.txt', 'w') as f:
-        f.write("1")
-    return jsonify({'message': 'Backtest avviato. L\'agente tester lavorerà di notte.'})
+        return jsonify({'open': 0})
 
 @app.route('/log')
 def log_api():
@@ -609,75 +430,55 @@ def log_api():
     except:
         return ""
 
-@app.route('/analyze_video', methods=['POST'])
-def analyze_video():
-    data = request.json
-    link = data.get('link')
-    if not link:
-        return jsonify({'message': 'Link mancante'}), 400
-    with open('/home/carlo/AI_Trading/video_link.txt', 'w') as f:
-        f.write(link)
-    with open('/home/carlo/video_analysis.log', 'w') as log:
-        subprocess.Popen(["python3", "/home/carlo/AI_Trading/multidigest.py"],
-                         stdout=log, stderr=log,
-                         cwd="/home/carlo/AI_Trading")
-    return jsonify({'message': f'Analisi avviata per: {link}. Controlla report_multivideo.txt tra qualche minuto.'})
-
-@app.route('/test_video_force', methods=['POST'])
-def test_video_force():
-    link = request.json.get('link')
-    if not link:
-        return jsonify({'message': 'Link mancante'}), 400
-    with open('/home/carlo/AI_Trading/video_link.txt', 'w') as f:
-        f.write(link)
-    subprocess.Popen(
-        ["python3", "/home/carlo/AI_Trading/multidigest.py", "--force"],
-        stdout=subprocess.DEVNULL,
-        stderr=subprocess.DEVNULL,
-        cwd="/home/carlo/AI_Trading"
-    )
-    return jsonify({'message': f'Test forzato avviato per {link}'})
-
-@app.route('/video_status')
-def video_status():
-    report_path = '/home/carlo/AI_Trading/report_multivideo.txt'
-    try:
-        with open(report_path, 'r') as f:
-            content = f.read()
-        lines = content.split('\n')
-        ts = lines[0].replace('REPORT MULTI-VIDEO - ', '').strip()
-        return jsonify({'report': content[:500], 'timestamp': ts})
-    except:
-        return jsonify({'report': None, 'timestamp': None})
-
-@app.route('/leggi_report_video')
-def leggi_report_video():
-    try:
-        with open('/home/carlo/AI_Trading/report_multivideo.txt', 'r') as f:
-            return f.read()
-    except:
-        return ""
-
-@app.route('/run_audit', methods=['POST'])
-def run_audit():
-    result = subprocess.run(["python3", "/home/carlo/AI_Trading/audit_agent.py"],
-                            capture_output=True, text=True, cwd="/home/carlo/AI_Trading")
-    if result.returncode == 0:
+@app.route('/verification_status')
+def verification_status():
+    status_file = '/home/carlo/AI_Trading/docs/verification/last_status.json'
+    if os.path.exists(status_file):
         try:
-            with open('/home/carlo/AI_Trading/audit_report.txt', 'r') as f:
-                return f.read()
+            with open(status_file) as f:
+                return jsonify(json.load(f))
         except:
-            return "Report generato ma non leggibile."
-    else:
-        return f"Errore: {result.stderr}"
+            pass
+    return jsonify({})
 
-@app.route('/leggi_audit')
-def leggi_audit():
+@app.route('/command', methods=['POST'])
+def command():
+    cmd = request.json.get('cmd')
+    if cmd == 'start':
+        os.system("cd /home/carlo/AI_Trading && tmux new-session -d -s ai_workforce 'bash -c \"source ~/AI_Trading_Agents/venv/bin/activate && while true; do python3 orchestrator.py; sleep 3600; done\"'")
+        return jsonify({'message': '▶️ Avviato'})
+    elif cmd == 'stop':
+        os.system("tmux kill-session -t ai_workforce 2>/dev/null")
+        return jsonify({'message': '⛔ Fermato'})
+    elif cmd == 'restart':
+        os.system("tmux kill-session -t ai_workforce 2>/dev/null; cd /home/carlo/AI_Trading && tmux new-session -d -s ai_workforce 'bash -c \"source ~/AI_Trading_Agents/venv/bin/activate && while true; do python3 orchestrator.py; sleep 3600; done\"'")
+        return jsonify({'message': '🔄 Riavviato'})
+    return jsonify({'message': 'Comando sconosciuto'})
+
+@app.route('/config', methods=['GET', 'POST'])
+def config():
+    config_path = '/home/carlo/AI_Trading/config.json'
+    if request.method == 'GET':
+        try:
+            with open(config_path) as f:
+                return jsonify(json.load(f))
+        except:
+            return jsonify({'timeframe': '15min', 'lot': 0.01})
+    data = request.json
     try:
-        with open('/home/carlo/AI_Trading/audit_report.txt', 'r') as f:
-            return f.read()
+        with open(config_path) as f:
+            cfg = json.load(f)
     except:
-        return "Nessun report audit disponibile."
+        cfg = {}
+    cfg.update(data)
+    with open(config_path, 'w') as f:
+        json.dump(cfg, f, indent=2)
+    return jsonify({'message': f'Config salvata: {cfg}'})
+
+@app.route('/status')
+def status():
+    online = os.system("tmux list-sessions | grep -q ai_workforce") == 0
+    return jsonify({'status': 'online' if online else 'offline'})
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=False)
