@@ -5,7 +5,7 @@ from datetime import datetime, timezone, timedelta
 CONFIG_PATH = os.path.expanduser("~/AI_Trading/config.json")
 OLLAMA_URL = "http://localhost:11434/api/generate"
 MODEL = "qwen2.5:0.5b"
-MAX_OPEN_ORDERS = 10
+MAX_OPEN_ORDERS = 3
 MT4_FILES = os.path.expanduser("~/Scrivania/XM MT4/MQL4/Files")
 ORDERS_JSON = os.path.expanduser("~/mt4_shared/orders.json")
 OPEN_TIME_FILE = os.path.expanduser("~/mt4_shared/open_time.json")
@@ -170,12 +170,12 @@ def main():
         check_time_stop()
         if not is_trading_hours(session):
             print(f"Fuori orario. UTC: {datetime.now(timezone.utc).hour}", flush=True)
-            time.sleep(600)
+            time.sleep(3600)
             continue
         open_count = count_open_orders()
         if open_count >= MAX_OPEN_ORDERS:
             print("Limite operazioni raggiunto.", flush=True)
-            time.sleep(600)
+            time.sleep(3600)
             continue
         signal = get_signal()
         print(f"Segnale AI: {signal}", flush=True)
@@ -217,7 +217,7 @@ def main():
                 f.write(f"{cmd}\n")
         else:
             print("HOLD", flush=True)
-        time.sleep(600)
+        time.sleep(3600)
 
 if __name__ == "__main__":
     main()
