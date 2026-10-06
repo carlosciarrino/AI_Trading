@@ -9,10 +9,13 @@ MAX_OPEN_ORDERS = 3
 MT4_FILES = os.path.expanduser("~/Scrivania/XM MT4/MQL4/Files")
 ORDERS_JSON = os.path.expanduser("~/mt4_shared/orders.json")
 OPEN_TIME_FILE = os.path.expanduser("~/mt4_shared/open_time.json")
+LOCK_FILE = "/tmp/orchestrator.lock"
+
 
 def load_config():
     with open(CONFIG_PATH) as f:
         return json.load(f)
+
 
 def is_trading_hours(session):
     now_utc = datetime.now(timezone.utc).hour
@@ -28,6 +31,7 @@ def is_trading_hours(session):
         return (8 <= now_utc < 17) or (13 <= now_utc < 22)
     return True
 
+
 def count_open_orders():
     try:
         with open(ORDERS_JSON) as f:
@@ -38,6 +42,7 @@ def count_open_orders():
     except Exception as e:
         print(f"[DEBUG] Errore lettura orders.json: {e}", flush=True)
         return 0
+
 
 def get_signal():
     scores = {}
@@ -128,6 +133,7 @@ def get_signal():
     else:
         return "HOLD"
 
+
 def check_time_stop():
     try:
         with open(ORDERS_JSON) as f:
@@ -162,62 +168,87 @@ def check_time_stop():
     except Exception as e:
         print(f"Errore time-stop: {e}")
 
+
 def main():
-    config = load_config()
-    session = config.get("session", "all")
-    print(f"Orchestratore avviato. Sessione: {session}", flush=True)
-    while True:
-        check_time_stop()
-        if not is_trading_hours(session):
-            print(f"Fuori orario. UTC: {datetime.now(timezone.utc).hour}", flush=True)
+    # Lock esclusivo
+    if os.path.exists(LOCK_FILE):
+        try:
+            with open(LOCK_FILE) as f:
+                pid = int(f.read().strip())
+            os.kill(pid, 0)
+            print(f"[LOCK] Orchestratore già attivo (PID {pid}). Esco.", flush=True)
+            return
+        except (ProcessLookupError, ValueError):
+            os.remove(LOCK_FILE)
+
+    with open(LOCK_FILE, "w") as f:
+        f.write(str(os.getpid()))
+
+    try:
+        config = load_config()
+        session = config.get("session", "all")
+        print(f"Orchestratore avviato. Sessione: {session}", flush=True)
+
+        while True:
+            check_time_stop()
+            if not is_trading_hours(session):
+                print(f"Fuori orario. UTC: {datetime.now(timezone.utc).hour}", flush=True)
+                time.sleep(3600)
+                continue
+
+            open_count = count_open_orders()
+            if open_count >= MAX_OPEN_ORDERS:
+                print("Limite operazioni raggiunto.", flush=True)
+                time.sleep(3600)
+                continue
+
+            signal = get_signal()
+            print(f"Segnale AI: {signal}", flush=True)
+
+            if signal in ("BUY", "SELL"):
+                action = "buy" if signal == "BUY" else "sell"
+                try:
+                    df = yf.download("EURUSD=X", period="1d", interval="15m", progress=False)
+                    if df.empty:
+                        raise ValueError("Nessun dato scaricato")
+                    df['ATR'] = df['High'].rolling(14).max() - df['Low'].rolling(14).min()
+                    atr = df['ATR'].iloc[-1]
+                    sl_distance = atr * 1.0
+                    tp_distance = atr * 1.5
+                    price = df['Close'].iloc[-1]
+                    if signal == "BUY":
+                        sl = price - sl_distance
+                        tp = price + tp_distance
+                    else:
+                        sl = price + sl_distance
+                        tp = price - tp_distance
+                    if hasattr(sl, 'iloc'):
+                        sl = float(sl.iloc[0])
+                    else:
+                        sl = float(sl)
+                    if hasattr(tp, 'iloc'):
+                        tp = float(tp.iloc[0])
+                    else:
+                        tp = float(tp)
+                    sl = round(sl, 5)
+                    tp = round(tp, 5)
+                    cmd = f"{action} 0.01 {sl} {tp}"
+                    print(f"Ordine {action} inviato con SL={sl} TP={tp}", flush=True)
+                except Exception as e:
+                    print(f"Errore calcolo ATR, uso default: {e}", flush=True)
+                    cmd = action
+
+                cmd_path = os.path.join(MT4_FILES, "AI_BRIDGE_CMD.txt")
+                with open(cmd_path, "w") as f:
+                    f.write(f"{cmd}\n")
+            else:
+                print("HOLD", flush=True)
+
             time.sleep(3600)
-            continue
-        open_count = count_open_orders()
-        if open_count >= MAX_OPEN_ORDERS:
-            print("Limite operazioni raggiunto.", flush=True)
-            time.sleep(3600)
-            continue
-        signal = get_signal()
-        print(f"Segnale AI: {signal}", flush=True)
-        if signal in ("BUY", "SELL"):
-            action = "buy" if signal == "BUY" else "sell"
-            try:
-                df = yf.download("EURUSD=X", period="1d", interval="15m", progress=False)
-                if df.empty:
-                    raise ValueError("Nessun dato scaricato")
-                df['ATR'] = df['High'].rolling(14).max() - df['Low'].rolling(14).min()
-                atr = df['ATR'].iloc[-1]
-                sl_distance = atr * 1.0
-                tp_distance = atr * 1.5
-                price = df['Close'].iloc[-1]
-                if signal == "BUY":
-                    sl = price - sl_distance
-                    tp = price + tp_distance
-                else:
-                    sl = price + sl_distance
-                    tp = price - tp_distance
-                # Estrai il valore scalare (se è una Series)
-                if hasattr(sl, 'iloc'):
-                    sl = float(sl.iloc[0])
-                else:
-                    sl = float(sl)
-                if hasattr(tp, 'iloc'):
-                    tp = float(tp.iloc[0])
-                else:
-                    tp = float(tp)
-                sl = round(sl, 5)
-                tp = round(tp, 5)
-                cmd = f"{action} 0.01 {sl} {tp}"
-                print(f"Ordine {action} inviato con SL={sl} TP={tp}", flush=True)
-            except Exception as e:
-                print(f"Errore calcolo ATR, uso default: {e}", flush=True)
-                cmd = action
-            cmd_path = os.path.join(MT4_FILES, "AI_BRIDGE_CMD.txt")
-            with open(cmd_path, "w") as f:
-                f.write(f"{cmd}\n")
-        else:
-            print("HOLD", flush=True)
-        time.sleep(3600)
+    finally:
+        if os.path.exists(LOCK_FILE):
+            os.remove(LOCK_FILE)
+
 
 if __name__ == "__main__":
     main()

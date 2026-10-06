@@ -2,6 +2,15 @@
 
 Ultimo aggiornamento: 2026-10-06
 
+## 🔧 Fix 2026-10-06 (sera)
+
+- **Orchestratore:** risolto bug ordini infiniti. `MAX_OPEN_ORDERS = 3`, `time.sleep = 3600`. Lock esclusivo in `/tmp/orchestrator.lock`.
+- **File comando:** `AI_BRIDGE_CMD.txt` svuotato (0 byte).
+- **Solo orchestratore** scrive ordini (confermato via grep).
+- **Dashboard:** multi-progetto (Home, Trading, Media, E-commerce, Verifier).
+- **Verifier:** 3/3 file PASS (position_manager, orchestrator, web_app).
+- **Auto-Researcher:** attivo, cron 5:00, report Telegram.
+
 ## 🎯 Visione
 
 Azienda digitale multi-progetto. Ogni progetto è un'azienda indipendente. Tu sei CEO, intervieni solo su direzioni strategiche e problemi gravi.
