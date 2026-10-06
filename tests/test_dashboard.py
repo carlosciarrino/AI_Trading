@@ -14,62 +14,62 @@ def test_dashboard_online():
         print(f"❌ FAIL: dashboard: {e}")
         return False
 
-def test_status_api():
+def test_trading_page():
     try:
-        r = requests.get(f"{BASE}/status", timeout=5)
-        data = r.json()
-        assert "status" in data
-        print(f"✅ PASS: /status → {data['status']}")
+        r = requests.get(f"{BASE}/trading", timeout=5)
+        assert r.status_code == 200
+        assert "Trading" in r.text
+        print("✅ PASS: /trading risponde")
         return True
     except Exception as e:
-        print(f"❌ FAIL: /status: {e}")
+        print(f"❌ FAIL: /trading: {e}")
+        return False
+
+def test_media_page():
+    try:
+        r = requests.get(f"{BASE}/media", timeout=5)
+        assert r.status_code == 200
+        assert "Media" in r.text
+        print("✅ PASS: /media risponde")
+        return True
+    except Exception as e:
+        print(f"❌ FAIL: /media: {e}")
         return False
 
 def test_verification_api():
     try:
-        r = requests.get(f"{BASE}/verification_status", timeout=5)
+        r = requests.get(f"{BASE}/api/verification_status", timeout=5)
         assert r.status_code == 200
         data = r.json()
         if data and "file" in data:
-            print(f"✅ PASS: /verification_status → {data['file']} ({'PASS' if data.get('success') else 'FAIL'})")
+            print(f"✅ PASS: /api/verification_status → {data['file']} ({'PASS' if data.get('success') else 'FAIL'})")
         else:
-            print("✅ PASS: /verification_status → vuoto (nessuna verifica recente)")
+            print("✅ PASS: /api/verification_status → vuoto")
         return True
     except Exception as e:
-        print(f"❌ FAIL: /verification_status: {e}")
-        return False
-
-def test_orders_api():
-    try:
-        r = requests.get(f"{BASE}/orders", timeout=5)
-        data = r.json()
-        assert "open" in data
-        print(f"✅ PASS: /orders → {data['open']} aperti")
-        return True
-    except Exception as e:
-        print(f"❌ FAIL: /orders: {e}")
+        print(f"❌ FAIL: /api/verification_status: {e}")
         return False
 
 def test_chart_api():
     try:
-        r = requests.post(f"{BASE}/chart_data",
+        r = requests.post(f"{BASE}/api/chart_data",
                          json={"symbol": "EURUSD=X", "period": "30d", "interval": "1d"},
                          timeout=15)
         data = r.json()
         assert isinstance(data, list)
         assert len(data) > 0
-        print(f"✅ PASS: /chart_data → {len(data)} candele")
+        print(f"✅ PASS: /api/chart_data → {len(data)} candele")
         return True
     except Exception as e:
-        print(f"❌ FAIL: /chart_data: {e}")
+        print(f"❌ FAIL: /api/chart_data: {e}")
         return False
 
 if __name__ == "__main__":
     results = [
         ("test_dashboard_online", test_dashboard_online()),
-        ("test_status_api", test_status_api()),
+        ("test_trading_page", test_trading_page()),
+        ("test_media_page", test_media_page()),
         ("test_verification_api", test_verification_api()),
-        ("test_orders_api", test_orders_api()),
         ("test_chart_api", test_chart_api()),
     ]
     passed = sum(1 for _, r in results if r)
