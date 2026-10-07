@@ -1,6 +1,69 @@
 # AI_BRIDGE V3 — Handoff Completo
 
 Ultimo aggiornamento: 2026-10-06
+## 🔴 Fix critici 2026-10-07
+
+### Orchestratore Forex
+- Bug ordini infiniti risolto: `MAX_OPEN_ORDERS = 3`, `time.sleep(3600)`.
+- Lock esclusivo in `/tmp/orchestrator.lock`.
+- Solo `orchestrator.py` scrive in `AI_BRIDGE_CMD.txt`.
+- File comando svuotato (0 byte).
+
+### Isolamento MT4
+- **MT4_Teletrade** = conto REALE, bot Mustang, WINEPREFIX `~/.wine`. **MAI TOCCARE.**
+- **XM MT4** = conto DEMO FP Markets, bot AI_Bridge, WINEPREFIX `~/.wine_trading_finale`. Agenti Python scrivono QUI.
+- **MAI `wineserver -k` globale.** Sempre: `WINEPREFIX=<path> wineserver -k`.
+- Link demo: `~/mt4_shared/orders.json` → `~/Scrivania/XM MT4/MQL4/Files/orders.json`.
+- Link real (solo lettura): `~/mt4_shared_real_link/`.
+
+### Mustang (conto reale)
+- EA martingala. Non ha memoria tra riavvii.
+- 4 operazioni buy aperte, TP unico 1.13432 (3) + una con TP diverso.
+- Drawdown ~113€ su 100k. AutoTrading OFF.
+- Aspetta chiusura TP. Non riavviare.
+
+### Dashboard
+- Multi-progetto: Home, Trading, Media, E-commerce, Verifier.
+- URL: `http://100.77.33.7:5000`.
+
+### Verifier
+- 3/3 file PASS: position_manager, orchestrator, web_app.
+- Banner dashboard con esito ultimo test.
+
+### Auto-Researcher
+- Attivo, cron 5:00, report Telegram + `docs/research/AUTO_RESEARCH_*.md`.
+
+## 🎯 Decisione aperta 2026-10-07
+
+**Testare Kilo Code + Nemotron 3 Super** come super agente (Orchestrator mode, sub-agenti, VS Code GUI).
+
+Modelli gratuiti candidati:
+- `nvidia/nemotron-3-super-120b-a12b:free` (agentic coding)
+- `nvidia/nemotron-3-ultra-550b-a55b:free` (orchestrazione)
+- `inclusionai/ling-3.0-flash:free` (agentic)
+- `poolside/laguna-s-2.1:free` (coding)
+
+Aider abbandonato (loop infinito su modelli gratuiti).
+
+## 📌 Progetti aperti
+
+1. **Forex** — demo stabile, real da migrare ad AI_Bridge appena pronta versione stabile.
+2. **Media Company** — da avviare, MVP: 1 video/giorno TikTok/YouTube.
+3. **E-commerce** — pianificato (Amazon, TikTok Shop, Shopee, Temu).
+4. **Piattaforma scommesse** — futuro.
+
+## 🔧 Regole operative (leggi prima di agire)
+
+1. Non dare comandi `sed` o `cat` lunghi. Usa `nano` con file completo.
+2. Ogni modifica → Verifier testa.
+3. Ogni test fallito → banner rosso dashboard + Telegram.
+4. Ogni decisione approvata → salva in questo file.
+5. Ogni sessione chat → aggiorna questo file alla fine.
+6. Zero costi: solo tool gratuiti.
+7. Hardware limitato: i3, 12GB RAM. Progetti leggeri.
+8. **Un solo agente decide su denaro.**
+9. **File vecchi cancellati, solo storico. Backup non attivo.**
+10. **Mai toccare MT4 real (Teletrade). Solo demo (XM MT4).**
 
 ## 🔧 Fix 2026-10-06 (sera)
 
