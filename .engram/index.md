@@ -54,6 +54,34 @@ Aider abbandonato (loop infinito su modelli gratuiti).
 
 ## 🔧 Regole operative (leggi prima di agire)
 
+## 🔐 Sicurezza — Rotazione credenziali post-progetto
+
+**Regola:** al termine di ogni progetto (o quando il progetto passa in produzione), 
+tutte le API key, password, token e credenziali usate durante lo sviluppo 
+vanno **revocate e sostituite** con nuove credenziali generate in ambiente 
+di produzione.
+
+**Motivo:** durante lo sviluppo le credenziali possono essere esposte in 
+chat, screenshot, log, commit, issue tracker.
+
+**Procedura:**
+1. Elencare tutte le credenziali usate nel progetto.
+2. Revocare ognuna dal provider originale.
+3. Generare nuove credenziali.
+4. Salvare in vault (non in chat, non in repo, non in screenshot).
+5. Aggiornare i servizi con le nuove credenziali.
+6. Verificare che i vecchi accessi siano negati (test 401).
+
+**Credenziali coinvolte (esempi):**
+- OpenRouter API keys
+- Telegram bot token
+- Credenziali dashboard
+- API key broker (FP Markets, XM)
+- Token GitHub
+- Password VPS/Tailscale
+
+**Stato:** regola attiva, non ancora applicata ad alcun progetto.
+
 1. Non dare comandi `sed` o `cat` lunghi. Usa `nano` con file completo.
 2. Ogni modifica → Verifier testa.
 3. Ogni test fallito → banner rosso dashboard + Telegram.
