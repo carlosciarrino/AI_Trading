@@ -48,3 +48,4 @@ project_source.tar.gz
 research/external_agents/liza/
 research/external_agents/looper/
 .aider*
+.andromity/
