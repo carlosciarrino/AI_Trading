@@ -49,3 +49,8 @@ research/external_agents/liza/
 research/external_agents/looper/
 .aider*
 .andromity/
+requirements_backup_local.txt
+
+# File necessari al deploy (eccezioni a *.txt)
+!requirements.txt
+!runtime.txt

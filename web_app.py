@@ -303,7 +303,7 @@ def ecommerce():
 def verifier():
     status = {}
     try:
-        with open('/home/carlo/AI_Trading/docs/verification/last_status.json') as f:
+        with open(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'docs/verification/last_status.json')) as f:
             status = json.load(f)
     except: pass
     content = f"""
@@ -343,7 +343,7 @@ def chart_data():
 
 @app.route('/api/verification_status')
 def verification_status():
-    status_file = '/home/carlo/AI_Trading/docs/verification/last_status.json'
+    status_file = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'docs/verification/last_status.json')
     if os.path.exists(status_file):
         with open(status_file) as f:
             return jsonify(json.load(f))
@@ -364,4 +364,5 @@ def command():
     return jsonify({'message': 'Comando sconosciuto'})
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000, debug=False)
+    port = int(os.environ.get('PORT', 5000))
+    app.run(host='0.0.0.0', port=port, debug=False)
