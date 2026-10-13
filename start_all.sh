@@ -4,7 +4,6 @@ cd /home/carlo/AI_Trading
 PY=/usr/bin/python3
 
 tmux new-session -d -s ai_workforce "cd /home/carlo/AI_Trading && $PY orchestrator.py > /home/carlo/ai_workforce.log 2>&1"
-tmux new-session -d -s web_app "cd /home/carlo/AI_Trading && $PY web_app.py > /home/carlo/web_app.log 2>&1"
 tmux new-session -d -s supervisor "cd /home/carlo/AI_Trading && $PY supervisor_agent.py > /home/carlo/supervisor.log 2>&1"
 tmux new-session -d -s news_agent "cd /home/carlo/AI_Trading && $PY news_agent.py > /home/carlo/news_agent.log 2>&1"
 tmux new-session -d -s social_agent "cd /home/carlo/AI_Trading && $PY social_agent.py > /home/carlo/social_agent.log 2>&1"

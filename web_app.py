@@ -171,12 +171,19 @@ def trading():
             orders = json.load(f)
     except: pass
     open_orders = [o for o in orders if o.get('status') == 'open']
+    closed_orders = [o for o in orders if o.get('status') == 'closed']
+    saldo_iniziale = 100000.0
+    pnl_chiusi = sum(float(o.get('pnl') or 0) for o in closed_orders)
+    pnl_aperti = sum(float(o.get('pnl') or 0) for o in open_orders)
+    saldo_attuale = saldo_iniziale + pnl_chiusi
+    equity_attuale = saldo_attuale + pnl_aperti
     content = f"""
     <div class="kpi-grid">
-        <div class="kpi-card"><div class="label">Capitale</div><div class="value">100.000,00</div></div>
+        <div class="kpi-card"><div class="label">Saldo</div><div class="value">{saldo_attuale:,.2f}</div></div>
+        <div class="kpi-card"><div class="label">Equity</div><div class="value">{equity_attuale:,.2f}</div></div>
+        <div class="kpi-card"><div class="label">PNL Chiusi</div><div class="value" style="color:{'#00c853' if pnl_chiusi >= 0 else '#ff1744'}">{pnl_chiusi:+,.2f}</div></div>
+        <div class="kpi-card"><div class="label">PNL Aperti</div><div class="value" style="color:{'#00c853' if pnl_aperti >= 0 else '#ff1744'}">{pnl_aperti:+,.2f}</div></div>
         <div class="kpi-card"><div class="label">Operazioni Aperte</div><div class="value">{len(open_orders)}</div></div>
-        <div class="kpi-card"><div class="label">PNL Giorno</div><div class="value">+0,00</div></div>
-        <div class="kpi-card"><div class="label">Drawdown Max</div><div class="value">0,00%</div></div>
     </div>
     <div class="controls">
         <button class="start" onclick="fetch('/api/command',{{method:'POST',headers:{{'Content-Type':'application/json'}},body:JSON.stringify({{cmd:'start'}})}}).then(r=>r.json()).then(d=>alert(d.message))">▶ Avvia</button>
@@ -208,6 +215,13 @@ def trading():
         <table>
             <tr><th>Stato</th><th>Azione</th><th>Lotti</th><th>Prezzo</th><th>SL</th><th>TP</th><th>PNL</th></tr>
             {''.join([f"<tr><td>{o.get('status')}</td><td class='{o.get('action')}'>{o.get('action')}</td><td>{o.get('lots')}</td><td>{o.get('price')}</td><td>{o.get('sl')}</td><td>{o.get('tp')}</td><td>{o.get('pnl', 0)}</td></tr>" for o in open_orders]) if open_orders else '<tr><td colspan="7" style="text-align:center;color:#4a5568;">Nessuna operazione aperta</td></tr>'}
+        </table>
+    </div>
+    <div class="table-wrap">
+        <h3>📜 Operazioni Chiuse</h3>
+        <table>
+            <tr><th>Ticket</th><th>Azione</th><th>Lotti</th><th>Apertura</th><th>Chiusura</th><th>PNL</th></tr>
+            {''.join([f"<tr><td>{o.get('ticket','')}</td><td class='{o.get('action')}'>{o.get('action')}</td><td>{o.get('lots')}</td><td>{o.get('price')}</td><td>{o.get('close_price','')}</td><td style='color:{'#00c853' if float(o.get('pnl',0) or 0) >= 0 else '#ff1744'}'>{o.get('pnl', 0)}</td></tr>" for o in closed_orders]) if closed_orders else '<tr><td colspan="6" style="text-align:center;color:#4a5568;">Nessuna operazione chiusa</td></tr>'}
         </table>
     </div>
     <script>
@@ -335,8 +349,13 @@ def chart_data():
         df = df[['Open','High','Low','Close']].tail(100).reset_index()
         records = df.to_dict(orient='records')
         for r in records:
-            if 'Date' in r:
-                r['Date'] = r['Date'].strftime('%Y-%m-%d %H:%M')
+            for k in ('Date','Datetime','index'):
+                if k in r:
+                    v = r.pop(k)
+                    try:
+                        r['Date'] = v.strftime('%Y-%m-%d %H:%M')
+                    except AttributeError:
+                        r['Date'] = str(v)
         return jsonify(records)
     except Exception as e:
         return jsonify({'error': str(e)})
