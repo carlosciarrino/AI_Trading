@@ -72,7 +72,26 @@ Obiettivo: azienda digitale semplice, intuitiva, aggiornabile facilmente.
 - loop sell: non diagnosticato.
 - test.mq4 in MT4 Experts: residuo di Kilo, da rimuovere.
 - Script auto-sync Git: bug nel messaggio commit, scrive "$(date)" come
-  stringa invece di espanderlo.
+  stringa invece di espanderlo. RISOLTO 2026-10-14.
+- orchestrator.py: path ordini CORRETTO in O7b. count_open_orders legge
+  da account.json (campo open_orders). check_time_stop ora funziona.
+- orchestrator.py: regex volume CORRETTO in O7b. Score volume ora legge
+  il valore vero da volume_context.txt.
+- orchestrator.py: MAX_OPEN_ORDERS allineato a 1 in O7b (letto da
+  account.json).
+- orchestrator.py: soglia decisionale ALZATA da ±0.01 a ±0.10 in O7b.
+  Il sistema ora non apre su segnali deboli.
+- news_context.txt: fermo al 2026-09-05 (40 giorni). news_agent non aggiorna.
+- social_context.txt, cycles_context.txt: aggiornati ma non contengono le
+  parole chiave attese dall'orchestratore ('positivo'/'negativo', 'mese N').
+  Score sempre 0.
+- 8 agenti su 11 non scrivono log attivi: social_agent, news_agent,
+  cycle_agent, market_anomaly, kronos_agent, nzt_agent, signal_observer,
+  strategy_validator. Da indagare se fanno qualcosa o sono muti.
+- orchestrator.py: nessuna storia dietro l'ordine nel log (risolto
+  parzialmente con decision_log.jsonl in O7a).
+- orchestrator.py: nessuna logica post-apertura (break-even, rivalutazione
+  giornaliera, chiusura venerdi'). Da implementare.
 
 ## 5. Decisioni prese (non si ridiscutono)
 
@@ -99,6 +118,13 @@ D10. Solo Carlo e la Chat decidono modifiche a backup PC e a GitHub.
      Kilo non ha voce in capitolo su questo.
 D11. La dashboard legge da account.json la telemetria conto. Non da
      orders.json per il saldo. orders.json serve solo per ordini aperti.
+D12. IN PRODUZIONE l'orchestratore deve operare SOLO durante i mercati
+     Londra (8-17 UTC) e New York (13-22 UTC). Non deve operare di notte.
+     Attualmente config.json ha session: 'all' per fare test. Va cambiato
+     a 'london_newyork' prima della messa in produzione.
+D13. Ogni decisione dell'orchestratore (anche HOLD) va loggata in
+     decision_log.jsonl con score, pesi, punteggio finale, azione presa.
+     Nessuna decisione senza tracciabilita'.
 
 ## 6. Ricerca agenti (una tantum, periodica)
 
@@ -118,11 +144,14 @@ commerciale.
 
 ## 7. Prossimo passo (uno solo)
 
-Verificare il flusso di decisione trading: l'orchestratore (ai_workforce)
-scrive davvero AI_BRIDGE_CMD.txt? Gli agenti aggiornano i file di contesto?
-C'e' un loop attivo che porta a operazioni in MT4? Questo e' il cuore del
-sistema e va capito prima di aggiungere altro.
-Obiettivo: O7 (nuovo).
+O7c: indagare perche' 4 segnali su 5 sono sempre 0:
+- news: news_context.txt fermo al 2026-09-05 (news_agent rotto o muto).
+- social: social_context.txt aggiornato ma non contiene 'positivo'/'negativo'.
+- cycle: cycles_context.txt non matcha il pattern 'mese N' atteso.
+- volume: ora regex corretto, ma il file contiene 'score 0.00'.
+
+O7d: logica post-apertura (break-even, rivalutazione giornaliera,
+chiusura venerdi'). Vedi O8.
 
 ## 8. Come si aggiorna questo file
 
@@ -136,4 +165,8 @@ diario Git con messaggio "contesto: <cosa e' cambiato>".
 - O4: fix script auto-sync Git ($(date) non espanso). FATTO 2026-10-14.
 - O5: pulizia file storici. FATTO 2026-10-14 (190 MB liberati).
 - O6: ricerca agenti (vedi sezione 6).
-- O7: verificare flusso decisione trading orchestratore -> MT4.
+- O7: verificare flusso decisione trading orchestratore -> MT4. IN CORSO.
+- O8: logica post-apertura (break-even, rivalutazione giornaliera,
+  chiusura venerdi'). Da progettare.
+- O9: attivare orario di mercato London+NY in config.json (D12). Da
+  fare in fase di produzione.

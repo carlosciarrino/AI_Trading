@@ -5,10 +5,11 @@ from datetime import datetime, timezone, timedelta
 CONFIG_PATH = os.path.expanduser("~/AI_Trading/config.json")
 OLLAMA_URL = "http://localhost:11434/api/generate"
 MODEL = "qwen2.5:0.5b"
-MAX_OPEN_ORDERS = 3
+MAX_OPEN_ORDERS = 1
 MT4_FILES = os.path.expanduser("~/Scrivania/XM MT4/MQL4/Files")
-ORDERS_JSON = os.path.expanduser("~/mt4_shared/orders.json")
-OPEN_TIME_FILE = os.path.expanduser("~/mt4_shared/open_time.json")
+ORDERS_JSON = "/home/carlo/Scrivania/XM MT4/MQL4/Files/orders.json"
+OPEN_TIME_FILE = "/home/carlo/Scrivania/XM MT4/MQL4/Files/open_time.json"
+ACCOUNT_JSON = "/home/carlo/Scrivania/XM MT4/MQL4/Files/account.json"
 LOCK_FILE = "/tmp/orchestrator.lock"
 DECISION_LOG = "/home/carlo/AI_Trading/decision_log.jsonl"
 
@@ -35,13 +36,13 @@ def is_trading_hours(session):
 
 def count_open_orders():
     try:
-        with open(ORDERS_JSON) as f:
-            orders = json.load(f)
-        open_orders = [o for o in orders if o.get('status') == 'open']
-        print(f"[DEBUG] Ordini aperti nel file: {len(open_orders)}", flush=True)
-        return len(open_orders)
+        with open(ACCOUNT_JSON) as f:
+            acc = json.load(f)
+        n = int(acc.get("open_orders", 0))
+        print(f"[DEBUG] Ordini aperti (account.json): {n}", flush=True)
+        return n
     except Exception as e:
-        print(f"[DEBUG] Errore lettura orders.json: {e}", flush=True)
+        print(f"[DEBUG] Errore lettura account.json: {e}", flush=True)
         return 0
 
 
@@ -95,7 +96,7 @@ def get_signal():
         with open('/home/carlo/AI_Trading/volume_context.txt', 'r') as f:
             text = f.read()
             import re
-            match = re.search(r'Punteggio:\s*([-+]?\d+\.?\d*)', text)
+            match = re.search(r'score\s*([-+]?\d+\.?\d*)', text)
             if match:
                 scores['volume'] = float(match.group(1))
             else:
@@ -127,9 +128,9 @@ def get_signal():
         weight_sum += weights[key]
     final_score = total / weight_sum if weight_sum > 0 else 0.0
     print(f"Punteggio combinato: {final_score:.3f}", flush=True)
-    if final_score > 0.01:
+    if final_score > 0.10:
         signal = "BUY"
-    elif final_score < -0.01:
+    elif final_score < -0.10:
         signal = "SELL"
     else:
         signal = "HOLD"
