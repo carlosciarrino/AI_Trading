@@ -126,3 +126,64 @@ Atteso:
 - decision_log.jsonl: storico decisioni orchestratore.
 - docs/kilo3_evidence/, docs/kilo4_evidence/: evidenze Kilo.
 - Backup vari: .pre_o7a, .pre_o7b, .pre_venvfix, .pre_dashboard, ecc.
+
+---
+
+## Sessione 2026-10-14 sera - O7c diagnosi 4 segnali
+
+Sessione: 14 ottobre 2026, sera (22:00-23:15 circa).
+Scopo: O7c - indagare perche' 4 segnali su 5 davano sempre score 0.
+
+### Scoperte
+
+- **news**: `news_context.txt` ORFANO. Nessun processo attivo lo scrive.
+  `news_agent.py` attuale scrive solo `/tmp/news_score.txt` (numero, sempre
+  0.0). Fetch a Investing.com RSS funziona (HTTP 200, RSS valido), ma
+  keyword-list italiane non trovate nei titoli. Segnale SOSPESO in
+  `orchestrator.py` (forzato a 0.0). Cantiere O10.
+- **social**: FIXATO. `social_agent.py` patchato con `sentiment_score()`
+  (keyword list EN, positivo/negativo/neutro). `social_context.txt` ora
+  contiene riga `Sentiment: negativo`. Orchestratore legge correttamente.
+  Contributo: -0.2.
+- **cycle**: FIXATO. `cycle_agent.py` patchato: `df.columns.get_level_values(0)`
+  per appiattire MultiIndex yfinance. `cycles_context.txt` ora contiene 12
+  righe `Mese N: media prezzo X.XXXXX`. Mese 10 = 1.08960 -> range neutro
+  (1.08-1.10) -> score 0.0. Nessun impatto su final_score attuale.
+- **volume**: regex orchestratore accetta ora `score` o `Punteggio`
+  (case-insensitive). Valore reale 0.00 (volume ratio 1.00, corretto).
+- **experience**: -0.2 (3 PERDITE recenti in `experiences.json`). Funziona.
+- **final_score**: -0.08. Signal: HOLD.
+
+### Contratto orchestratore <-> EA chiarito
+
+- Formato comando: `buy|sell lots sl tp` oppure `close <ticket>`.
+- `AI_BRIDGE_CMD.txt` consumato one-shot (EA cancella dopo lettura).
+- `AI_BRIDGE_RES.txt` contiene esito (`OK: aperto ...` / `ERR: ...`).
+- Orchestratore NON legge `AI_BRIDGE_RES.txt`. Logga `action_taken` senza
+  verificare esito.
+- Bug `orders.json`: record con doppio `status` (`open` + `closed`). Dedup
+  v3.5 cerca `"status":"closed"` esatto e non scatta nel caso osservato.
+
+### Backup creati (NON cancellare per 24h, D3)
+
+- `orchestrator.py.pre_o7c` (pre-fix O7c)
+- `orchestrator.py.pre_o7c_news_suspend` (pre-sospensione news)
+- `social_agent.py.pre_s1` (coincide con file patchato - backup poco utile)
+- `cycle_agent.py.pre_h` (pre-patch cycle)
+- `CONTESTO.md.pre_o7c`, `HANDOFF.md.pre_o7c`
+
+### Da fare prossima sessione
+
+1. Test end-to-end orchestratore -> MT4 con comando manuale (buy/sell a
+   prezzi plausibili). Verificare catena: AI_BRIDGE_CMD.txt -> EA ->
+   AI_BRIDGE_RES.txt -> orders.json -> account.json -> dashboard.
+2. Fix `orders.json` dedup (v3.5-bis).
+3. Orchestratore legge `AI_BRIDGE_RES.txt` per tracciare esito reale.
+4. Cantiere O10: riprogettare `news_agent.py` (file di testo vs numero).
+5. Pulizia processi tmux zombie (es. wrapper 1263886).
+
+### Decisioni nuove proposte
+
+- **O10**: news redesign.
+- **O11**: password broker fuori da `config.json` (file in chiaro,
+  potenzialmente su GitHub).

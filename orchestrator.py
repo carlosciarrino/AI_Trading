@@ -48,17 +48,10 @@ def count_open_orders():
 
 def get_signal():
     scores = {}
-    try:
-        with open('/home/carlo/AI_Trading/news_context.txt', 'r') as f:
-            text = f.read().lower()
-            if any(w in text for w in ['guerra', 'crisi', 'inflazione', 'rialzo tassi']):
-                scores['news'] = -0.3
-            elif any(w in text for w in ['pace', 'accordo', 'taglio tassi', 'stimoli']):
-                scores['news'] = 0.3
-            else:
-                scores['news'] = 0.0
-    except:
-        scores['news'] = 0.0
+    # O7c: news SOSPESO. news_agent non aggiorna news_context.txt da 40 giorni.
+    # Il parser a keyword su titoli vecchi e ambigui produce segnali inaffidabili.
+    # Riattivare SOLO dopo che news_agent scrive un file fresco e datato.
+    scores['news'] = 0.0
     try:
         with open('/home/carlo/AI_Trading/social_context.txt', 'r') as f:
             text = f.read().lower()
@@ -96,7 +89,7 @@ def get_signal():
         with open('/home/carlo/AI_Trading/volume_context.txt', 'r') as f:
             text = f.read()
             import re
-            match = re.search(r'score\s*([-+]?\d+\.?\d*)', text)
+            match = re.search(r'(?:score|punteggio)\s*:?\s*([-+]?\d+\.?\d*)', text, re.IGNORECASE)
             if match:
                 scores['volume'] = float(match.group(1))
             else:

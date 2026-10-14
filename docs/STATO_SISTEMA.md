@@ -1,25 +1,25 @@
 # STATO SISTEMA AI_TRADING
 
 ## 1. Stato rilevato (auto)
-Timestamp: 2026-10-14 21:55:34
-TMUX: ai_workforce: 1 windows (created Tue Oct 13 16:36:06 2026)
-cycle_agent: 1 windows (created Tue Oct 13 16:36:06 2026)
-experience_agent: 1 windows (created Tue Oct 13 16:36:06 2026)
-kronos_agent: 1 windows (created Tue Oct 13 16:36:06 2026)
-market_anomaly: 1 windows (created Tue Oct 13 16:36:06 2026)
-news_agent: 1 windows (created Tue Oct 13 16:36:06 2026)
-nzt_agent: 1 windows (created Tue Oct 13 16:36:06 2026)
-signal_observer: 1 windows (created Tue Oct 13 16:36:06 2026)
-social_agent: 1 windows (created Tue Oct 13 16:36:06 2026)
-strategy_validator: 1 windows (created Tue Oct 13 16:36:06 2026)
-supervisor: 1 windows (created Wed Oct 14 21:37:57 2026)
-volume_agent: 1 windows (created Tue Oct 13 16:36:06 2026)
+Timestamp: 2026-10-14 22:54:34
+TMUX: ai_workforce: 1 windows (created Wed Oct 14 22:31:56 2026)
+cycle_agent: 1 windows (created Wed Oct 14 22:53:12 2026)
+experience_agent: 1 windows (created Wed Oct 14 21:58:49 2026)
+kronos_agent: 1 windows (created Wed Oct 14 21:58:49 2026)
+market_anomaly: 1 windows (created Wed Oct 14 21:58:49 2026)
+news_agent: 1 windows (created Wed Oct 14 21:58:49 2026)
+nzt_agent: 1 windows (created Wed Oct 14 21:58:49 2026)
+signal_observer: 1 windows (created Wed Oct 14 21:58:49 2026)
+social_agent: 1 windows (created Wed Oct 14 22:43:50 2026)
+strategy_validator: 1 windows (created Wed Oct 14 21:58:49 2026)
+supervisor: 1 windows (created Wed Oct 14 21:58:49 2026)
+volume_agent: 1 windows (created Wed Oct 14 21:58:49 2026)
 Servizi systemd user: web-app: active; controllo-remoto: active; ai-trading-agenti: active
 Processi Windows: terminal.exe: carlo       2366  0.0  0.0   9984  2132 ?        S    ott13   0:00 bash -c wineserver -k; export WINEPREFIX="/home/carlo/.wine_trading_finale"; export WINEDEBUG=-all; cd "/home/carlo/Scrivania/XM MT4" && wine terminal.exe /portable
-carlo       2369 12.9  0.6 1464336 80008 ?       Sl   ott13 227:50 terminal.exe /portable; metaeditor.exe: nessun processo metaeditor.exe
-File condivisi MT4: orders.json: presente (135 bytes); open_time.json: presente (2002 bytes); sl_commands.json: presente (109 bytes)
+carlo       2369 12.8  0.6 1464336 75476 ?       Sl   ott13 233:08 terminal.exe /portable; metaeditor.exe: nessun processo metaeditor.exe
+File condivisi MT4: orders.json: presente (187 bytes); open_time.json: presente (2002 bytes); sl_commands.json: presente (109 bytes)
 IP Tailscale: 100.77.33.7
-Git: commit bfb2509: auto-sync mer 14 ott 2026, 21:07:26, WEST
+Git: commit 6ea87e6: contesto: aggiunta tabella segnali orchestratore e pesi
 
 ## 2. Diario azioni
 
@@ -55,6 +55,9 @@ Git: commit bfb2509: auto-sync mer 14 ott 2026, 21:07:26, WEST
 - 14 October 2026 - 5c78cac: auto-sync $(date)
 - 14 October 2026 - 9852d34: auto-sync $(date)
 - 14 October 2026 - bfb2509: auto-sync mer 14 ott 2026, 21:07:26, WEST
+- 14 October 2026 - b986387: auto-sync mer 14 ott 2026, 22:00:01, WEST
+- 14 October 2026 - 061cf63: handoff: sessione 2026-10-14 (O1-O7b) + documenti di continuita'
+- 14 October 2026 - 6ea87e6: contesto: aggiunta tabella segnali orchestratore e pesi
 
 ## 3. Problemi noti
 

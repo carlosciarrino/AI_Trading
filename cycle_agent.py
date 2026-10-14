@@ -7,6 +7,8 @@ def analyze_cycles():
     try:
         df = yf.download("EURUSD=X", period="5y", interval="1d", progress=False)
         if df.empty: return
+        if hasattr(df.columns, "get_level_values"):
+            df.columns = df.columns.get_level_values(0)
         df['Month'] = df.index.month
         monthly_avg = df.groupby('Month')['Close'].mean()
         

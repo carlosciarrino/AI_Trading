@@ -62,6 +62,23 @@ Risultato: HOLD.
 Riferimento codice: /home/carlo/AI_Trading/orchestrator.py, funzione
 get_signal().
 
+## 3c. Contratto orchestratore <-> EA (confermato 2026-10-14)
+
+Formato comando accettato da AI_BRIDGE_EA.mq4 (funzione ExecuteCommand):
+  buy  [lots] [sl_price] [tp_price]
+  sell [lots] [sl_price] [tp_price]
+  close <ticket>
+
+Ciclo file comando:
+- orchestratore scrive "AI_BRIDGE_CMD.txt"
+- EA legge, esegue, FileDelete(CMD_FILE) one-shot
+- EA scrive esito in "AI_BRIDGE_RES.txt" (OK: aperto <ticket>... / ERR: ...)
+- orchestratore NON legge AI_BRIDGE_RES.txt (debolezza, da fixare)
+
+Path:
+- MT4_FILES = ~/Scrivania/XM MT4/MQL4/Files
+- AI_BRIDGE_CMD.txt, AI_BRIDGE_RES.txt, orders.json, account.json
+
 ## 4. Stato attuale
 
 ### Cosa funziona
@@ -107,10 +124,23 @@ get_signal().
   account.json).
 - orchestrator.py: soglia decisionale ALZATA da ±0.01 a ±0.10 in O7b.
   Il sistema ora non apre su segnali deboli.
-- news_context.txt: fermo al 2026-09-05 (40 giorni). news_agent non aggiorna.
-- social_context.txt, cycles_context.txt: aggiornati ma non contengono le
-  parole chiave attese dall'orchestratore ('positivo'/'negativo', 'mese N').
-  Score sempre 0.
+- news_context.txt: ORFANO. Nessun agente attivo lo scrive. Residuo storico.
+  news_agent.py attuale scrive solo /tmp/news_score.txt (numero). Segnale
+  news SOSPESO in orchestrator.py (forzato a 0.0). Da riprogettare in O10.
+- social_agent.py: PATCHATO 2026-10-14. Aggiunta funzione sentiment_score()
+  (keyword list EN, positivo/negativo/neutro). File social_context.txt ora
+  contiene riga "Sentiment: negativo|positivo|neutro". Orchestratore legge
+  correttamente. Segnale ATTIVO.
+- cycle_agent.py: PATCHATO 2026-10-14. Fix MultiIndex yfinance
+  (df.columns.get_level_values(0)). cycles_context.txt ora contiene 12 righe
+  "Mese N: media prezzo X.XXXXX". Orchestratore legge correttamente. Segnale
+  ATTIVO (ottobre media 1.08960 -> range 1.08-1.10 -> 0.0).
+- orchestrator.py: NON legge AI_BRIDGE_RES.txt. Logga action_taken ma non
+  verifica esito. decision_log.jsonl puo' riportare ticket:null anche se
+  l'ordine e' stato rifiutato dall'EA (es. "ERR: limite operazioni raggiunto").
+  Da fixare.
+- orders.json: record con doppio "status" (open + closed). Bug residuo v3.5
+  nella dedup (cerca "status":"closed" esatto). Da fixare in v3.5-bis.
 - 8 agenti su 11 non scrivono log attivi: social_agent, news_agent,
   cycle_agent, market_anomaly, kronos_agent, nzt_agent, signal_observer,
   strategy_validator. Da indagare se fanno qualcosa o sono muti.
