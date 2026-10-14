@@ -10,6 +10,7 @@ MT4_FILES = os.path.expanduser("~/Scrivania/XM MT4/MQL4/Files")
 ORDERS_JSON = os.path.expanduser("~/mt4_shared/orders.json")
 OPEN_TIME_FILE = os.path.expanduser("~/mt4_shared/open_time.json")
 LOCK_FILE = "/tmp/orchestrator.lock"
+DECISION_LOG = "/home/carlo/AI_Trading/decision_log.jsonl"
 
 
 def load_config():
@@ -127,11 +128,18 @@ def get_signal():
     final_score = total / weight_sum if weight_sum > 0 else 0.0
     print(f"Punteggio combinato: {final_score:.3f}", flush=True)
     if final_score > 0.01:
-        return "BUY"
+        signal = "BUY"
     elif final_score < -0.01:
-        return "SELL"
+        signal = "SELL"
     else:
-        return "HOLD"
+        signal = "HOLD"
+    detail = {
+        "scores": dict(scores),
+        "weights": dict(weights),
+        "final_score": round(final_score, 4),
+        "signal": signal,
+    }
+    return signal, detail
 
 
 def check_time_stop():
@@ -169,6 +177,25 @@ def check_time_stop():
         print(f"Errore time-stop: {e}")
 
 
+def write_decision(detail, action_taken, ticket=None, reason=None):
+    import json as _json
+    entry = {
+        "timestamp": datetime.now().isoformat(),
+        "scores": detail.get("scores", {}),
+        "weights": detail.get("weights", {}),
+        "final_score": detail.get("final_score", 0.0),
+        "signal": detail.get("signal", "HOLD"),
+        "action_taken": action_taken,
+        "ticket": ticket,
+        "reason": reason,
+    }
+    try:
+        with open(DECISION_LOG, "a") as f:
+            f.write(_json.dumps(entry) + "\n")
+    except Exception as e:
+        print(f"Errore write_decision: {e}", flush=True)
+
+
 def main():
     # Lock esclusivo
     if os.path.exists(LOCK_FILE):
@@ -202,7 +229,7 @@ def main():
                 time.sleep(3600)
                 continue
 
-            signal = get_signal()
+            signal, detail = get_signal()
             print(f"Segnale AI: {signal}", flush=True)
 
             if signal in ("BUY", "SELL"):
@@ -241,8 +268,10 @@ def main():
                 cmd_path = os.path.join(MT4_FILES, "AI_BRIDGE_CMD.txt")
                 with open(cmd_path, "w") as f:
                     f.write(f"{cmd}\n")
+                write_decision(detail, action_taken=action, reason="signal_ok")
             else:
                 print("HOLD", flush=True)
+                write_decision(detail, action_taken="none", reason="score_neutro")
 
             time.sleep(3600)
     finally:

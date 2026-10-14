@@ -59,7 +59,9 @@ Obiettivo: azienda digitale semplice, intuitiva, aggiornabile facilmente.
   a parita' di ordini. Backup del file gonfio in MQL4/Files/orders.json.pre_v3.5fix.
 - orders_backup_20261002_2335.json: 200 MB, file storico enorme in
   MQL4/Files/. Va archiviato o rimosso.
-- supervisor: venv rotto, non riavviato.
+- supervisor: RISCRITTO v2 il 2026-10-14. Legge stato agenti da tmux,
+  riavvia critici fermi, aggiorna audit_status.json ogni 300s. Venv
+  canonico: /home/carlo/AI_Trading_Agents/venv. Log: /home/carlo/supervisor.log.
 - web_app: RISCRITTO unificato il 2026-10-14. Legge account.json e
   orders.json da MT4, mostra saldo/equity/margin/free_margin/profit,
   PNL giorno/settimana, ordini aperti/chiusi, controllo agenti tmux
@@ -116,15 +118,11 @@ commerciale.
 
 ## 7. Prossimo passo (uno solo)
 
-Decidere con Carlo il prossimo obiettivo tra:
-(A) Pulizia file storici (O5): orders_backup 200 MB, test.mq4,
-    orders.json.pre_v3.5fix, web_app.py.pre_unified_20261014,
-    web_app_backup.py, _backups, backups vari.
-(B) Fix supervisor venv (O3).
-(C) Fix script auto-sync Git $(date) non espanso (O4).
-(D) Ricerca agenti periodica (O6).
-
-La decisione spetta a Carlo. Un solo compito per volta.
+Verificare il flusso di decisione trading: l'orchestratore (ai_workforce)
+scrive davvero AI_BRIDGE_CMD.txt? Gli agenti aggiornano i file di contesto?
+C'e' un loop attivo che porta a operazioni in MT4? Questo e' il cuore del
+sistema e va capito prima di aggiungere altro.
+Obiettivo: O7 (nuovo).
 
 ## 8. Come si aggiorna questo file
 
@@ -135,7 +133,7 @@ diario Git con messaggio "contesto: <cosa e' cambiato>".
 
 ## 9. Prossimi obiettivi in coda (non attivi, solo promemoria)
 
-- O3: fix supervisor venv.
-- O4: fix script auto-sync Git ($(date) non espanso).
-- O5: pulizia file storici (orders_backup 200 MB, test.mq4).
+- O4: fix script auto-sync Git ($(date) non espanso). FATTO 2026-10-14.
+- O5: pulizia file storici. FATTO 2026-10-14 (190 MB liberati).
 - O6: ricerca agenti (vedi sezione 6).
+- O7: verificare flusso decisione trading orchestratore -> MT4.

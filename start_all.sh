@@ -1,7 +1,7 @@
 #!/bin/bash
 sleep 20
 cd /home/carlo/AI_Trading
-PY=/usr/bin/python3
+PY=/home/carlo/AI_Trading_Agents/venv/bin/python3
 
 tmux new-session -d -s ai_workforce "cd /home/carlo/AI_Trading && $PY orchestrator.py > /home/carlo/ai_workforce.log 2>&1"
 tmux new-session -d -s supervisor "cd /home/carlo/AI_Trading && $PY supervisor_agent.py > /home/carlo/supervisor.log 2>&1"
