@@ -1,7 +1,7 @@
 # STATO SISTEMA AI_TRADING
 
 ## 1. Stato rilevato (auto)
-Timestamp: 2026-10-13 23:58:34
+Timestamp: 2026-10-14 00:58:34
 TMUX: ai_workforce: 1 windows (created Tue Oct 13 16:36:06 2026)
 cycle_agent: 1 windows (created Tue Oct 13 16:36:06 2026)
 experience_agent: 1 windows (created Tue Oct 13 16:36:06 2026)
@@ -15,11 +15,11 @@ strategy_validator: 1 windows (created Tue Oct 13 16:36:06 2026)
 supervisor: 1 windows (created Tue Oct 13 16:36:06 2026)
 volume_agent: 1 windows (created Tue Oct 13 16:36:06 2026)
 Servizi systemd user: web-app: active; controllo-remoto: active; ai-trading-agenti: active
-Processi Windows: terminal.exe: carlo       2366  0.0  0.0   9984  2392 ?        S    16:36   0:00 bash -c wineserver -k; export WINEPREFIX="/home/carlo/.wine_trading_finale"; export WINEDEBUG=-all; cd "/home/carlo/Scrivania/XM MT4" && wine terminal.exe /portable
-carlo       2369 15.6  0.9 1464320 118804 ?      Sl   16:36  69:13 terminal.exe /portable; metaeditor.exe: carlo      11929  2.1  1.5 1427060 191404 ?      Sl   17:24   8:28 Z:\home\carlo\Scrivania\XM MT4\metaeditor.exe /portable
+Processi Windows: terminal.exe: carlo       2366  0.0  0.0   9984  2392 ?        S    ott13   0:00 bash -c wineserver -k; export WINEPREFIX="/home/carlo/.wine_trading_finale"; export WINEDEBUG=-all; cd "/home/carlo/Scrivania/XM MT4" && wine terminal.exe /portable
+carlo       2369 15.1  0.9 1464320 118336 ?      Sl   ott13  76:19 terminal.exe /portable; metaeditor.exe: carlo      11929  2.1  1.5 1427060 191280 ?      Sl   ott13   9:55 Z:\home\carlo\Scrivania\XM MT4\metaeditor.exe /portable
 File condivisi MT4: orders.json: presente (397 bytes); open_time.json: presente (1973 bytes); sl_commands.json: presente (109 bytes)
 IP Tailscale: 100.77.33.7
-Git: commit 957b8b5: auto-sync $(date)
+Git: commit ef0c7e7: auto-sync $(date)
 
 ## 2. Diario azioni
 
@@ -32,6 +32,7 @@ Git: commit 957b8b5: auto-sync $(date)
 - 13 October 2026 - 8f5967a: auto-sync $(date)
 - 13 October 2026 - 81849dc: auto-sync $(date)
 - 13 October 2026 - 957b8b5: auto-sync $(date)
+- 14 October 2026 - ef0c7e7: auto-sync $(date)
 
 ## 3. Problemi noti
 
