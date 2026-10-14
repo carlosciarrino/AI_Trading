@@ -1,7 +1,7 @@
 # STATO SISTEMA AI_TRADING
 
 ## 1. Stato rilevato (auto)
-Timestamp: 2026-10-14 04:58:34
+Timestamp: 2026-10-14 05:58:34
 TMUX: ai_workforce: 1 windows (created Tue Oct 13 16:36:06 2026)
 cycle_agent: 1 windows (created Tue Oct 13 16:36:06 2026)
 experience_agent: 1 windows (created Tue Oct 13 16:36:06 2026)
@@ -16,10 +16,10 @@ supervisor: 1 windows (created Tue Oct 13 16:36:06 2026)
 volume_agent: 1 windows (created Tue Oct 13 16:36:06 2026)
 Servizi systemd user: web-app: active; controllo-remoto: active; ai-trading-agenti: active
 Processi Windows: terminal.exe: carlo       2366  0.0  0.0   9984  2388 ?        S    ott13   0:00 bash -c wineserver -k; export WINEPREFIX="/home/carlo/.wine_trading_finale"; export WINEDEBUG=-all; cd "/home/carlo/Scrivania/XM MT4" && wine terminal.exe /portable
-carlo       2369 14.2  0.9 1464320 117960 ?      Sl   ott13 105:28 terminal.exe /portable; metaeditor.exe: carlo      11929  2.2  1.5 1427060 191192 ?      Sl   ott13  15:43 Z:\home\carlo\Scrivania\XM MT4\metaeditor.exe /portable
+carlo       2369 14.0  0.9 1464320 117960 ?      Sl   ott13 112:40 terminal.exe /portable; metaeditor.exe: carlo      11929  2.2  1.5 1427060 191192 ?      Sl   ott13  17:11 Z:\home\carlo\Scrivania\XM MT4\metaeditor.exe /portable
 File condivisi MT4: orders.json: presente (397 bytes); open_time.json: presente (1973 bytes); sl_commands.json: presente (109 bytes)
 IP Tailscale: 100.77.33.7
-Git: commit ddef97a: auto-sync $(date)
+Git: commit 75bb43f: auto-sync $(date)
 
 ## 2. Diario azioni
 
@@ -37,6 +37,7 @@ Git: commit ddef97a: auto-sync $(date)
 - 14 October 2026 - 7621477: auto-sync $(date)
 - 14 October 2026 - 1b17e32: auto-sync $(date)
 - 14 October 2026 - ddef97a: auto-sync $(date)
+- 14 October 2026 - 75bb43f: auto-sync $(date)
 
 ## 3. Problemi noti
 
