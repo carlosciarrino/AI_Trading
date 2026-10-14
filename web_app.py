@@ -1,12 +1,50 @@
+#!/usr/bin/env python3
+"""
+AI_BRIDGE Dashboard - web_app.py
+Versione unificata 2026-10-14
+Legge account.json e orders.json da MT4, mostra stato agenti tmux.
+"""
 from flask import Flask, render_template_string, jsonify, request
-import json, os, yfinance as yf
-from datetime import datetime
+import json
+import os
+import subprocess
+from datetime import datetime, timedelta
 
 app = Flask(__name__)
 
 # =====================
-# TEMPLATE BASE
+# PATH FILES MT4
 # =====================
+MT4_FILES = "/home/carlo/Scrivania/XM MT4/MQL4/Files"
+ACCOUNT_JSON = os.path.join(MT4_FILES, "account.json")
+ORDERS_JSON  = os.path.join(MT4_FILES, "orders.json")
+
+# =====================
+# AGENTI TMUX
+# =====================
+AGENTS = {
+    "cycle_agent":         "Analizza cicli storici e stagionalita' del mercato.",
+    "experience_agent":    "Impara dagli errori passati e aggiorna la memoria.",
+    "kronos_agent":        "Analisi temporale e timing operativo.",
+    "market_anomaly":      "Rileva anomalie di mercato.",
+    "news_agent":          "Analizza notizie macro.",
+    "nzt_agent":           "Strategia NZT.",
+    "signal_observer":     "Osserva e valida segnali.",
+    "social_agent":        "Sentiment da social e news trending.",
+    "strategy_validator":  "Valida strategie su dati storici.",
+    "supervisor":          "Supervisiona l'orchestrazione degli agenti.",
+    "volume_agent":        "Analisi volumi.",
+}
+
+# =====================
+# HELPER: LETTURA FILE MT4
+# =====================
+def read_json(path):
+    try:
+        with open(path, "r") as f:
+            return json.load(f)
+    except Exception:
+        return None
 BASE_HTML = """
 <!DOCTYPE html>
 <html lang="it">
@@ -16,12 +54,12 @@ BASE_HTML = """
     <title>{{ title }} · AI_BRIDGE</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Inter', sans-serif; background: #0b0e14; color: #e5e9f0; display: flex; min-height: 100vh; }
+        body { font-family: 'Inter', system-ui, sans-serif; background: #0b0e14; color: #e5e9f0; display: flex; min-height: 100vh; }
         .sidebar { width: 240px; background: #131722; border-right: 1px solid #2a2e39; padding: 24px 16px; display: flex; flex-direction: column; flex-shrink: 0; height: 100vh; position: sticky; top: 0; }
         .sidebar .logo { font-size: 20px; font-weight: 700; margin-bottom: 32px; display: flex; align-items: center; gap: 10px; }
         .sidebar .logo span { background: linear-gradient(135deg, #2962ff, #7c3aed); padding: 6px 10px; border-radius: 8px; font-size: 14px; }
         .sidebar nav a { color: #78828c; text-decoration: none; padding: 10px 14px; border-radius: 8px; font-size: 14px; font-weight: 500; display: block; cursor: pointer; margin-bottom: 4px; }
-        .sidebar nav a:hover, .sidebar nav a.active { background: #2a2e39; color: #e5e9f0; }
+        .sidebar nav a:hover { background: #2a2e39; color: #e5e9f0; }
         .sidebar .footer { margin-top: auto; font-size: 12px; color: #4a5568; border-top: 1px solid #2a2e39; padding-top: 16px; }
         .main { flex: 1; padding: 24px 32px; overflow-y: auto; }
         .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
@@ -30,11 +68,12 @@ BASE_HTML = """
         .header .status .dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
         .header .status .dot.online { background: #00c853; }
         .header .status .dot.offline { background: #ff1744; }
-        #verification-banner { margin-bottom: 20px; padding: 12px 20px; border-radius: 8px; display: none; font-size: 14px; }
         .kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px; margin-bottom: 28px; }
         .kpi-card { background: #131722; border: 1px solid #2a2e39; border-radius: 12px; padding: 16px 20px; }
         .kpi-card .label { font-size: 13px; color: #78828c; text-transform: uppercase; }
         .kpi-card .value { font-size: 24px; font-weight: 700; margin-top: 4px; }
+        .kpi-card .value.green { color: #00c853; }
+        .kpi-card .value.red { color: #ff1744; }
         .card-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
         .card-project { background: #131722; border: 1px solid #2a2e39; border-radius: 12px; padding: 24px; cursor: pointer; transition: all 0.2s; }
         .card-project:hover { border-color: #2962ff; transform: translateY(-2px); }
@@ -47,13 +86,8 @@ BASE_HTML = """
         .controls .start { background: #00c853; color: #0b0e14; }
         .controls .stop { background: #ff1744; color: #fff; }
         .controls .restart { background: #2962ff; color: #fff; }
-        .section { display: none; margin-bottom: 28px; }
-        .section.active { display: block; }
-        .config-area { background: #131722; border: 1px solid #2a2e39; border-radius: 12px; padding: 20px 24px; display: flex; flex-wrap: wrap; align-items: flex-end; gap: 16px; }
-        .config-area label { font-size: 13px; color: #78828c; display: flex; flex-direction: column; gap: 4px; }
-        .config-area select, .config-area input { background: #1e222d; border: 1px solid #2a2e39; border-radius: 8px; padding: 8px 14px; color: #e5e9f0; font-size: 14px; }
-        .config-area .save-btn { background: #2962ff; border: none; border-radius: 40px; padding: 10px 24px; color: #fff; font-weight: 600; cursor: pointer; }
-        .chart-container { background: #131722; border: 1px solid #2a2e39; border-radius: 12px; padding: 16px 20px; margin-bottom: 28px; }
+        .link-btn { display: inline-block; background: #2962ff; color: #fff; padding: 10px 24px; border-radius: 40px; text-decoration: none; font-weight: 600; font-size: 14px; margin-bottom: 20px; }
+        .link-btn:hover { background: #1e4fd6; }
         .table-wrap { background: #131722; border: 1px solid #2a2e39; border-radius: 12px; padding: 16px 20px; margin-bottom: 28px; overflow-x: auto; }
         .table-wrap h3 { font-size: 16px; font-weight: 600; margin-bottom: 12px; }
         table { width: 100%; border-collapse: collapse; font-size: 14px; }
@@ -61,11 +95,16 @@ BASE_HTML = """
         td { padding: 10px 8px; border-bottom: 1px solid #1e222d; }
         .buy { color: #00c853; font-weight: 600; }
         .sell { color: #ff1744; font-weight: 600; }
-        .log-box { background: #0b0e14; border: 1px solid #2a2e39; border-radius: 12px; padding: 16px 20px; max-height: 200px; overflow-y: auto; font-family: monospace; font-size: 12px; color: #78828c; white-space: pre-wrap; }
         .placeholder { background: #131722; border: 1px dashed #2a2e39; border-radius: 12px; padding: 40px; text-align: center; color: #78828c; }
+        .agent-row button { border: none; padding: 6px 14px; border-radius: 20px; font-size: 12px; font-weight: 600; cursor: pointer; margin-right: 4px; }
+        .agent-row .btn-start { background: #00c853; color: #0b0e14; }
+        .agent-row .btn-stop { background: #ff1744; color: #fff; }
+        .agent-row .btn-restart { background: #2962ff; color: #fff; }
+        .agent-status { display: inline-block; padding: 3px 10px; border-radius: 12px; font-size: 12px; font-weight: 600; }
+        .agent-status.active { background: #0d3d1e; color: #00c853; }
+        .agent-status.stopped { background: #3d0d0d; color: #ff1744; }
         @media (max-width: 768px) { .sidebar { display: none; } .main { padding: 16px; } }
     </style>
-    <script src="https://cdn.plot.ly/plotly-2.27.1.min.js"></script>
 </head>
 <body>
 <div class="sidebar">
@@ -73,201 +112,352 @@ BASE_HTML = """
     <nav>
         <a href="/">🏠 Home</a>
         <a href="/trading">💱 Trading</a>
+        <a href="/agents">🤖 Agenti</a>
+        <a href="/verifier">✅ Verifier</a>
         <a href="/media">🎬 Media</a>
         <a href="/ecommerce">🛒 E-commerce</a>
-        <a href="/verifier">✅ Verifier</a>
     </nav>
-    <div class="footer">v3.0 · {{ now }}</div>
+    <div class="footer">v4.0 · {{ now }}</div>
 </div>
 <div class="main">
     <div class="header">
         <h1>{{ title }}</h1>
-        <div class="status"><span class="dot online" id="status_dot"></span><span id="status_text">Online</span><span style="color:#4a5568;">|</span><span>{{ now }}</span></div>
-    </div>
-    <div id="verification-banner">
-        <strong>Stato Verifica:</strong> <span id="verification-text">Nessuna verifica recente</span>
+        <div class="status"><span class="dot online"></span><span>Online</span><span style="color:#4a5568;">|</span><span>{{ now }}</span></div>
     </div>
     {{ content | safe }}
 </div>
-<script>
-function loadVerificationStatus() {
-    fetch('/api/verification_status')
-        .then(r => r.json())
-        .then(data => {
-            const banner = document.getElementById('verification-banner');
-            const text = document.getElementById('verification-text');
-            if (!data || !data.timestamp) { banner.style.display = 'none'; return; }
-            banner.style.display = 'block';
-            const date = new Date(data.timestamp).toLocaleString('it-IT');
-            if (data.success) {
-                banner.style.background = '#0d3d1e';
-                banner.style.color = '#00c853';
-                text.innerText = `✅ ${data.file} - PASS (${date})`;
-            } else {
-                banner.style.background = '#3d0d0d';
-                banner.style.color = '#ff1744';
-                text.innerText = `❌ ${data.file} - FAIL (${date})`;
-            }
-        }).catch(e => console.error(e));
-}
-setInterval(loadVerificationStatus, 30000);
-loadVerificationStatus();
-</script>
 </body>
 </html>
 """
 
 def render_page(title, content):
-    return render_template_string(BASE_HTML, title=title, content=content, now=datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
-
-@app.template_filter('timestamp')
-def timestamp_filter(s):
+    return render_template_string(
+        BASE_HTML,
+        title=title,
+        content=content,
+        now=datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+    )
+# =====================
+# HELPER TMUX
+# =====================
+def tmux_sessions():
     try:
-        return datetime.fromtimestamp(int(s)).strftime('%Y-%m-%d %H:%M:%S')
-    except:
-        return str(s)
+        out = subprocess.run(
+            ["tmux", "ls"],
+            capture_output=True, text=True, timeout=5
+        )
+        if out.returncode != 0:
+            return []
+        sessions = []
+        for line in out.stdout.splitlines():
+            name = line.split(":")[0].strip()
+            if name:
+                sessions.append(name)
+        return sessions
+    except Exception:
+        return []
+
+def agent_status():
+    sessions = tmux_sessions()
+    status = {}
+    for name in AGENTS:
+        status[name] = "active" if name in sessions else "stopped"
+    return status
 
 # =====================
-# HOME
+# HELPER PNL
+# =====================
+def calculate_pnl(period):
+    orders = read_json(ORDERS_JSON) or []
+    if not isinstance(orders, list):
+        return 0.0
+    now = datetime.now()
+    if period == "day":
+        start = now.replace(hour=0, minute=0, second=0, microsecond=0)
+    elif period == "week":
+        start = now - timedelta(days=now.weekday())
+        start = start.replace(hour=0, minute=0, second=0, microsecond=0)
+    else:
+        return 0.0
+    total = 0.0
+    for o in orders:
+        if o.get("status") != "closed":
+            continue
+        ts = o.get("close_time") or o.get("time") or 0
+        try:
+            dt = datetime.fromtimestamp(int(ts))
+        except Exception:
+            continue
+        if dt >= start:
+            try:
+                total += float(o.get("pnl") or 0)
+            except Exception:
+                pass
+    return total
+
+# =====================
+# ROUTE: HOME
 # =====================
 @app.route('/')
 def index():
-    projects_online = os.system("tmux list-sessions | grep -q ai_workforce") == 0
-    verifier_online = os.system("tmux list-sessions | grep -q verifier") == 0
+    sessions = tmux_sessions()
+    trading_on = "ai_workforce" in sessions
+    agents_on = any(a in sessions for a in AGENTS)
     content = f"""
     <div class="card-grid">
         <div class="card-project" onclick="location.href='/trading'">
             <h3>💱 Forex Trading</h3>
-            <div class="desc">Azienda trading algoritmico con agenti AI, break-even, trailing stop</div>
-            <div class="stat {'online' if projects_online else 'offline'}">{'● Attivo' if projects_online else '● Fermo'}</div>
+            <div class="desc">Stato conto, ordini aperti, PNL giorno/settimana</div>
+            <div class="stat {'online' if trading_on else 'offline'}">{'● Attivo' if trading_on else '● Fermo'}</div>
         </div>
-        <div class="card-project" onclick="location.href='/media'">
-            <h3>🎬 Media Company</h3>
-            <div class="desc">Generazione automatica video per YouTube, TikTok, Reels</div>
-            <div class="stat offline">● Da avviare</div>
-        </div>
-        <div class="card-project" onclick="location.href='/ecommerce'">
-            <h3>🛒 E-commerce</h3>
-            <div class="desc">Dropshipping e affiliazione automatica</div>
-            <div class="stat offline">● Pianificato</div>
+        <div class="card-project" onclick="location.href='/agents'">
+            <h3>🤖 Agenti</h3>
+            <div class="desc">Controllo agenti tmux: attiva, ferma, riavvia</div>
+            <div class="stat {'online' if agents_on else 'offline'}">{'● Attivi' if agents_on else '● Fermi'}</div>
         </div>
         <div class="card-project" onclick="location.href='/verifier'">
             <h3>✅ Verifier</h3>
             <div class="desc">Test automatici post-modifica</div>
-            <div class="stat {'online' if verifier_online else 'offline'}">{'● Attivo' if verifier_online else '● Fermo'}</div>
+            <div class="stat">● Vedi stato</div>
+        </div>
+        <div class="card-project" onclick="location.href='/media'">
+            <h3>🎬 Media Company</h3>
+            <div class="desc">Generazione video automatica</div>
+            <div class="stat offline">● Pianificato</div>
         </div>
     </div>
     """
     return render_page("🏠 Home", content)
-
 # =====================
-# TRADING
+# ROUTE: TRADING
 # =====================
 @app.route('/trading')
 def trading():
-    orders = []
-    try:
-        with open(os.path.expanduser('~/mt4_shared/orders.json')) as f:
-            orders = json.load(f)
-    except: pass
-    open_orders = [o for o in orders if o.get('status') == 'open']
-    closed_orders = [o for o in orders if o.get('status') == 'closed']
-    saldo_iniziale = 100000.0
-    pnl_chiusi = sum(float(o.get('pnl') or 0) for o in closed_orders)
-    pnl_aperti = sum(float(o.get('pnl') or 0) for o in open_orders)
-    saldo_attuale = saldo_iniziale + pnl_chiusi
-    equity_attuale = saldo_attuale + pnl_aperti
+    account = read_json(ACCOUNT_JSON) or {}
+    orders = read_json(ORDERS_JSON) or []
+    if not isinstance(orders, list):
+        orders = []
+
+    balance     = float(account.get("balance", 0) or 0)
+    equity      = float(account.get("equity", 0) or 0)
+    margin      = float(account.get("margin", 0) or 0)
+    free_margin = float(account.get("free_margin", 0) or 0)
+    profit      = float(account.get("profit", 0) or 0)
+    currency    = account.get("currency", "EUR")
+    login       = account.get("login", "N/D")
+    server      = account.get("server", "N/D")
+    ts          = account.get("timestamp", 0)
+    ts_str      = datetime.fromtimestamp(int(ts)).strftime('%Y-%m-%d %H:%M:%S') if ts else "N/D"
+
+    pnl_day  = calculate_pnl("day")
+    pnl_week = calculate_pnl("week")
+
+    open_orders   = [o for o in orders if o.get("status") == "open"]
+    closed_orders = [o for o in orders if o.get("status") == "closed"]
+    closed_orders = sorted(closed_orders, key=lambda o: o.get("time", 0), reverse=True)[:20]
+
+    def color(v):
+        return "green" if v >= 0 else "red"
+
+    rows_open = ""
+    if open_orders:
+        for o in open_orders:
+            rows_open += (
+                f"<tr>"
+                f"<td>{o.get('ticket','')}</td>"
+                f"<td class='{o.get('action','')}'>{o.get('action','')}</td>"
+                f"<td>{o.get('lots','')}</td>"
+                f"<td>{o.get('price','')}</td>"
+                f"<td>{o.get('sl','')}</td>"
+                f"<td>{o.get('tp','')}</td>"
+                f"<td>{o.get('pnl',0)}</td>"
+                f"</tr>"
+            )
+    else:
+        rows_open = "<tr><td colspan='7' style='text-align:center;color:#4a5568;'>Nessuna operazione aperta</td></tr>"
+
+    rows_closed = ""
+    if closed_orders:
+        for o in closed_orders:
+            try:
+                pnl_v = float(o.get('pnl') or 0)
+            except Exception:
+                pnl_v = 0
+            clr = "green" if pnl_v >= 0 else "red"
+            rows_closed += (
+                f"<tr>"
+                f"<td>{o.get('ticket','')}</td>"
+                f"<td class='{o.get('action','')}'>{o.get('action','')}</td>"
+                f"<td>{o.get('lots','')}</td>"
+                f"<td>{o.get('price','')}</td>"
+                f"<td>{o.get('close_price','')}</td>"
+                f"<td class='{clr}'>{pnl_v:+.2f}</td>"
+                f"</tr>"
+            )
+    else:
+        rows_closed = "<tr><td colspan='6' style='text-align:center;color:#4a5568;'>Nessuna operazione chiusa</td></tr>"
+
     content = f"""
+    <a class="link-btn" href="https://www.tradingview.com/chart/?symbol=FX:EURUSD" target="_blank" rel="noopener">📈 Apri TradingView</a>
+
     <div class="kpi-grid">
-        <div class="kpi-card"><div class="label">Saldo</div><div class="value">{saldo_attuale:,.2f}</div></div>
-        <div class="kpi-card"><div class="label">Equity</div><div class="value">{equity_attuale:,.2f}</div></div>
-        <div class="kpi-card"><div class="label">PNL Chiusi</div><div class="value" style="color:{'#00c853' if pnl_chiusi >= 0 else '#ff1744'}">{pnl_chiusi:+,.2f}</div></div>
-        <div class="kpi-card"><div class="label">PNL Aperti</div><div class="value" style="color:{'#00c853' if pnl_aperti >= 0 else '#ff1744'}">{pnl_aperti:+,.2f}</div></div>
-        <div class="kpi-card"><div class="label">Operazioni Aperte</div><div class="value">{len(open_orders)}</div></div>
+        <div class="kpi-card"><div class="label">Saldo</div><div class="value">{balance:,.2f} {currency}</div></div>
+        <div class="kpi-card"><div class="label">Equity</div><div class="value">{equity:,.2f} {currency}</div></div>
+        <div class="kpi-card"><div class="label">Margin</div><div class="value">{margin:,.2f}</div></div>
+        <div class="kpi-card"><div class="label">Free Margin</div><div class="value">{free_margin:,.2f}</div></div>
+        <div class="kpi-card"><div class="label">Profit flottante</div><div class="value {color(profit)}">{profit:+,.2f}</div></div>
+        <div class="kpi-card"><div class="label">PNL oggi</div><div class="value {color(pnl_day)}">{pnl_day:+,.2f}</div></div>
+        <div class="kpi-card"><div class="label">PNL settimana</div><div class="value {color(pnl_week)}">{pnl_week:+,.2f}</div></div>
+        <div class="kpi-card"><div class="label">Conto</div><div class="value" style="font-size:14px;">{login} · {server}</div></div>
     </div>
-    <div class="controls">
-        <button class="start" onclick="fetch('/api/command',{{method:'POST',headers:{{'Content-Type':'application/json'}},body:JSON.stringify({{cmd:'start'}})}}).then(r=>r.json()).then(d=>alert(d.message))">▶ Avvia</button>
-        <button class="stop" onclick="fetch('/api/command',{{method:'POST',headers:{{'Content-Type':'application/json'}},body:JSON.stringify({{cmd:'stop'}})}}).then(r=>r.json()).then(d=>alert(d.message))">⏹ Ferma</button>
-        <button class="restart" onclick="fetch('/api/command',{{method:'POST',headers:{{'Content-Type':'application/json'}},body:JSON.stringify({{cmd:'restart'}})}}).then(r=>r.json()).then(d=>alert(d.message))">🔄 Riavvia</button>
-    </div>
-    <div class="chart-container">
-        <h3>📈 Grafico EUR/USD</h3>
-        <div style="display:flex; gap:12px; margin-bottom:12px; flex-wrap:wrap;">
-            <select id="chart_symbol" onchange="loadChart()">
-                <option value="EURUSD=X" selected>EUR/USD</option>
-                <option value="GBPUSD=X">GBP/USD</option>
-                <option value="GC=F">XAU/USD</option>
-            </select>
-            <select id="chart_interval" onchange="loadChart()">
-                <option value="1m">1 min</option>
-                <option value="5m">5 min</option>
-                <option value="15m" selected>15 min</option>
-                <option value="1h">1 ora</option>
-                <option value="4h">4 ore</option>
-                <option value="1d">Daily</option>
-            </select>
-            <button onclick="loadChart()" style="background:#2962ff;border:none;border-radius:40px;padding:8px 20px;color:#fff;font-weight:600;cursor:pointer;">Aggiorna</button>
-        </div>
-        <div id="candlestick-chart" style="height:400px;"></div>
-    </div>
+
+    <div style="color:#78828c;font-size:12px;margin-bottom:20px;">Ultimo aggiornamento account.json: {ts_str}</div>
+
     <div class="table-wrap">
-        <h3>📋 Operazioni Aperte</h3>
+        <h3>📋 Operazioni Aperte ({len(open_orders)})</h3>
         <table>
-            <tr><th>Stato</th><th>Azione</th><th>Lotti</th><th>Prezzo</th><th>SL</th><th>TP</th><th>PNL</th></tr>
-            {''.join([f"<tr><td>{o.get('status')}</td><td class='{o.get('action')}'>{o.get('action')}</td><td>{o.get('lots')}</td><td>{o.get('price')}</td><td>{o.get('sl')}</td><td>{o.get('tp')}</td><td>{o.get('pnl', 0)}</td></tr>" for o in open_orders]) if open_orders else '<tr><td colspan="7" style="text-align:center;color:#4a5568;">Nessuna operazione aperta</td></tr>'}
+            <tr><th>Ticket</th><th>Azione</th><th>Lotti</th><th>Prezzo</th><th>SL</th><th>TP</th><th>PNL</th></tr>
+            {rows_open}
         </table>
     </div>
+
     <div class="table-wrap">
-        <h3>📜 Operazioni Chiuse</h3>
+        <h3>📜 Operazioni Chiuse (ultime 20)</h3>
         <table>
             <tr><th>Ticket</th><th>Azione</th><th>Lotti</th><th>Apertura</th><th>Chiusura</th><th>PNL</th></tr>
-            {''.join([f"<tr><td>{o.get('ticket','')}</td><td class='{o.get('action')}'>{o.get('action')}</td><td>{o.get('lots')}</td><td>{o.get('price')}</td><td>{o.get('close_price','')}</td><td style='color:{'#00c853' if float(o.get('pnl',0) or 0) >= 0 else '#ff1744'}'>{o.get('pnl', 0)}</td></tr>" for o in closed_orders]) if closed_orders else '<tr><td colspan="6" style="text-align:center;color:#4a5568;">Nessuna operazione chiusa</td></tr>'}
+            {rows_closed}
+        </table>
+    </div>
+    """
+    return render_page("💱 Trading", content)
+# =====================
+# ROUTE: AGENTS
+# =====================
+@app.route('/agents')
+def agents():
+    status = agent_status()
+    rows = ""
+    for name, desc in AGENTS.items():
+        st = status.get(name, "stopped")
+        st_class = "active" if st == "active" else "stopped"
+        st_label = "Attivo" if st == "active" else "Fermo"
+        rows += (
+            f"<tr class='agent-row'>"
+            f"<td><strong>{name}</strong><br><span style='color:#78828c;font-size:12px;'>{desc}</span></td>"
+            f"<td><span class='agent-status {st_class}'>{st_label}</span></td>"
+            f"<td>"
+            f"<button class='btn-start' onclick=\"agentAction('{name}','start')\">▶ Start</button>"
+            f"<button class='btn-stop' onclick=\"agentAction('{name}','stop')\">⏹ Stop</button>"
+            f"<button class='btn-restart' onclick=\"agentAction('{name}','restart')\">🔄 Restart</button>"
+            f"</td>"
+            f"</tr>"
+        )
+
+    content = f"""
+    <div style="color:#78828c;font-size:12px;margin-bottom:16px;">
+        Agenti tmux della sessione <strong>ai_workforce</strong>. Start / Stop / Restart agiscono sul singolo agente.
+    </div>
+    <div class="table-wrap">
+        <h3>🤖 Agenti ({len(AGENTS)})</h3>
+        <table>
+            <tr><th>Agente</th><th>Stato</th><th>Azioni</th></tr>
+            {rows}
         </table>
     </div>
     <script>
-    function loadChart() {{
-        const symbol = document.getElementById('chart_symbol').value;
-        const interval = document.getElementById('chart_interval').value;
-        fetch('/api/chart_data', {{
-            method: 'POST',
-            headers: {{'Content-Type': 'application/json'}},
-            body: JSON.stringify({{symbol: symbol, period: '30d', interval: interval}})
-        }})
-        .then(r => r.json())
-        .then(data => {{
-            if (data.error) {{
-                document.getElementById('candlestick-chart').innerHTML = '<p style="color:#ff1744;">' + data.error + '</p>';
-                return;
-            }}
-            const trace = {{
-                x: data.map(d => d.Date),
-                open: data.map(d => d.Open),
-                high: data.map(d => d.High),
-                low: data.map(d => d.Low),
-                close: data.map(d => d.Close),
-                type: 'candlestick',
-                increasing: {{line: {{color: '#00c853'}}}},
-                decreasing: {{line: {{color: '#ff1744'}}}}
-            }};
-            const layout = {{
-                template: 'plotly_dark',
-                xaxis: {{title: 'Data', type: 'date'}},
-                yaxis: {{title: 'Prezzo'}},
-                margin: {{l: 40, r: 20, t: 20, b: 40}},
-                paper_bgcolor: '#0b0e14',
-                plot_bgcolor: '#0b0e14'
-            }};
-            Plotly.newPlot('candlestick-chart', [trace], layout);
-        }})
-        .catch(e => document.getElementById('candlestick-chart').innerHTML = '<p style="color:#ff1744;">Errore: ' + e + '</p>');
+    function agentAction(name, action) {{
+        if (!confirm(action.toUpperCase() + ' ' + name + '?')) return;
+        fetch('/api/agent/' + name + '/' + action, {{method: 'POST'}})
+            .then(r => r.json())
+            .then(d => {{
+                alert(d.message || d.error || 'Fatto');
+                location.reload();
+            }})
+            .catch(e => alert('Errore: ' + e));
     }}
-    loadChart();
     </script>
     """
-    return render_page("💱 Trading", content)
+    return render_page("🤖 Agenti", content)
 
 # =====================
-# MEDIA
+# API: CONTROLLO AGENTE
+# =====================
+@app.route('/api/agent/<name>/<action>', methods=['POST'])
+def api_agent(name, action):
+    if name not in AGENTS:
+        return jsonify({"error": f"Agente '{name}' sconosciuto"}), 404
+    if action not in ("start", "stop", "restart"):
+        return jsonify({"error": f"Azione '{action}' non valida"}), 400
+
+    sessions = tmux_sessions()
+    is_active = name in sessions
+
+    try:
+        if action == "start":
+            if is_active:
+                return jsonify({"message": f"{name} gia' attivo"})
+            script = f"/home/carlo/AI_Trading/{name}.py"
+            if not os.path.exists(script):
+                return jsonify({"error": f"Script {script} non trovato"}), 404
+            cmd = f"tmux new-session -d -s {name} 'cd /home/carlo/AI_Trading && python3 {name}.py'"
+            subprocess.run(cmd, shell=True, timeout=10)
+            return jsonify({"message": f"{name} avviato"})
+
+        elif action == "stop":
+            if not is_active:
+                return jsonify({"message": f"{name} gia' fermo"})
+            subprocess.run(f"tmux kill-session -t {name}", shell=True, timeout=10)
+            return jsonify({"message": f"{name} fermato"})
+
+        elif action == "restart":
+            subprocess.run(f"tmux kill-session -t {name}", shell=True, timeout=10)
+            script = f"/home/carlo/AI_Trading/{name}.py"
+            if not os.path.exists(script):
+                return jsonify({"error": f"Script {script} non trovato"}), 404
+            cmd = f"tmux new-session -d -s {name} 'cd /home/carlo/AI_Trading && python3 {name}.py'"
+            subprocess.run(cmd, shell=True, timeout=10)
+            return jsonify({"message": f"{name} riavviato"})
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+# =====================
+# ROUTE: VERIFIER
+# =====================
+@app.route('/verifier')
+def verifier():
+    status = {}
+    status_file = os.path.join(
+        os.path.dirname(os.path.abspath(__file__)),
+        'docs', 'verification', 'last_status.json'
+    )
+    try:
+        with open(status_file) as f:
+            status = json.load(f)
+    except Exception:
+        pass
+
+    ok = bool(status.get("success"))
+    ok_color = "#00c853" if ok else "#ff1744"
+    ok_label = "PASS" if ok else ("FAIL" if status else "N/D")
+    ts = status.get("timestamp", "N/D")
+    if ts and ts != "N/D":
+        ts = ts[:19]
+
+    content = f"""
+    <div class="kpi-grid">
+        <div class="kpi-card"><div class="label">Ultimo File</div><div class="value" style="font-size:16px;">{status.get('file', 'N/D')}</div></div>
+        <div class="kpi-card"><div class="label">Esito</div><div class="value" style="color:{ok_color};">{ok_label}</div></div>
+        <div class="kpi-card"><div class="label">Timestamp</div><div class="value" style="font-size:14px;">{ts}</div></div>
+    </div>
+    <div class="table-wrap">
+        <h3>📋 Output Ultimo Test</h3>
+        <pre style="background:#0b0e14;padding:12px;border-radius:8px;color:#78828c;font-size:12px;white-space:pre-wrap;overflow-x:auto;">{status.get('output_tail', 'Nessun output')}</pre>
+    </div>
+    """
+    return render_page("✅ Verifier", content)
+
+# =====================
+# ROUTE: MEDIA
 # =====================
 @app.route('/media')
 def media():
@@ -279,26 +469,14 @@ def media():
         <div class="kpi-card"><div class="label">Revenue</div><div class="value">$0.00</div></div>
     </div>
     <div class="table-wrap">
-        <h3>🔥 Trend Attuali</h3>
-        <div class="placeholder">Agente Trend Scanner non ancora attivo. Da implementare.</div>
-    </div>
-    <div class="table-wrap">
-        <h3>📝 Script Generati</h3>
-        <div class="placeholder">Agente Script Generator non ancora attivo. Da implementare.</div>
-    </div>
-    <div class="table-wrap">
         <h3>🎬 Video Prodotti</h3>
-        <div class="placeholder">Agente Video Creator non ancora attivo. Da implementare.</div>
-    </div>
-    <div class="table-wrap">
-        <h3>📤 Pubblicazioni</h3>
-        <div class="placeholder">Agente Publisher non ancora attivo. Da implementare.</div>
+        <div class="placeholder">Agenti Media non ancora attivi. Progetto pianificato.</div>
     </div>
     """
     return render_page("🎬 Media Company", content)
 
 # =====================
-# ECOMMERCE
+# ROUTE: ECOMMERCE
 # =====================
 @app.route('/ecommerce')
 def ecommerce():
@@ -309,79 +487,49 @@ def ecommerce():
     </div>
     """
     return render_page("🛒 E-commerce", content)
+# =====================
+# API: ACCOUNT
+# =====================
+@app.route('/api/account')
+def api_account():
+    account = read_json(ACCOUNT_JSON)
+    if not account:
+        return jsonify({"error": "account.json non trovato o non leggibile"}), 404
+    return jsonify(account)
 
 # =====================
-# VERIFIER
+# API: ORDERS
 # =====================
-@app.route('/verifier')
-def verifier():
-    status = {}
-    try:
-        with open(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'docs/verification/last_status.json')) as f:
-            status = json.load(f)
-    except: pass
-    content = f"""
-    <div class="kpi-grid">
-        <div class="kpi-card"><div class="label">Ultimo File</div><div class="value" style="font-size:16px;">{status.get('file', 'N/A')}</div></div>
-        <div class="kpi-card"><div class="label">Esito</div><div class="value" style="color:{'#00c853' if status.get('success') else '#ff1744'};">{'PASS' if status.get('success') else 'FAIL' if status else 'N/A'}</div></div>
-        <div class="kpi-card"><div class="label">Timestamp</div><div class="value" style="font-size:14px;">{status.get('timestamp', 'N/A')[:19] if status.get('timestamp') else 'N/A'}</div></div>
-    </div>
-    <div class="table-wrap">
-        <h3>📋 Output Ultimo Test</h3>
-        <pre style="background:#0b0e14;padding:12px;border-radius:8px;color:#78828c;font-size:12px;white-space:pre-wrap;">{status.get('output_tail', 'Nessun output')}</pre>
-    </div>
-    """
-    return render_page("✅ Verifier", content)
+@app.route('/api/orders')
+def api_orders():
+    orders = read_json(ORDERS_JSON)
+    if orders is None:
+        return jsonify({"error": "orders.json non trovato o non leggibile"}), 404
+    if not isinstance(orders, list):
+        return jsonify({"error": "orders.json non e' una lista"}), 500
+    seen = set()
+    dedup = []
+    for o in orders:
+        t = o.get("ticket")
+        if t in seen:
+            continue
+        seen.add(t)
+        dedup.append(o)
+    return jsonify(dedup)
 
 # =====================
-# API
+# API: PNL
 # =====================
-@app.route('/api/chart_data', methods=['POST'])
-def chart_data():
-    data = request.json
-    symbol = data.get('symbol', 'EURUSD=X')
-    period = data.get('period', '30d')
-    interval = data.get('interval', '1d')
-    try:
-        df = yf.download(symbol, period=period, interval=interval, multi_level_index=False)
-        if df.empty:
-            return jsonify({'error': 'Nessun dato'})
-        df = df[['Open','High','Low','Close']].tail(100).reset_index()
-        records = df.to_dict(orient='records')
-        for r in records:
-            for k in ('Date','Datetime','index'):
-                if k in r:
-                    v = r.pop(k)
-                    try:
-                        r['Date'] = v.strftime('%Y-%m-%d %H:%M')
-                    except AttributeError:
-                        r['Date'] = str(v)
-        return jsonify(records)
-    except Exception as e:
-        return jsonify({'error': str(e)})
+@app.route('/api/pnl')
+def api_pnl():
+    period = request.args.get("period", "day")
+    if period not in ("day", "week"):
+        return jsonify({"error": "period deve essere 'day' o 'week'"}), 400
+    return jsonify({"period": period, "pnl": calculate_pnl(period)})
 
-@app.route('/api/verification_status')
-def verification_status():
-    status_file = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'docs/verification/last_status.json')
-    if os.path.exists(status_file):
-        with open(status_file) as f:
-            return jsonify(json.load(f))
-    return jsonify({})
-
-@app.route('/api/command', methods=['POST'])
-def command():
-    cmd = request.json.get('cmd')
-    if cmd == 'start':
-        os.system("cd /home/carlo/AI_Trading && tmux new-session -d -s ai_workforce 'bash -c \"source ~/AI_Trading_Agents/venv/bin/activate && while true; do python3 orchestrator.py; sleep 3600; done\"'")
-        return jsonify({'message': '▶️ Avviato'})
-    elif cmd == 'stop':
-        os.system("tmux kill-session -t ai_workforce 2>/dev/null")
-        return jsonify({'message': '⛔ Fermato'})
-    elif cmd == 'restart':
-        os.system("tmux kill-session -t ai_workforce 2>/dev/null; cd /home/carlo/AI_Trading && tmux new-session -d -s ai_workforce 'bash -c \"source ~/AI_Trading_Agents/venv/bin/activate && while true; do python3 orchestrator.py; sleep 3600; done\"'")
-        return jsonify({'message': '🔄 Riavviato'})
-    return jsonify({'message': 'Comando sconosciuto'})
-
+# =====================
+# MAIN
+# =====================
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))
     app.run(host='0.0.0.0', port=port, debug=False)

@@ -1,0 +1,111 @@
+# CONTESTO PROGETTO AI_TRADING
+
+Ultimo aggiornamento: 2026-10-14
+Autore: Carlo + Chat (decisione congiunta)
+Regola: questo file si aggiorna SOLO a mano, in chat, quando cambia una decisione.
+Nessuno script automatico deve scriverci dentro.
+
+## 1. Cos'e' il progetto
+
+Sistema di trading automatico su MT4 (Wine su Linux) con:
+- un EA MQL4 che esegue ordini e scrive file di stato,
+- agenti Python (tmux) che analizzano mercato e generano segnali,
+- una dashboard web che mostra stato conto, ordini aperti, PNL, controllo agenti.
+
+Obiettivo: azienda digitale semplice, intuitiva, aggiornabile facilmente.
+"Come l'acqua": si adatta, non si rompe, non ci fa perdere tempo.
+
+## 2. Chi fa cosa
+
+- Carlo: idee, obiettivi, decisioni finali, verifica in MT4.
+- Chat: progetta, decide la strategia tecnica, prepara i comandi per Kilo,
+  ricerca soluzioni online (in piu' lingue, non solo italiano).
+- Kilo: esegue. Non interpreta. Non decide. Se ha dubbi, si ferma e chiede.
+
+## 3. Architettura attuale (deciso, non si discute)
+
+- Un solo EA per grafico MT4.
+- L'EA di trading si chiama AI_BRIDGE_EA.mq4 e risiede in:
+  /home/carlo/Scrivania/XM MT4/MQL4/Experts/AI_BRIDGE_EA.mq4
+- La telemetria (account.json) sta DENTRO AI_BRIDGE_EA, non in un EA separato.
+  Motivo: MT4 accetta un solo EA per grafico. Due EA = confusione.
+- AccountWriter.mq4 resta in cartella ma NON viene caricato su nessun grafico.
+  E' un riferimento, non un pezzo attivo del sistema.
+- Gli agenti Python girano in tmux sessione "ai_workforce".
+- La dashboard web gira come servizio systemd user "web-app".
+
+## 4. Stato attuale
+
+### Cosa funziona
+- MT4 su Wine, terminal.exe attivo.
+- Agenti tmux attivi (12 finestre).
+- Servizi systemd user attivi: web-app, controllo-remoto, ai-trading-agenti.
+- File condivisi MT4 presenti: orders.json, open_time.json, sl_commands.json.
+- GitHub carlosciarrino/AI_Trading: integro, sincronizzato con origin/main.
+- Cartelle backup PC: intatte, non toccate da Kilo.
+
+### Cosa e' rotto o incompleto
+- AI_BRIDGE_EA.mq4 in MT4: attualmente rotto (sovrascritto da Kilo #3).
+  Backup del file rotto: AI_BRIDGE_EA.rotto_kilo3.mq4.
+  La v3.3 vera esiste solo nel testo salvato in chat.
+- Kilo #4: FAIL al Cancello 4 (diff contiene righe rimosse, non solo aggiunte).
+- supervisor: venv rotto, non riavviato.
+- web_app: versione ridotta, da ripristinare da web_app_backup.py.
+- saldo MT4: non ancora letto dalla dashboard (dipende da account.json).
+- loop sell: non diagnosticato.
+- EA UpdateOrdersFile: accumula ordini nel file senza cancellazione.
+- test.mq4 in MT4 Experts: residuo di Kilo, da rimuovere.
+- Script auto-sync Git: bug nel messaggio commit, scrive "$(date)" come stringa.
+
+## 5. Decisioni prese (non si ridiscutono)
+
+D1. Un solo EA per grafico. Telemetria dentro l'EA di trading.
+D2. La v3.3 e' il sorgente di riferimento. Ogni modifica parte da li' e
+    aggiunge SOLO righe. Se una modifica rimuove righe, e' FAIL.
+D3. Ogni modifica a un file di produzione richiede backup con md5sum
+    prima/dopo. Il backup non si cancella finche' la modifica non e'
+    confermata su demo per almeno 24h.
+D4. Kilo non decide mai. Esegue, e se ha dubbi si ferma.
+D5. I comandi a Kilo hanno intestazione fissa (5 righe): ID, file target,
+    cosa fare, cosa NON fare, dove salvare evidenza.
+D6. La chat non incolla codice in mezzo al testo: i comandi a Kilo e i
+    comandi al terminale Linux sono sempre in blocchi separati, etichettati
+    fuori dal blocco.
+D7. La chat dichiara, prima di ogni comando a Kilo, cosa contiene il file
+    target e cosa cambia. Carlo autorizza solo dopo aver letto.
+D8. La ricerca online va fatta in almeno 3 lingue (italiano, inglese,
+    cinese) e su almeno 4 fonti (GitHub, forum specializzati, Reddit/HN,
+    repo minori). Non ci si ferma ai primi 3 risultati.
+D9. Il ripristino di AI_BRIDGE_EA.mq4 v3.3 e la patch a v3.4 sono fatti
+    DIRETTAMENTE dalla chat, non da Kilo. Kilo non tocca questo file.
+D10. Solo Carlo e la Chat decidono modifiche a backup PC e a GitHub.
+     Kilo non ha voce in capitolo su questo.
+
+## 6. Ricerca agenti (una tantum, periodica)
+
+Cercare su GitHub, forum, repo specializzati chi ha costruito agenti di
+comunicazione tra agenti, come li ha costruiti, con quali pattern.
+Non fermarsi ai primi risultati. Verificare codice, stelle, manutenzione,
+licenza. Obiettivo: prendere il meglio e applicarlo a tutti i progetti,
+non solo al trading. Questa ricerca si fa una volta, poi si aggiorna
+periodicamente.
+
+Per il progetto trading: cercare al 100% dei risultati, ma limitato al
+settore trading/algo trading/MT4/MT5/bot/EA/signal/dashboard.
+Lingue minime: italiano, inglese, cinese, russo, spagnolo.
+
+Quando passeremo al progetto commerciale: stessa regola, settore
+commerciale.
+
+## 7. Prossimo passo (uno solo)
+
+Ripristinare AI_BRIDGE_EA.mq4 v3.3 in MT4 e patchare a v3.4 aggiungendo
+SOLO la funzione WriteAccountFile() e la chiamata in OnTimer().
+Questo lo fa la Chat, non Kilo. Kilo resta fermo.
+
+## 8. Come si aggiorna questo file
+
+Solo in chat, solo a mano, solo quando Carlo dice "aggiorna CONTESTO.md".
+Nessuna scrittura automatica. Nessun commit automatico.
+Se una decisione cambia, si aggiorna qui, e la vecchia versione resta nel
+diario Git con messaggio "contesto: <cosa e' cambiato>".
