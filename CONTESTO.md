@@ -36,6 +36,32 @@ Obiettivo: azienda digitale semplice, intuitiva, aggiornabile facilmente.
 - Gli agenti Python girano in tmux sessione "ai_workforce".
 - La dashboard web gira come servizio systemd user "web-app".
 
+## 3b. Segnali dell'orchestratore e pesi
+
+L'orchestratore legge 5 file di contesto, assegna uno score a ciascuno,
+moltiplica per un peso, somma e divide per la somma dei pesi.
+
+| Segnale      | Fonte file                 | Peso  | Range score    |
+|--------------|----------------------------|-------|----------------|
+| news         | news_context.txt           | 0.20  | -0.3 / 0 / +0.3|
+| social       | social_context.txt         | 0.20  | -0.2 / 0 / +0.2|
+| cycle        | cycles_context.txt         | 0.15  | -0.2 / 0 / +0.2|
+| volume       | volume_context.txt         | 0.25  | variabile      |
+| experience   | experiences.json           | 0.20  | -0.2 / 0       |
+|--------------|----------------------------|-------|----------------|
+| SOMMA PESI   |                            | 1.00  |                |
+
+Soglie decisionali (post O7b):
+- final_score > +0.10  ->  BUY
+- final_score < -0.10  ->  SELL
+- altrimenti           ->  HOLD
+
+Punteggio attuale: -0.04 (solo experience contribuisce con -0.2).
+Risultato: HOLD.
+
+Riferimento codice: /home/carlo/AI_Trading/orchestrator.py, funzione
+get_signal().
+
 ## 4. Stato attuale
 
 ### Cosa funziona
