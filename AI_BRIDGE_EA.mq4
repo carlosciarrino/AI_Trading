@@ -1,5 +1,6 @@
 #property strict
 
+#property version "3.4"
 //+------------------------------------------------------------------+
 //| SEZIONE 1: CONFIGURAZIONE GENERALE (Modificabile da MT4)        |
 //+------------------------------------------------------------------+
@@ -172,4 +173,50 @@ void OnTick()
          }
       }
    }
+}
+
+void WriteAccountFile()
+{
+   string file = "account.json";
+   int handle = FileOpen(file, FILE_WRITE|FILE_TXT|FILE_ANSI);
+   if(handle < 0) return;
+
+   string json = "{";
+   json += "\"balance\":" + DoubleToString(AccountBalance(), 2) + ",";
+   json += "\"equity\":" + DoubleToString(AccountEquity(), 2) + ",";
+   json += "\"margin\":" + DoubleToString(AccountMargin(), 2) + ",";
+   json += "\"free_margin\":" + DoubleToString(AccountFreeMargin(), 2) + ",";
+   json += "\"margin_level\":" + DoubleToString(AccountMarginLevel(), 2) + ",";
+   json += "\"currency\":\"" + AccountCurrency() + "\",";
+   json += "\"leverage\":" + IntegerToString(AccountLeverage()) + ",";
+   json += "\"login\":" + IntegerToString(AccountInteger(ACCOUNT_LOGIN)) + ",";
+   json += "\"server\":\"" + AccountString(ACCOUNT_SERVER) + "\",";
+   json += "\"timestamp\":" + IntegerToString(TimeCurrent()) + "";
+   json += "}";
+
+   FileWrite(handle, json);
+   FileClose(handle);
+}
+
+void UpdateOrdersFile()
+{
+   // Intentionally left empty as per instructions: do not touch orders.json
+}
+
+void OnTimer()
+{
+   UpdateOrdersFile();
+   WriteAccountFile();
+}
+
+int OnInit()
+{
+   // Set timer to 5 seconds
+   EventSetTimer(5);
+   return(INIT_SUCCEEDED);
+}
+
+void OnDeinit(const int reason)
+{
+   EventKillTimer();
 }
