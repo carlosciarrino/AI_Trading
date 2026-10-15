@@ -1,7 +1,7 @@
 # STATO SISTEMA AI_TRADING
 
 ## 1. Stato rilevato (auto)
-Timestamp: 2026-10-15 20:59:34
+Timestamp: 2026-10-15 21:59:34
 TMUX: ai_workforce: 1 windows (created Wed Oct 14 22:31:56 2026)
 cycle_agent: 1 windows (created Wed Oct 14 22:53:12 2026)
 experience_agent: 1 windows (created Wed Oct 14 21:58:49 2026)
@@ -16,10 +16,10 @@ supervisor: 1 windows (created Wed Oct 14 21:58:49 2026)
 volume_agent: 1 windows (created Wed Oct 14 21:58:49 2026)
 Servizi systemd user: web-app: active; controllo-remoto: active; ai-trading-agenti: active
 Processi Windows: terminal.exe: carlo    1333698  0.0  0.0   9984  2880 ?        S    ott14   0:00 bash -c wineserver -k; export WINEPREFIX="/home/carlo/.wine_trading_finale"; export WINEDEBUG=-all; cd "/home/carlo/Scrivania/XM MT4" && wine terminal.exe /portable
-carlo    1333702 12.2  1.1 1463952 142512 ?      Sl   ott14 158:01 terminal.exe /portable; metaeditor.exe: nessun processo metaeditor.exe
+carlo    1333702 12.1  1.1 1463952 142512 ?      Sl   ott14 163:38 terminal.exe /portable; metaeditor.exe: nessun processo metaeditor.exe
 File condivisi MT4: orders.json: presente (162 bytes); open_time.json: presente (2002 bytes); sl_commands.json: presente (109 bytes)
 IP Tailscale: 100.77.33.7
-Git: commit 7a47e12: O10: news_agent v2 (Investing.com RSS, sentiment) + riattivazione segnale news in orchestrator
+Git: commit d3d92a4: PENDENZE.md (registro questioni in sospeso) + D18 + aggiornamento documenti
 
 ## 2. Diario azioni
 
@@ -83,6 +83,9 @@ Git: commit 7a47e12: O10: news_agent v2 (Investing.com RSS, sentiment) + riattiv
 - 15 October 2026 - 744db1b: contesto: O11 (password broker rimossa) + regole D15/D16 + aggiornamento HANDOFF
 - 15 October 2026 - f646d04: auto-sync gio 15 ott 2026, 20:00:01, WEST
 - 15 October 2026 - 7a47e12: O10: news_agent v2 (Investing.com RSS, sentiment) + riattivazione segnale news in orchestrator
+- 15 October 2026 - bf94127: auto-sync gio 15 ott 2026, 21:00:01, WEST
+- 15 October 2026 - df60d62: O8: logica post-apertura (break-even, C1 venerdi profitto, C2 venerdi chiusura) + D17
+- 15 October 2026 - d3d92a4: PENDENZE.md (registro questioni in sospeso) + D18 + aggiornamento documenti
 
 ## 3. Problemi noti
 
