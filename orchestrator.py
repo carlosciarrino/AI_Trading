@@ -48,10 +48,19 @@ def count_open_orders():
 
 def get_signal():
     scores = {}
-    # O7c: news SOSPESO. news_agent non aggiorna news_context.txt da 40 giorni.
-    # Il parser a keyword su titoli vecchi e ambigui produce segnali inaffidabili.
-    # Riattivare SOLO dopo che news_agent scrive un file fresco e datato.
-    scores['news'] = 0.0
+    # O10 (2026-10-15): news RIATTIVATO. news_agent v2 scrive news_context.txt
+    # fresco (ogni 10 min) con riga "Sentiment: positivo|negativo|neutro".
+    try:
+        with open('/home/carlo/AI_Trading/news_context.txt', 'r') as f:
+            text = f.read().lower()
+            if 'sentiment: positivo' in text:
+                scores['news'] = 0.3
+            elif 'sentiment: negativo' in text:
+                scores['news'] = -0.3
+            else:
+                scores['news'] = 0.0
+    except:
+        scores['news'] = 0.0
     try:
         with open('/home/carlo/AI_Trading/social_context.txt', 'r') as f:
             text = f.read().lower()

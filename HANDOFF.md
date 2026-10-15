@@ -61,7 +61,6 @@ FILE AI_Trading:
 - decision_log.jsonl (nuovo)
 - CONTESTO.md (nuovo, 172 righe)
 - HANDOFF.md (questo file)
-- APERTURA_CHAT.md (da creare subito dopo)
 
 SERVIZI:
 - web-app: systemd user, attivo
@@ -72,11 +71,9 @@ SERVIZI:
 
 - Orchestratore: attivo, in HOLD. Punteggio attuale -0.04 < soglia 0.10.
 - Supervisor: attivo, watchdog. Ultimo audit_status.json aggiornato.
-- Dashboard: attiva su porta 5000. Pagine /, /trading, /agents, /verifier ok.
+- Dashboard: attiva su porta 5000.
 - MT4: 0 ordini aperti. Account 100066.12 EUR.
-- 12 sessioni tmux attive (ai_workforce, cycle_agent, experience_agent,
-  kronos_agent, market_anomaly, news_agent, nzt_agent, signal_observer,
-  social_agent, strategy_validator, supervisor, volume_agent).
+- 12 sessioni tmux attive.
 
 ### 5. Cosa NON e' stato fatto (aperto)
 
@@ -101,7 +98,6 @@ O7c - Indagare perche' 4 agenti su 5 danno score 0.
 - CONTESTO.md: stato stabile, decisioni.
 - HANDOFF.md: questo file.
 - decision_log.jsonl: storico decisioni orchestratore.
-- Backup vari: .pre_o7a, .pre_o7b, .pre_venvfix, .pre_dashboard, ecc.
 
 ---
 
@@ -112,37 +108,29 @@ Scopo: O7c - indagare perche' 4 segnali su 5 davano sempre score 0.
 ### Scoperte
 
 - **news**: `news_context.txt` ORFANO. Nessun processo attivo lo scrive.
-  `news_agent.py` attuale scrive solo `/tmp/news_score.txt` (numero, sempre
-  0.0). Fetch a Investing.com RSS funziona (HTTP 200, RSS valido), ma
-  keyword-list italiane non trovate nei titoli. Segnale SOSPESO in
-  `orchestrator.py` (forzato a 0.0). Cantiere O10.
+  `news_agent.py` scrive solo `/tmp/news_score.txt` (numero, sempre 0.0).
+  Segnale SOSPESO in `orchestrator.py`. Cantiere O10.
 - **social**: FIXATO. `social_agent.py` patchato con `sentiment_score()`
-  (keyword list EN, positivo/negativo/neutro). `social_context.txt` ora
-  contiene riga `Sentiment: negativo`. Contributo: -0.2.
-- **cycle**: FIXATO. `cycle_agent.py` patchato: `df.columns.get_level_values(0)`
-  per appiattire MultiIndex yfinance. `cycles_context.txt` ora contiene 12
-  righe `Mese N: media prezzo X.XXXXX`. Mese 10 = 1.08960 -> range neutro.
-- **volume**: regex orchestratore accetta ora `score` o `Punteggio`
-  (case-insensitive). Valore reale 0.00 (volume ratio 1.00, corretto).
-- **experience**: -0.2 (3 PERDITE recenti in `experiences.json`). Funziona.
+  (keyword EN). Contributo: -0.2.
+- **cycle**: FIXATO. `cycle_agent.py` patchato: `df.columns.get_level_values(0)`.
+  Segnale ATTIVO.
+- **volume**: regex orchestratore accetta `score` o `Punteggio`. Score 0.00.
+- **experience**: -0.2 (3 PERDITE recenti). Funziona.
 - **final_score**: -0.08. Signal: HOLD.
 
 ### Contratto orchestratore <-> EA chiarito
 
 - Formato comando: `buy|sell lots sl tp` oppure `close <ticket>`.
-- `AI_BRIDGE_CMD.txt` consumato one-shot (EA cancella dopo lettura).
 - `AI_BRIDGE_RES.txt` contiene esito (`OK: aperto ...` / `ERR: ...`).
-- Orchestratore NON legge `AI_BRIDGE_RES.txt`. Logga `action_taken` senza
-  verificare esito. Fix in O7b-bis (2026-10-15).
-- Bug `orders.json`: record con doppio `status` (`open` + `closed`).
+- Orchestratore NON legge `AI_BRIDGE_RES.txt` (fino a O7b-bis).
 
 ### Da fare prossima sessione
 
-1. Test end-to-end orchestratore -> MT4. FATTO 2026-10-14 notte.
+1. Test end-to-end. FATTO 2026-10-14 notte.
 2. Fix `orders.json` dedup (v3.5-bis). FATTO 2026-10-14 notte.
 3. Orchestratore legge `AI_BRIDGE_RES.txt`. FATTO 2026-10-15.
-4. Cantiere O10: news redesign.
-5. Pulizia processi tmux zombie (es. wrapper 1263886).
+4. Cantiere O10: news redesign. FATTO 2026-10-15.
+5. Pulizia processi tmux zombie.
 
 ---
 
@@ -153,37 +141,23 @@ Scopo: fixare bug doppio "status"/"pnl" in orders.json.
 ### Fatto
 
 - Diagnosi: dedup v3.5 non rimuoveva "status":"open" e "pnl":0 prima di
-  appendere "status":"closed" e pnl reale. Record malformato.
-- Patch v3.5-bis: blocco objClean rimuove i campi vecchi prima di appendere
-  quelli nuovi.
-- Applicata via script Python (evita errori di copia-incolla in MetaEditor).
+  appendere "status":"closed" e pnl reale.
+- Patch v3.5-bis: blocco objClean rimuove i campi vecchi prima di appendere.
+- Applicata via script Python.
 - Prima applicazione fallita: MetaEditor sovrascrive file su disco con
-  copia in memoria. Soluzione: chiudere MetaEditor prima della patch.
-  Diventata regola D14 in CONTESTO.md.
-- File intermedio rotto (455 righe, graffe sbilanciate) -> backup
-  .broken_v3.5bis (cancellato in pulizia 2026-10-15), poi ripristinato
-  da .pre_v3.5bis.
-- Compilata in MetaEditor: 0 errori, 0 warning.
+  copia in memoria. Soluzione: chiudere MetaEditor prima della patch (D14).
+- File intermedio rotto (455 righe, graffe sbilanciate) -> ripristinato.
+- Compilata: 0 errori, 0 warning.
 - md5 .mq4 = c728dfa14c3246268dedd260a0542418
 - md5 .ex4 = e9df7b1d225b52b9e756d3df72c19f27
 
 ### Test end-to-end superato
 
-1. orders.json cancellato -> rigenerato "[]" in 15 sec.
-2. buy 0.01 0 0 -> "OK: aperto 253699 lotto 0.01".
-3. orders.json: 1 record, 1 solo status":"open".
-4. account.json: open_orders 1.
-5. close 253699 -> "OK: chiuso 253699".
-6. orders.json: 1 record, 1 solo status":"closed", 1 solo pnl (-0.04),
-   1 solo close_price (1.11666).
-7. account.json: open_orders 0.
-
-### Da fare prossima sessione
-
-- O7b-bis: orchestratore legge AI_BRIDGE_RES.txt.
-- O10: news redesign.
-- O11: password broker fuori da config.json.
-- Pulizia backup/file storici.
+1. orders.json -> "[]" in 15 sec.
+2. buy 0.01 0 0 -> "OK: aperto 253699".
+3. orders.json: 1 record, 1 status":"open".
+4. close 253699 -> "OK: chiuso 253699".
+5. orders.json: 1 record, 1 status":"closed", 1 pnl (-0.04).
 
 ---
 
@@ -194,80 +168,124 @@ Scopo: O7b-bis (orchestratore legge esito EA); O11 (password); pulizia.
 
 ### 1. Punto di partenza
 
-- orchestrator.py (277 righe, md5 6c6d6f908c9b4bcd21fef72607209f09) non
-  leggeva AI_BRIDGE_RES.txt. Loggava action_taken senza esito reale.
-- decision_log.jsonl poteva riportare ticket:null anche se EA rifiutava.
-- config.json conteneva broker.password in chiaro (mai su Git, ma
-  leggibile da tutti sul sistema).
+- orchestrator.py (277 righe, md5 6c6d6f90...) non leggeva AI_BRIDGE_RES.txt.
+- config.json conteneva broker.password in chiaro (mai su Git).
 - Numerosi backup vecchi accumulati (25 file, ~240 KB).
 
 ### 2. Cosa e' stato fatto
 
 **O7b-bis** - patch orchestrator.py, 4 modifiche:
 
-1. Nuova funzione `read_bridge_result(timeout=8)`:
-   - attende AI_BRIDGE_RES.txt fino a 8 sec, polling 0.5 sec,
-   - verifica mtime recente (no residui),
-   - parsa "OK: aperto <ticket>" -> ritorna ("ok", {"ticket": ...}),
-   - parsa "ERR: ..." -> ritorna ("err", {"error": ...}),
-   - timeout -> ritorna ("timeout", {"error": "timeout_ea"}).
+1. Nuova funzione `read_bridge_result(timeout=8)`.
 2. `write_decision(... error=None)`: nuovo campo opzionale `error`.
-3. Main loop: dopo write CMD, cancella RES vecchio, attende, legge esito,
-   logga ticket reale o errore o timeout.
-4. Chiusura 24h: stessa logica, logga conferma/errore/timeout.
-
-**Backup**: orchestrator.py.pre_o7b_bis (md5 6c6d6f908c9b4bcd21fef72607209f09).
+3. Main loop: dopo write CMD, cancella RES vecchio, attende, legge esito.
+4. Chiusura 24h: stessa logica.
 
 **md5 orchestrator.py post-patch**: 4f567d0d6009cbb8d01effc9344a4aad.
-Righe: 330 (prima 277, +53).
+Righe: 330.
 
 **O11** - password broker rimossa da config.json:
 
-- Verificato: nessun file usa `broker.password` (grep su tutti i *.py).
-- Rimossa `broker.password` da config.json.
-- Permessi cambiati a 600.
-- Backup: config.json.pre_o11 (md5 af9a8567be69c794985c80f3a11b8c0f).
-- md5 config.json post: 65985576e9a14f20c2b2437c11b52a92.
+- Verificato: nessun file usa `broker.password`.
+- Rimossa, permessi 600. md5 config.json post: 65985576e9a14f20c2b2437c11b52a92.
 
-**Pulizia backup**: rimossi 25 file (~240 KB). Tenuti:
-- AI_BRIDGE_EA.mq4.pre_v3.5bis, .ex4.pre_v3.5bis
-- orders.json.pre_v3.5bis
-- orchestrator.py.pre_o7b_bis
-- config.json.pre_o11
-- supervisor_agent.py.pre_rewrite, .pre_venvfix
-- start_all.sh.pre_venvfix, agents_night_shift.sh.pre_venvfix
-- CONTESTO.md.v3.5bis, HANDOFF.md.v3.5bis
-
+**Pulizia backup**: rimossi 25 file. Tenuti i principali.
 **.gitignore**: aggiunti pattern `*.pre_*` e `.pre_*`.
-
-**Regole aggiunte a CONTESTO.md**:
-- D14: MetaEditor va chiuso prima di modificare AI_BRIDGE_EA.mq4.
-- D15: chat fornisce comando apertura + contenuto in un unico messaggio.
-- D16: sempre file completo, mai istruzioni puntuali. Controllo post-modifica.
+**Regole nuove**: D14, D15, D16.
 
 ### 3. Test O7b-bis superato
 
-Test unitario `read_bridge_result()` (3 casi):
-- `OK: aperto 999999 lotto 0.01` -> status=ok, ticket=999999 OK
-- `ERR: limite operazioni raggiunto (1)` -> status=err OK
-- file assente -> status=timeout OK
-- "TUTTI I TEST PASSATI".
+Test unitario `read_bridge_result()`: 3 casi OK/ERR/timeout. Tutti passati.
 
-### 4. Orchestratore riavviato
+### 4. Commit Git
 
-tmux ai_workforce riavviato. Output: "Orchestratore avviato. Sessione: all",
-"Ordini aperti (account.json): 0", "Punteggio combinato: -0.040",
-"Segnale AI: HOLD", "HOLD".
+`9fd95ce contesto: O7b-bis ... + pulizia backup`.
 
-### 5. Commit Git
+### 5. Da fare prossima sessione
 
-Commit manuale: `9fd95ce contesto: O7b-bis + aggiornamento HANDOFF + pulizia
-backup`. Push su origin/main riuscito.
+- O10: news redesign.
+- O8: logica post-apertura.
 
-### 6. Da fare prossima sessione
+---
 
-- **O10**: news redesign (prossimo passo).
-- O8: logica post-apertura (break-even, rivalutazione giornaliera,
-  chiusura venerdi').
-- Verifica O7b-bis in produzione al primo BUY reale (non ancora testato
-  con ordine vero post-patch).
+## Sessione 2026-10-15 sera - O10 news redesign (ore 20:30-21:00)
+
+Autore: Carlo + Chat.
+Scopo: riprogettare news_agent.py, riattivare segnale news.
+
+### 1. Punto di partenza
+
+- news_agent.py fermo al 2026-09-05. Scriveva solo /tmp/news_score.txt
+  (numero). Non scriveva news_context.txt.
+- news_context.txt orfano dal 2026-09-05 (formato vecchio, senza Sentiment).
+- orchestrator.py forzava scores['news'] = 0.0 (SOSPESO).
+- Segnale news contribuiva 0 al final_score.
+
+### 2. Cosa e' stato fatto
+
+**news_agent.py v2** (file completo, 113 righe):
+
+- Legge RSS Investing.com IT (https://it.investing.com/rss/news.rss).
+- Filtra titoli con keyword macro (IT+EN): fed, bce, tassi, inflazione,
+  pil, lavoro, euro, dollaro, guerra, dazi, ecc.
+- Sentiment EN+IT (positivo/negativo/neutro).
+- Scrive news_context.txt nel formato:
+  "Ultime notizie macro (aggiornate <data>):" + N titoli + "Sentiment: ...".
+- Max 15 titoli (macro prima, poi altri). Loop ogni 10 min.
+- md5 news_agent.py = d5b5c99630b8ac0512a9b9440a4edc46
+- Backup: news_agent.py.pre_o10 (md5 25e6108b4c679526c99faf3d736ec5b4)
+
+**orchestrator.py O10** (patch chirurgica, no file completo):
+
+- Rimosso force-to-zero `scores['news'] = 0.0`.
+- Aggiunto: legge `Sentiment:` da news_context.txt, assegna +0.3/0/-0.3.
+- md5 orchestrator.py = b99adeb9775958108ee3b99ec501ffae
+- Backup: orchestrator.py.pre_o10 (md5 4f567d0d6009cbb8d01effc9344a4aad)
+
+### 3. Test superato
+
+news_agent.py v2 eseguito una volta:
+- Output: "news: 10 titoli (4 macro), sentiment=positivo".
+- news_context.txt generato, formato corretto, Sentiment presente.
+
+news_agent in tmux riavviato (sessione creata 20:43:52).
+
+orchestrator.py riavviato:
+- Punteggio combinato: -0.020 (prima -0.04/-0.08).
+- decision_log.jsonl: `news: 0.3`, final_score -0.02, HOLD.
+
+### 4. Calcolo
+
+- news +0.3 × 0.20 = +0.06
+- social -0.2 × 0.20 = -0.04
+- experience -0.2 × 0.20 = -0.04
+- cycle, volume = 0
+- final_score = -0.02
+
+### 5. Da fare prossima sessione
+
+- **O8**: logica post-apertura (prossimo passo).
+- Verifica O7b-bis in produzione al primo BUY reale.
+- Bug noto supervisor (falso positivo su news_agent).
+- 8 agenti con log vuoti.
+
+### 6. Riepilogo finale sessione 2026-10-15
+
+**Obiettivi completati:**
+- O7b-bis: orchestratore legge AI_BRIDGE_RES.txt.
+- O11: password broker rimossa da config.json.
+- O10: news redesign + riattivazione segnale.
+- Pulizia backup (25 file).
+- Regole D14, D15, D16.
+- Documenti aggiornati (2 commit Git).
+
+**Stato sistema:**
+- 5/5 segnali attivi. Punteggio attuale -0.02. HOLD.
+- EA v3.5-bis funzionante.
+- Agenti vivi (12 sessioni).
+- Conto demo: saldo ~100066 EUR, 0 ordini aperti.
+
+**Prossimo:**
+- O8: logica post-apertura (break-even, rivalutazione, chiusura venerdi').
+- Verifica O7b-bis con ordine reale.
+- Bug supervisor.

@@ -1,6 +1,6 @@
 # CONTESTO PROGETTO AI_TRADING
 
-Ultimo aggiornamento: 2026-10-15 19:30
+Ultimo aggiornamento: 2026-10-15 20:50
 Autore: Carlo + Chat (decisione congiunta)
 Regola: questo file si aggiorna SOLO a mano, in chat, quando cambia una decisione.
 Nessuno script automatico deve scriverci dentro.
@@ -56,8 +56,10 @@ Soglie decisionali (post O7b):
 - final_score < -0.10  ->  SELL
 - altrimenti           ->  HOLD
 
-Punteggio attuale: -0.04/-0.08 (social/experience variabili, altri 0).
-Risultato: HOLD.
+TUTTI I 5 SEGNALI SONO ATTIVI (post O10, 2026-10-15).
+
+Punteggio attuale: -0.02 (news +0.06, social -0.04, experience -0.04,
+cycle e volume 0). Risultato: HOLD.
 
 Riferimento codice: /home/carlo/AI_Trading/orchestrator.py, funzione
 get_signal().
@@ -100,7 +102,14 @@ Path:
   ("OK: aperto 253699") -> orders.json -> account.json -> close 253699.
 - orchestrator.py O7b-bis: legge AI_BRIDGE_RES.txt dopo ogni comando.
   Test unitario superato 2026-10-15 (OK/ERR/timeout).
-  md5 orchestrator.py = 4f567d0d6009cbb8d01effc9344a4aad
+- orchestrator.py O10: news RIATTIVATO. Legge "Sentiment:" da
+  news_context.txt, assegna +0.3/0/-0.3.
+  md5 orchestrator.py = b99adeb9775958108ee3b99ec501ffae
+- news_agent.py v2 (O10, 2026-10-15): legge Investing.com RSS, filtra
+  keyword macro, calcola sentiment (keyword EN+IT), scrive news_context.txt
+  ogni 10 min. Formato: "Ultime notizie macro (aggiornate <data>):" +
+  N titoli + "Sentiment: positivo|negativo|neutro".
+  md5 news_agent.py = d5b5c99630b8ac0512a9b9440a4edc46
 - config.json: password broker RIMOSSA 2026-10-15 (O11). Nessuno la usava.
   Struttura attuale: timeframe, lot, broker.{login, server}.
   Permessi 600. Backup in config.json.pre_o11.
@@ -112,19 +121,10 @@ Path:
 
 ### Cosa e' rotto o incompleto
 - orders.json: bug doppio "status" RISOLTO in v3.5-bis (2026-10-14).
-  Dedup ora rimuove i campi vecchi (status:open, pnl:0) prima di appendere
-  quelli nuovi. Test end-to-end superato: ticket 253699 aperto/chiuso pulito.
-- news_context.txt: ORFANO. Nessun agente attivo lo scrive. Residuo storico.
-  news_agent.py attuale scrive solo /tmp/news_score.txt (numero). Segnale
-  news SOSPESO in orchestrator.py (forzato a 0.0). Cantiere O10.
-- social_agent.py: PATCHATO 2026-10-14. Aggiunta funzione sentiment_score()
-  (keyword list EN, positivo/negativo/neutro). File social_context.txt ora
-  contiene riga "Sentiment: negativo|positivo|neutro". Orchestratore legge
-  correttamente. Segnale ATTIVO.
-- cycle_agent.py: PATCHATO 2026-10-14. Fix MultiIndex yfinance
-  (df.columns.get_level_values(0)). cycles_context.txt ora contiene 12 righe
-  "Mese N: media prezzo X.XXXXX". Orchestratore legge correttamente. Segnale
-  ATTIVO (ottobre media 1.08960 -> range 1.08-1.10 -> 0.0).
+- social_agent.py: PATCHATO 2026-10-14. sentiment_score() (keyword EN).
+  Segnale ATTIVO.
+- cycle_agent.py: PATCHATO 2026-10-14. Fix MultiIndex yfinance.
+  Segnale ATTIVO.
 - 8 agenti su 11 non scrivono log attivi: social_agent, news_agent,
   cycle_agent, market_anomaly, kronos_agent, nzt_agent, signal_observer,
   strategy_validator. Da indagare se fanno qualcosa o sono muti.
@@ -133,6 +133,9 @@ Path:
 - supervisor: RISCRITTO v2 il 2026-10-14. Legge stato agenti da tmux,
   riavvia critici fermi, aggiorna audit_status.json ogni 300s. Venv
   canonico: /home/carlo/AI_Trading_Agents/venv. Log: /home/carlo/supervisor.log.
+  BUG NOTO: controlla solo esistenza sessione tmux per nome, non il
+  processo figlio. Se sessione chiusa ma supervisor dice "active", falso
+  positivo. Da fixare in futuro.
 - web_app: RISCRITTO unificato il 2026-10-14. Legge account.json e
   orders.json da MT4, mostra saldo/equity/margin/free_margin/profit,
   PNL giorno/settimana, ordini aperti/chiusi, controllo agenti tmux
@@ -147,10 +150,12 @@ Path:
 - AI_BRIDGE_EA.ex4.pre_v3.5bis (md5 2c5ca83375d568aef8f1abfd62baa5e3)
 - orders.json.pre_v3.5bis (record malformato pre-patch v3.5-bis)
 - orchestrator.py.pre_o7b_bis (md5 6c6d6f908c9b4bcd21fef72607209f09)
+- orchestrator.py.pre_o10 (md5 4f567d0d6009cbb8d01effc9344a4aad)
 - config.json.pre_o11 (md5 af9a8567be69c794985c80f3a11b8c0f)
+- news_agent.py.pre_o10 (md5 25e6108b4c679526c99faf3d736ec5b4)
 - supervisor_agent.py.pre_rewrite, supervisor_agent.py.pre_venvfix
 - start_all.sh.pre_venvfix, agents_night_shift.sh.pre_venvfix
-- CONTESTO.md.v3.5bis, HANDOFF.md.v3.5bis (documenti pre-O7b-bis)
+- CONTESTO.md.pre_o11, HANDOFF.md.pre_o11 (documenti pre-O10)
 
 ## 5. Decisioni prese (non si ridiscutono)
 
@@ -216,10 +221,9 @@ commerciale.
 
 ## 7. Prossimo passo (uno solo)
 
-O10: news redesign. news_agent.py attualmente scrive solo
-/tmp/news_score.txt (numero). news_context.txt orfano dal 2026-09-05.
-Riprogettare l'agente per scrivere un file di testo con notizie +
-sentiment, leggibile dall'orchestratore.
+O8: logica post-apertura. Break-even, rivalutazione giornaliera,
+chiusura venerdi'. Attualmente orchestratore apre ordini e li lascia
+correre fino a SL/TP o chiusura 24h. Manca gestione attiva.
 
 ## 8. Come si aggiorna questo file
 
@@ -239,9 +243,8 @@ diario Git con messaggio "contesto: <cosa e' cambiato>".
 - O7b-bis: orchestratore legge AI_BRIDGE_RES.txt. FATTO 2026-10-15.
 - O7c: diagnosi 4 segnali su 5 a 0. CHIUSO 2026-10-14.
 - O8: logica post-apertura (break-even, rivalutazione giornaliera,
-  chiusura venerdi'). Da progettare.
+  chiusura venerdi'). Prossimo passo.
 - O9: attivare orario di mercato London+NY in config.json (D12). Da
   fare in fase di produzione.
-- O10: news redesign (news_agent.py scrive file di testo invece di numero).
-  Prossimo passo.
+- O10: news redesign. FATTO 2026-10-15.
 - O11: password broker fuori da config.json. FATTO 2026-10-15.
