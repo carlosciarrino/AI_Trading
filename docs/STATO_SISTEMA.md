@@ -1,7 +1,7 @@
 # STATO SISTEMA AI_TRADING
 
 ## 1. Stato rilevato (auto)
-Timestamp: 2026-10-15 06:59:34
+Timestamp: 2026-10-15 07:59:34
 TMUX: ai_workforce: 1 windows (created Wed Oct 14 22:31:56 2026)
 cycle_agent: 1 windows (created Wed Oct 14 22:53:12 2026)
 experience_agent: 1 windows (created Wed Oct 14 21:58:49 2026)
@@ -16,10 +16,10 @@ supervisor: 1 windows (created Wed Oct 14 21:58:49 2026)
 volume_agent: 1 windows (created Wed Oct 14 21:58:49 2026)
 Servizi systemd user: web-app: active; controllo-remoto: active; ai-trading-agenti: active
 Processi Windows: terminal.exe: carlo    1333698  0.0  0.0   9984  3584 ?        S    ott14   0:00 bash -c wineserver -k; export WINEPREFIX="/home/carlo/.wine_trading_finale"; export WINEDEBUG=-all; cd "/home/carlo/Scrivania/XM MT4" && wine terminal.exe /portable
-carlo    1333702 12.1  1.1 1464320 141408 ?      Sl   ott14  54:29 terminal.exe /portable; metaeditor.exe: carlo    1338542  1.9  1.6 1426680 199256 ?      Ssl  ott14   8:43 Z:\home\carlo\Scrivania\XM MT4\MetaEditor.exe Z:\home\carlo\Scrivania\XM MT4\MQL4\Experts\AI_BRIDGE_EA.mq4
+carlo    1333702 12.2  1.1 1464320 141408 ?      Sl   ott14  62:10 terminal.exe /portable; metaeditor.exe: carlo    1338542  1.9  1.6 1426680 199256 ?      Ssl  ott14  10:00 Z:\home\carlo\Scrivania\XM MT4\MetaEditor.exe Z:\home\carlo\Scrivania\XM MT4\MQL4\Experts\AI_BRIDGE_EA.mq4
 File condivisi MT4: orders.json: presente (162 bytes); open_time.json: presente (2002 bytes); sl_commands.json: presente (109 bytes)
 IP Tailscale: 100.77.33.7
-Git: commit 9e76c2c: auto-sync gio 15 ott 2026, 06:00:01, WEST
+Git: commit 0896ee9: auto-sync gio 15 ott 2026, 07:00:01, WEST
 
 ## 2. Diario azioni
 
@@ -66,6 +66,7 @@ Git: commit 9e76c2c: auto-sync gio 15 ott 2026, 06:00:01, WEST
 - 15 October 2026 - 4b32b4a: auto-sync gio 15 ott 2026, 04:00:01, WEST
 - 15 October 2026 - 93e4238: auto-sync gio 15 ott 2026, 05:00:01, WEST
 - 15 October 2026 - 9e76c2c: auto-sync gio 15 ott 2026, 06:00:01, WEST
+- 15 October 2026 - 0896ee9: auto-sync gio 15 ott 2026, 07:00:01, WEST
 
 ## 3. Problemi noti
 
