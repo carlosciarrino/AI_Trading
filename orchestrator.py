@@ -10,8 +10,16 @@ MT4_FILES = os.path.expanduser("~/Scrivania/XM MT4/MQL4/Files")
 ORDERS_JSON = "/home/carlo/Scrivania/XM MT4/MQL4/Files/orders.json"
 OPEN_TIME_FILE = "/home/carlo/Scrivania/XM MT4/MQL4/Files/open_time.json"
 ACCOUNT_JSON = "/home/carlo/Scrivania/XM MT4/MQL4/Files/account.json"
+SL_COMMANDS_FILE = "/home/carlo/Scrivania/XM MT4/MQL4/Files/sl_commands.json"
 LOCK_FILE = "/tmp/orchestrator.lock"
 DECISION_LOG = "/home/carlo/AI_Trading/decision_log.jsonl"
+
+# O8 - parametri logica post-apertura
+BREAK_EVEN_PIP = 20       # attivazione: profitto >= 20 pip
+BREAK_EVEN_OFFSET_PIP = 2 # SL spostato a entry +/- 2 pip
+FRIDAY_PROFIT_HOUR_UTC = 15  # C1: venerdi 15:00 UTC, chiudi se PNL > 0
+FRIDAY_CLOSE_HOUR_UTC = 20   # C2: venerdi 20:00 UTC, chiudi tutto
+MAIN_LOOP_SLEEP = 300        # 5 minuti
 
 
 def load_config():
@@ -45,6 +53,42 @@ def count_open_orders():
         print(f"[DEBUG] Errore lettura account.json: {e}", flush=True)
         return 0
 
+
+def get_open_order():
+    """Ritorna il primo ordine aperto da orders.json, o None.
+    Formato tipico: {"action":"buy","lots":0.01,"price":1.11664,"sl":1.11614,
+    "tp":1.11764,"time":...,"status":"open","ticket":"253699","pnl":0}
+    """
+    try:
+        with open(ORDERS_JSON) as f:
+            orders = json.load(f)
+        for o in orders:
+            if o.get("status") == "open":
+                return o
+        return None
+    except Exception as e:
+        print(f"[DEBUG] Errore lettura orders.json: {e}", flush=True)
+        return None
+
+
+def send_close_command(ticket, reason_log):
+    """Invia comando CLOSE <ticket> all'EA e legge esito. Logga su stdout."""
+    cmd_path = os.path.join(MT4_FILES, "AI_BRIDGE_CMD.txt")
+    res_path = os.path.join(MT4_FILES, "AI_BRIDGE_RES.txt")
+    if os.path.exists(res_path):
+        try:
+            os.remove(res_path)
+        except Exception:
+            pass
+    with open(cmd_path, "w") as f:
+        f.write(f"CLOSE {ticket}\n")
+    status, payload = read_bridge_result(timeout=8)
+    if status == "ok":
+        print(f"[O8] Chiusura {ticket} confermata ({reason_log})", flush=True)
+    elif status == "err":
+        print(f"[O8] Chiusura {ticket} fallita ({reason_log}): {payload.get('error')}", flush=True)
+    else:
+        print(f"[O8] Chiusura {ticket} timeout EA ({reason_log})", flush=True)
 
 def get_signal():
     scores = {}
@@ -96,9 +140,9 @@ def get_signal():
         scores['cycle'] = 0.0
     try:
         with open('/home/carlo/AI_Trading/volume_context.txt', 'r') as f:
-            text = f.read()
+            text = f.read().lower()
             import re
-            match = re.search(r'(?:score|punteggio)\s*:?\s*([-+]?\d+\.?\d*)', text, re.IGNORECASE)
+            match = re.search(r'(?:score|punteggio)[:\s]+(-?\d+\.\d+)', text)
             if match:
                 scores['volume'] = float(match.group(1))
             else:
@@ -107,26 +151,29 @@ def get_signal():
         scores['volume'] = 0.0
     try:
         with open('/home/carlo/AI_Trading/experiences.json', 'r') as f:
-            exp = json.load(f)
-            recent = [e for e in exp if e.get('esito') == 'PERDITA'][-3:]
-            if len(recent) >= 3:
-                scores['experience'] = -0.2
-            else:
-                scores['experience'] = 0.0
+            exps = json.load(f)
+        recent = exps[-3:] if len(exps) >= 3 else exps
+        losses = sum(1 for e in recent if e.get('esito') == 'PERDITA')
+        wins = sum(1 for e in recent if e.get('esito') == 'PROFITTO')
+        if losses > wins:
+            scores['experience'] = -0.2
+        elif wins > losses:
+            scores['experience'] = 0.2
+        else:
+            scores['experience'] = 0.0
     except:
         scores['experience'] = 0.0
-
     weights = {
         'news': 0.2,
         'social': 0.2,
         'cycle': 0.15,
         'volume': 0.25,
-        'experience': 0.2
+        'experience': 0.2,
     }
     total = 0.0
     weight_sum = 0.0
-    for key in scores:
-        total += scores[key] * weights[key]
+    for key in weights:
+        total += scores.get(key, 0.0) * weights[key]
         weight_sum += weights[key]
     final_score = total / weight_sum if weight_sum > 0 else 0.0
     print(f"Punteggio combinato: {final_score:.3f}", flush=True)
@@ -144,48 +191,145 @@ def get_signal():
     }
     return signal, detail
 
-
 def check_time_stop():
+    """Chiude ordini aperti da piu' di 24h."""
+    order = get_open_order()
+    if not order:
+        return
+    ticket = order.get('ticket')
+    if not ticket:
+        return
     try:
-        with open(ORDERS_JSON) as f:
-            orders = json.load(f)
-        open_orders = [o for o in orders if o.get('status') == 'open']
-        if not open_orders:
-            return
-        order = open_orders[0]
-        ticket = order.get('ticket')
-        if not ticket:
-            return
+        with open(OPEN_TIME_FILE) as f:
+            open_times = json.load(f)
+    except Exception:
+        open_times = {}
+    open_time = open_times.get(str(ticket))
+    if not open_time:
+        open_times[str(ticket)] = time.time()
+        with open(OPEN_TIME_FILE, "w") as f:
+            json.dump(open_times, f)
+        return
+    open_dt = datetime.fromtimestamp(open_time)
+    if datetime.now() - open_dt > timedelta(hours=24):
+        print(f"[O8] Ordine {ticket} aperto da >24h. Chiusura.", flush=True)
+        send_close_command(ticket, "time_stop_24h")
+        # Rimuovi da open_times
         try:
-            with open(OPEN_TIME_FILE) as f:
-                open_times = json.load(f)
-            open_time = open_times.get(str(ticket))
-            if not open_time:
-                open_times[str(ticket)] = time.time()
-                with open(OPEN_TIME_FILE, "w") as f:
-                    json.dump(open_times, f)
-                return
-            open_dt = datetime.fromtimestamp(open_time)
-            if datetime.now() - open_dt > timedelta(hours=24):
-                print(f"Operazione {ticket} aperta da più di 24h. Invio chiusura.", flush=True)
-                cmd_path = os.path.join(MT4_FILES, "AI_BRIDGE_CMD.txt")
-                with open(cmd_path, "w") as f:
-                    f.write(f"CLOSE {ticket}\n")
-                status, payload = read_bridge_result(timeout=8)
-                if status == "ok":
-                    print(f"Chiusura {ticket} confermata", flush=True)
-                elif status == "err":
-                    print(f"Chiusura {ticket} fallita: {payload.get('error')}", flush=True)
-                else:
-                    print(f"Chiusura {ticket} timeout EA", flush=True)
-                del open_times[str(ticket)]
-                with open(OPEN_TIME_FILE, "w") as f:
-                    json.dump(open_times, f)
-        except Exception as e:
-            print(f"Errore timestamp: {e}")
-    except Exception as e:
-        print(f"Errore time-stop: {e}")
+            del open_times[str(ticket)]
+            with open(OPEN_TIME_FILE, "w") as f:
+                json.dump(open_times, f)
+        except Exception:
+            pass
 
+
+def get_current_price():
+    """Scarica prezzo corrente EURUSD (Close ultima candela 15m)."""
+    try:
+        df = yf.download("EURUSD=X", period="1d", interval="15m", progress=False)
+        if df.empty:
+            return None
+        price = df['Close'].iloc[-1]
+        if hasattr(price, 'iloc'):
+            price = float(price.iloc[0])
+        else:
+            price = float(price)
+        return price
+    except Exception as e:
+        print(f"[O8] Errore get_current_price: {e}", flush=True)
+        return None
+
+
+def check_break_even():
+    """Se ordine in profitto >= BREAK_EVEN_PIP, sposta SL a entry+offset.
+    Scrive sl_commands.json, l'EA lo applica al timer successivo.
+    """
+    order = get_open_order()
+    if not order:
+        return
+    ticket = order.get('ticket')
+    action = order.get('action')  # buy|sell
+    entry = order.get('price')
+    current_sl = order.get('sl')
+    if not all([ticket, action, entry, current_sl is not None]):
+        return
+    entry = float(entry)
+    current_sl = float(current_sl)
+    current_price = get_current_price()
+    if current_price is None:
+        return
+    pip = 0.0001  # 1 pip EURUSD = 0.0001
+    offset = BREAK_EVEN_OFFSET_PIP * pip
+
+    if action == "buy":
+        profit_pips = (current_price - entry) / pip
+        # Attiva se profitto >= soglia e SL ancora sotto entry
+        if profit_pips >= BREAK_EVEN_PIP and current_sl < entry:
+            new_sl = round(entry + offset, 5)
+            write_sl_command(ticket, new_sl)
+    elif action == "sell":
+        profit_pips = (entry - current_price) / pip
+        if profit_pips >= BREAK_EVEN_PIP and current_sl > entry:
+            new_sl = round(entry - offset, 5)
+            write_sl_command(ticket, new_sl)
+
+
+def write_sl_command(ticket, new_sl):
+    """Scrive sl_commands.json. L'EA legge e applica, poi cancella il file."""
+    try:
+        cmd = {"ticket": int(ticket), "new_sl": float(new_sl)}
+        # L'EA legge un array di comandi (anche se ne scriviamo uno solo)
+        existing = []
+        if os.path.exists(SL_COMMANDS_FILE):
+            try:
+                with open(SL_COMMANDS_FILE) as f:
+                    existing = json.load(f)
+                    if not isinstance(existing, list):
+                        existing = [existing]
+            except Exception:
+                existing = []
+        existing.append(cmd)
+        with open(SL_COMMANDS_FILE, "w") as f:
+            json.dump(existing, f)
+        print(f"[O8] SL command scritto: ticket={ticket} new_sl={new_sl}", flush=True)
+    except Exception as e:
+        print(f"[O8] Errore write_sl_command: {e}", flush=True)
+
+
+def check_friday_profit():
+    """C1: venerdi 15:00 UTC. Chiudi ordini con PNL > 0 (salva-profitto)."""
+    now = datetime.now(timezone.utc)
+    if now.weekday() != 4:  # 4 = venerdi
+        return
+    if now.hour != FRIDAY_PROFIT_HOUR_UTC:
+        return
+    order = get_open_order()
+    if not order:
+        return
+    ticket = order.get('ticket')
+    pnl = order.get('pnl', 0)
+    try:
+        pnl = float(pnl)
+    except Exception:
+        pnl = 0.0
+    if pnl > 0:
+        print(f"[O8] C1 venerdi: ordine {ticket} PNL={pnl} > 0. Chiusura.", flush=True)
+        send_close_command(ticket, "friday_profit")
+
+
+def check_friday_close():
+    """C2: venerdi 20:00 UTC. Chiudi tutti gli ordini aperti."""
+    now = datetime.now(timezone.utc)
+    if now.weekday() != 4:
+        return
+    if now.hour != FRIDAY_CLOSE_HOUR_UTC:
+        return
+    order = get_open_order()
+    if not order:
+        return
+    ticket = order.get('ticket')
+    print(f"[O8] C2 venerdi: chiusura forzata ordine {ticket}.", flush=True)
+    send_close_command(ticket, "friday_close_all")
 
 def read_bridge_result(timeout=8):
     """Legge AI_BRIDGE_RES.txt dopo invio comando. Ritorna (status, payload)."""
@@ -233,7 +377,6 @@ def write_decision(detail, action_taken, ticket=None, reason=None, error=None):
     except Exception as e:
         print(f"Errore write_decision: {e}", flush=True)
 
-
 def main():
     # Lock esclusivo
     if os.path.exists(LOCK_FILE):
@@ -255,16 +398,21 @@ def main():
         print(f"Orchestratore avviato. Sessione: {session}", flush=True)
 
         while True:
+            # O8: logica post-apertura (sempre attiva, anche fuori orario)
             check_time_stop()
+            check_break_even()
+            check_friday_profit()
+            check_friday_close()
+
             if not is_trading_hours(session):
                 print(f"Fuori orario. UTC: {datetime.now(timezone.utc).hour}", flush=True)
-                time.sleep(3600)
+                time.sleep(MAIN_LOOP_SLEEP)
                 continue
 
             open_count = count_open_orders()
             if open_count >= MAX_OPEN_ORDERS:
                 print("Limite operazioni raggiunto.", flush=True)
-                time.sleep(3600)
+                time.sleep(MAIN_LOOP_SLEEP)
                 continue
 
             signal, detail = get_signal()
@@ -329,7 +477,7 @@ def main():
                 print("HOLD", flush=True)
                 write_decision(detail, action_taken="none", reason="score_neutro")
 
-            time.sleep(3600)
+            time.sleep(MAIN_LOOP_SLEEP)
     finally:
         if os.path.exists(LOCK_FILE):
             os.remove(LOCK_FILE)
@@ -337,3 +485,5 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+
