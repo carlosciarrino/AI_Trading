@@ -5,11 +5,13 @@ from datetime import datetime, timezone, timedelta
 CONFIG_PATH = os.path.expanduser("~/AI_Trading/config.json")
 OLLAMA_URL = "http://localhost:11434/api/generate"
 MODEL = "qwen2.5:0.5b"
-MAX_OPEN_ORDERS = 3
+MAX_OPEN_ORDERS = 1
 MT4_FILES = os.path.expanduser("~/Scrivania/XM MT4/MQL4/Files")
-ORDERS_JSON = os.path.expanduser("~/mt4_shared/orders.json")
-OPEN_TIME_FILE = os.path.expanduser("~/mt4_shared/open_time.json")
+ORDERS_JSON = "/home/carlo/Scrivania/XM MT4/MQL4/Files/orders.json"
+OPEN_TIME_FILE = "/home/carlo/Scrivania/XM MT4/MQL4/Files/open_time.json"
+ACCOUNT_JSON = "/home/carlo/Scrivania/XM MT4/MQL4/Files/account.json"
 LOCK_FILE = "/tmp/orchestrator.lock"
+DECISION_LOG = "/home/carlo/AI_Trading/decision_log.jsonl"
 
 
 def load_config():
@@ -34,29 +36,22 @@ def is_trading_hours(session):
 
 def count_open_orders():
     try:
-        with open(ORDERS_JSON) as f:
-            orders = json.load(f)
-        open_orders = [o for o in orders if o.get('status') == 'open']
-        print(f"[DEBUG] Ordini aperti nel file: {len(open_orders)}", flush=True)
-        return len(open_orders)
+        with open(ACCOUNT_JSON) as f:
+            acc = json.load(f)
+        n = int(acc.get("open_orders", 0))
+        print(f"[DEBUG] Ordini aperti (account.json): {n}", flush=True)
+        return n
     except Exception as e:
-        print(f"[DEBUG] Errore lettura orders.json: {e}", flush=True)
+        print(f"[DEBUG] Errore lettura account.json: {e}", flush=True)
         return 0
 
 
 def get_signal():
     scores = {}
-    try:
-        with open('/home/carlo/AI_Trading/news_context.txt', 'r') as f:
-            text = f.read().lower()
-            if any(w in text for w in ['guerra', 'crisi', 'inflazione', 'rialzo tassi']):
-                scores['news'] = -0.3
-            elif any(w in text for w in ['pace', 'accordo', 'taglio tassi', 'stimoli']):
-                scores['news'] = 0.3
-            else:
-                scores['news'] = 0.0
-    except:
-        scores['news'] = 0.0
+    # O7c: news SOSPESO. news_agent non aggiorna news_context.txt da 40 giorni.
+    # Il parser a keyword su titoli vecchi e ambigui produce segnali inaffidabili.
+    # Riattivare SOLO dopo che news_agent scrive un file fresco e datato.
+    scores['news'] = 0.0
     try:
         with open('/home/carlo/AI_Trading/social_context.txt', 'r') as f:
             text = f.read().lower()
@@ -94,7 +89,7 @@ def get_signal():
         with open('/home/carlo/AI_Trading/volume_context.txt', 'r') as f:
             text = f.read()
             import re
-            match = re.search(r'Punteggio:\s*([-+]?\d+\.?\d*)', text)
+            match = re.search(r'(?:score|punteggio)\s*:?\s*([-+]?\d+\.?\d*)', text, re.IGNORECASE)
             if match:
                 scores['volume'] = float(match.group(1))
             else:
@@ -126,12 +121,19 @@ def get_signal():
         weight_sum += weights[key]
     final_score = total / weight_sum if weight_sum > 0 else 0.0
     print(f"Punteggio combinato: {final_score:.3f}", flush=True)
-    if final_score > 0.01:
-        return "BUY"
-    elif final_score < -0.01:
-        return "SELL"
+    if final_score > 0.10:
+        signal = "BUY"
+    elif final_score < -0.10:
+        signal = "SELL"
     else:
-        return "HOLD"
+        signal = "HOLD"
+    detail = {
+        "scores": dict(scores),
+        "weights": dict(weights),
+        "final_score": round(final_score, 4),
+        "signal": signal,
+    }
+    return signal, detail
 
 
 def check_time_stop():
@@ -169,6 +171,25 @@ def check_time_stop():
         print(f"Errore time-stop: {e}")
 
 
+def write_decision(detail, action_taken, ticket=None, reason=None):
+    import json as _json
+    entry = {
+        "timestamp": datetime.now().isoformat(),
+        "scores": detail.get("scores", {}),
+        "weights": detail.get("weights", {}),
+        "final_score": detail.get("final_score", 0.0),
+        "signal": detail.get("signal", "HOLD"),
+        "action_taken": action_taken,
+        "ticket": ticket,
+        "reason": reason,
+    }
+    try:
+        with open(DECISION_LOG, "a") as f:
+            f.write(_json.dumps(entry) + "\n")
+    except Exception as e:
+        print(f"Errore write_decision: {e}", flush=True)
+
+
 def main():
     # Lock esclusivo
     if os.path.exists(LOCK_FILE):
@@ -202,7 +223,7 @@ def main():
                 time.sleep(3600)
                 continue
 
-            signal = get_signal()
+            signal, detail = get_signal()
             print(f"Segnale AI: {signal}", flush=True)
 
             if signal in ("BUY", "SELL"):
@@ -241,8 +262,10 @@ def main():
                 cmd_path = os.path.join(MT4_FILES, "AI_BRIDGE_CMD.txt")
                 with open(cmd_path, "w") as f:
                     f.write(f"{cmd}\n")
+                write_decision(detail, action_taken=action, reason="signal_ok")
             else:
                 print("HOLD", flush=True)
+                write_decision(detail, action_taken="none", reason="score_neutro")
 
             time.sleep(3600)
     finally:

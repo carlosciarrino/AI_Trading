@@ -44,9 +44,10 @@ MAX_OPEN_ORDERS = 1. Soglia decisionale da ±0.01 a ±0.10.
 ## 3. Cosa e' cambiato sul sistema
 
 FILE MT4:
-- /home/carlo/Scrivania/XM MT4/MQL4/Experts/AI_BRIDGE_EA.mq4 (v3.5)
-- /home/carlo/Scrivania/XM MT4/MQL4/Experts/AI_BRIDGE_EA.ex4 (v3.5)
-- Backup v3.4 in AI_BRIDGE_EA.v3.4.mq4/.ex4
+- /home/carlo/Scrivania/XM MT4/MQL4/Experts/AI_BRIDGE_EA.mq4 (v3.5-bis)
+- /home/carlo/Scrivania/XM MT4/MQL4/Experts/AI_BRIDGE_EA.ex4 (v3.5-bis)
+- Backup v3.5 originale in AI_BRIDGE_EA.mq4.pre_v3.5bis
+- Backup v3.4 in AI_BRIDGE_EA_v3.4.mq4/.ex4
 
 FILE AI_Trading:
 - web_app.py (dashboard unificata)
@@ -54,7 +55,7 @@ FILE AI_Trading:
 - orchestrator.py (fix O7b)
 - start_all.sh, agents_night_shift.sh (venv corretto)
 - decision_log.jsonl (nuovo)
-- CONTESTO.md (nuovo, 172 righe)
+- CONTESTO.md (aggiornato 2026-10-14 23:50)
 - HANDOFF.md (questo file)
 - APERTURA_CHAT.md (da creare subito dopo)
 
@@ -65,22 +66,18 @@ SERVIZI:
 
 ## 4. Stato attuale dei processi
 
-- Orchestratore: attivo, in HOLD. Punteggio attuale -0.04 < soglia 0.10.
+- Orchestratore: attivo, in HOLD. Punteggio attuale -0.08 < soglia 0.10.
   Non aprira' nulla finche' i segnali non si rafforzano.
 - Supervisor: attivo, watchdog. Ultimo audit_status.json aggiornato.
 - Dashboard: attiva su porta 5000. Pagine /, /trading, /agents, /verifier ok.
-- MT4: 0 ordini aperti. Account 100066.12 EUR.
+- MT4: 0 ordini aperti. Account ~100066 EUR.
 - 12 sessioni tmux attive (ai_workforce, cycle_agent, experience_agent,
   kronos_agent, market_anomaly, news_agent, nzt_agent, signal_observer,
   social_agent, strategy_validator, supervisor, volume_agent).
 
 ## 5. Cosa NON e' stato fatto (aperto)
 
-O7c - 4 segnali su 5 sono sempre 0: news, social, cycle, volume.
-  - news_context.txt fermo al 2026-09-05 (40 giorni).
-  - social_context.txt aggiornato ma non contiene 'positivo'/'negativo'.
-  - cycles_context.txt non matcha il pattern 'mese N'.
-  - volume_context.txt contiene 'score 0.00'.
+O7b-bis - Orchestratore legge AI_BRIDGE_RES.txt per verificare esito reale.
 
 O7d - Logica post-apertura: break-even, rivalutazione giornaliera,
   chiusura venerdi'. Vedi O8.
@@ -89,18 +86,23 @@ O6 - Ricerca agenti (GitHub, forum, repo). Settore trading.
 
 O9 - Orario di mercato London+NY in config.json (D12). Solo in produzione.
 
+O10 - news redesign.
+
+O11 - password broker fuori da config.json.
+
 ## 6. Prossimo passo esatto
 
-O7c - Indagare perche' 4 agenti su 5 danno score 0.
+O7b-bis - orchestrator.py legge AI_BRIDGE_RES.txt dopo aver scritto
+AI_BRIDGE_CMD.txt.
 
 Azioni concrete:
-1. Leggere news_context.txt, social_context.txt, cycles_context.txt,
-   volume_context.txt: contenuto esatto.
-2. Capire chi li scrive (quale agente).
-3. Verificare se l'agente e' attivo (tmux, log).
-4. Confrontare il formato atteso dall'orchestratore vs il formato scritto.
-5. Fixare: o l'agente (scrive nel formato giusto) o l'orchestratore
-   (legge il formato scritto).
+1. Dopo write di AI_BRIDGE_CMD.txt, attendere breve (1-3 sec) che l'EA
+   consumi il comando.
+2. Leggere AI_BRIDGE_RES.txt.
+3. Parsare esito: "OK: aperto <ticket>" -> loggare ticket reale;
+   "ERR: ..." -> loggare errore, non ticket:null.
+4. Aggiornare decision_log.jsonl con esito reale.
+5. Gestire caso file assente (timeout EA).
 
 ## 7. Come verificare che il sistema e' come lo abbiamo lasciato
 
@@ -174,10 +176,8 @@ Scopo: O7c - indagare perche' 4 segnali su 5 davano sempre score 0.
 
 ### Da fare prossima sessione
 
-1. Test end-to-end orchestratore -> MT4 con comando manuale (buy/sell a
-   prezzi plausibili). Verificare catena: AI_BRIDGE_CMD.txt -> EA ->
-   AI_BRIDGE_RES.txt -> orders.json -> account.json -> dashboard.
-2. Fix `orders.json` dedup (v3.5-bis).
+1. ~~Test end-to-end orchestratore -> MT4~~ FATTO 2026-10-14 notte.
+2. ~~Fix `orders.json` dedup (v3.5-bis)~~ FATTO 2026-10-14 notte.
 3. Orchestratore legge `AI_BRIDGE_RES.txt` per tracciare esito reale.
 4. Cantiere O10: riprogettare `news_agent.py` (file di testo vs numero).
 5. Pulizia processi tmux zombie (es. wrapper 1263886).
@@ -187,3 +187,53 @@ Scopo: O7c - indagare perche' 4 segnali su 5 davano sempre score 0.
 - **O10**: news redesign.
 - **O11**: password broker fuori da `config.json` (file in chiaro,
   potenzialmente su GitHub).
+
+---
+
+## Sessione 2026-10-14 notte - Fix orders.json dedup (v3.5-bis)
+
+Sessione: 14 ottobre 2026, 23:00-23:45.
+Scopo: fixare bug doppio "status"/"pnl" in orders.json.
+
+### Fatto
+
+- Diagnosi: dedup v3.5 non rimuoveva "status":"open" e "pnl":0 prima di
+  appendere "status":"closed" e pnl reale. Record malformato (doppio status,
+  doppio pnl, doppio valore pnl).
+- Patch v3.5-bis: blocco objClean rimuove i campi vecchi prima di appendere
+  quelli nuovi.
+- Applicata via script Python (evita errori di copia-incolla in MetaEditor).
+- Prima applicazione fallita: MetaEditor sovrascrive file su disco con
+  copia in memoria. Soluzione: chiudere MetaEditor prima della patch.
+- File intermedio rotto (455 righe, graffe sbilanciate) -> backup
+  .broken_v3.5bis, poi ripristinato da .pre_v3.5bis.
+- Compilata in MetaEditor: 0 errori, 0 warning.
+- md5 .mq4 = c728dfa14c3246268dedd260a0542418
+- md5 .ex4 = e9df7b1d225b52b9e756d3df72c19f27
+
+### Test end-to-end superato
+
+1. orders.json cancellato -> rigenerato "[]" in 15 sec.
+2. buy 0.01 0 0 -> "OK: aperto 253699 lotto 0.01".
+3. orders.json: 1 record, 1 solo status":"open".
+4. account.json: open_orders 1.
+5. close 253699 -> "OK: chiuso 253699".
+6. orders.json: 1 record, 1 solo status":"closed", 1 solo pnl (-0.04),
+   1 solo close_price (1.11666).
+7. account.json: open_orders 0.
+
+### Backup (24h, D3)
+
+- AI_BRIDGE_EA.mq4.pre_v3.5bis (7bd03880a822babf63770b92671bf62f)
+- AI_BRIDGE_EA.mq4.pre_python_patch
+- AI_BRIDGE_EA.mq4.pre_python_patch2
+- AI_BRIDGE_EA.mq4.broken_v3.5bis
+- AI_BRIDGE_EA.ex4.pre_v3.5bis (2c5ca83375d568aef8f1abfd62baa5e3)
+- orders.json.pre_v3.5bis
+
+### Da fare prossima sessione
+
+- O7b-bis: orchestratore legge AI_BRIDGE_RES.txt.
+- O10: news redesign.
+- O11: password broker fuori da config.json.
+- Pulizia backup/file storici.

@@ -162,6 +162,13 @@ def check_time_stop():
                 cmd_path = os.path.join(MT4_FILES, "AI_BRIDGE_CMD.txt")
                 with open(cmd_path, "w") as f:
                     f.write(f"CLOSE {ticket}\n")
+                status, payload = read_bridge_result(timeout=8)
+                if status == "ok":
+                    print(f"Chiusura {ticket} confermata", flush=True)
+                elif status == "err":
+                    print(f"Chiusura {ticket} fallita: {payload.get('error')}", flush=True)
+                else:
+                    print(f"Chiusura {ticket} timeout EA", flush=True)
                 del open_times[str(ticket)]
                 with open(OPEN_TIME_FILE, "w") as f:
                     json.dump(open_times, f)
@@ -171,7 +178,33 @@ def check_time_stop():
         print(f"Errore time-stop: {e}")
 
 
-def write_decision(detail, action_taken, ticket=None, reason=None):
+def read_bridge_result(timeout=8):
+    """Legge AI_BRIDGE_RES.txt dopo invio comando. Ritorna (status, payload)."""
+    res_path = os.path.join(MT4_FILES, "AI_BRIDGE_RES.txt")
+    start = time.time()
+    while time.time() - start < timeout:
+        if os.path.exists(res_path):
+            try:
+                if time.time() - os.path.getmtime(res_path) < timeout:
+                    with open(res_path) as f:
+                        content = f.read().strip()
+                    if content.startswith("OK:"):
+                        parts = content.split()
+                        ticket = None
+                        for p in parts:
+                            if p.isdigit():
+                                ticket = p
+                                break
+                        return ("ok", {"ticket": ticket, "raw": content})
+                    elif content.startswith("ERR:"):
+                        return ("err", {"error": content, "raw": content})
+            except Exception as e:
+                return ("err", {"error": f"read_exception: {e}"})
+        time.sleep(0.5)
+    return ("timeout", {"error": "timeout_ea"})
+
+
+def write_decision(detail, action_taken, ticket=None, reason=None, error=None):
     import json as _json
     entry = {
         "timestamp": datetime.now().isoformat(),
@@ -183,6 +216,8 @@ def write_decision(detail, action_taken, ticket=None, reason=None):
         "ticket": ticket,
         "reason": reason,
     }
+    if error is not None:
+        entry["error"] = error
     try:
         with open(DECISION_LOG, "a") as f:
             f.write(_json.dumps(entry) + "\n")
@@ -260,9 +295,27 @@ def main():
                     cmd = action
 
                 cmd_path = os.path.join(MT4_FILES, "AI_BRIDGE_CMD.txt")
+                res_path = os.path.join(MT4_FILES, "AI_BRIDGE_RES.txt")
+                if os.path.exists(res_path):
+                    try:
+                        os.remove(res_path)
+                    except Exception:
+                        pass
                 with open(cmd_path, "w") as f:
                     f.write(f"{cmd}\n")
-                write_decision(detail, action_taken=action, reason="signal_ok")
+                status, payload = read_bridge_result(timeout=8)
+                if status == "ok":
+                    write_decision(detail, action_taken=action,
+                                   ticket=payload.get("ticket"),
+                                   reason="ea_ok")
+                elif status == "err":
+                    write_decision(detail, action_taken="none",
+                                   reason="ea_err",
+                                   error=payload.get("error"))
+                else:
+                    write_decision(detail, action_taken="none",
+                                   reason="timeout_ea",
+                                   error="timeout_ea")
             else:
                 print("HOLD", flush=True)
                 write_decision(detail, action_taken="none", reason="score_neutro")
