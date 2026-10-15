@@ -1,6 +1,6 @@
 # CONTESTO PROGETTO AI_TRADING
 
-Ultimo aggiornamento: 2026-10-15 19:10
+Ultimo aggiornamento: 2026-10-15 19:30
 Autore: Carlo + Chat (decisione congiunta)
 Regola: questo file si aggiorna SOLO a mano, in chat, quando cambia una decisione.
 Nessuno script automatico deve scriverci dentro.
@@ -56,7 +56,7 @@ Soglie decisionali (post O7b):
 - final_score < -0.10  ->  SELL
 - altrimenti           ->  HOLD
 
-Punteggio attuale: -0.08 (social -0.2, experience -0.2, altri 0).
+Punteggio attuale: -0.04/-0.08 (social/experience variabili, altri 0).
 Risultato: HOLD.
 
 Riferimento codice: /home/carlo/AI_Trading/orchestrator.py, funzione
@@ -101,6 +101,11 @@ Path:
 - orchestrator.py O7b-bis: legge AI_BRIDGE_RES.txt dopo ogni comando.
   Test unitario superato 2026-10-15 (OK/ERR/timeout).
   md5 orchestrator.py = 4f567d0d6009cbb8d01effc9344a4aad
+- config.json: password broker RIMOSSA 2026-10-15 (O11). Nessuno la usava.
+  Struttura attuale: timeframe, lot, broker.{login, server}.
+  Permessi 600. Backup in config.json.pre_o11.
+  md5 config.json = 65985576e9a14f20c2b2437c11b52a92
+- .gitignore: aggiunti pattern *.pre_* e .pre_* (2026-10-15).
 - account.json: scritto ogni 5s con balance, equity, margin, free_margin,
   profit, open_orders, currency, leverage, login, server, timestamp.
   Conto demo: FPTrading-Demo login 450000065, saldo ~100066 EUR.
@@ -136,13 +141,13 @@ Path:
   /api/pnl, /api/agent/<name>/<action>. Servizio systemd user web-app
   attivo, porta 5000.
 - loop sell: non diagnosticato.
-- config.json: contiene password broker in chiaro. Cantiere O11.
 
 ### Backup attivi (NON cancellare finche' non confermati su demo 24h, D3)
 - AI_BRIDGE_EA.mq4.pre_v3.5bis (md5 7bd03880a822babf63770b92671bf62f)
 - AI_BRIDGE_EA.ex4.pre_v3.5bis (md5 2c5ca83375d568aef8f1abfd62baa5e3)
 - orders.json.pre_v3.5bis (record malformato pre-patch v3.5-bis)
 - orchestrator.py.pre_o7b_bis (md5 6c6d6f908c9b4bcd21fef72607209f09)
+- config.json.pre_o11 (md5 af9a8567be69c794985c80f3a11b8c0f)
 - supervisor_agent.py.pre_rewrite, supervisor_agent.py.pre_venvfix
 - start_all.sh.pre_venvfix, agents_night_shift.sh.pre_venvfix
 - CONTESTO.md.v3.5bis, HANDOFF.md.v3.5bis (documenti pre-O7b-bis)
@@ -187,6 +192,11 @@ D15. Quando Carlo deve modificare un file, la chat fornisce in un UNICO
      Mai spezzare in due messaggi. Motivo: evitare che il file resti
      aperto e vulnerabile a imprevisti mentre si aspetta il secondo
      messaggio.
+D16. Per modificare un file a mano, Carlo preferisce SEMPRE il file
+     completo (sostituzione totale), mai istruzioni puntuali (es. "cambia
+     riga 5, 20, 40"). Motivo: meno errori (spazi, parentesi), recupero
+     piu' semplice, tempo/token risparmiati. Dopo ogni modifica, sempre
+     un controllo di routine (grep, md5, wc) commisurato alla modifica.
 
 ## 6. Ricerca agenti (una tantum, periodica)
 
@@ -206,9 +216,10 @@ commerciale.
 
 ## 7. Prossimo passo (uno solo)
 
-O11: rimuovere password broker da config.json (file in chiaro,
-potenzialmente su GitHub). Usare variabili d'ambiente o file .env con
-permessi 600, fuori da Git.
+O10: news redesign. news_agent.py attualmente scrive solo
+/tmp/news_score.txt (numero). news_context.txt orfano dal 2026-09-05.
+Riprogettare l'agente per scrivere un file di testo con notizie +
+sentiment, leggibile dall'orchestratore.
 
 ## 8. Come si aggiorna questo file
 
@@ -232,4 +243,5 @@ diario Git con messaggio "contesto: <cosa e' cambiato>".
 - O9: attivare orario di mercato London+NY in config.json (D12). Da
   fare in fase di produzione.
 - O10: news redesign (news_agent.py scrive file di testo invece di numero).
-- O11: password broker fuori da config.json. IN CORSO (prossimo passo).
+  Prossimo passo.
+- O11: password broker fuori da config.json. FATTO 2026-10-15.

@@ -187,16 +187,18 @@ Scopo: fixare bug doppio "status"/"pnl" in orders.json.
 
 ---
 
-## Sessione 2026-10-15 - O7b-bis + pulizia backup (ore 18:30-19:10)
+## Sessione 2026-10-15 - O7b-bis + O11 + pulizia backup (ore 18:30-19:30)
 
 Autore: Carlo + Chat.
-Scopo: far leggere all'orchestratore l'esito reale dei comandi EA; pulizia.
+Scopo: O7b-bis (orchestratore legge esito EA); O11 (password); pulizia.
 
 ### 1. Punto di partenza
 
 - orchestrator.py (277 righe, md5 6c6d6f908c9b4bcd21fef72607209f09) non
   leggeva AI_BRIDGE_RES.txt. Loggava action_taken senza esito reale.
 - decision_log.jsonl poteva riportare ticket:null anche se EA rifiutava.
+- config.json conteneva broker.password in chiaro (mai su Git, ma
+  leggibile da tutti sul sistema).
 - Numerosi backup vecchi accumulati (25 file, ~240 KB).
 
 ### 2. Cosa e' stato fatto
@@ -219,35 +221,53 @@ Scopo: far leggere all'orchestratore l'esito reale dei comandi EA; pulizia.
 **md5 orchestrator.py post-patch**: 4f567d0d6009cbb8d01effc9344a4aad.
 Righe: 330 (prima 277, +53).
 
+**O11** - password broker rimossa da config.json:
+
+- Verificato: nessun file usa `broker.password` (grep su tutti i *.py).
+- Rimossa `broker.password` da config.json.
+- Permessi cambiati a 600.
+- Backup: config.json.pre_o11 (md5 af9a8567be69c794985c80f3a11b8c0f).
+- md5 config.json post: 65985576e9a14f20c2b2437c11b52a92.
+
 **Pulizia backup**: rimossi 25 file (~240 KB). Tenuti:
 - AI_BRIDGE_EA.mq4.pre_v3.5bis, .ex4.pre_v3.5bis
 - orders.json.pre_v3.5bis
 - orchestrator.py.pre_o7b_bis
+- config.json.pre_o11
 - supervisor_agent.py.pre_rewrite, .pre_venvfix
 - start_all.sh.pre_venvfix, agents_night_shift.sh.pre_venvfix
 - CONTESTO.md.v3.5bis, HANDOFF.md.v3.5bis
 
-**Regola D15 aggiunta a CONTESTO.md**: chat fornisce comando apertura +
-contenuto in un unico messaggio, mai spezzare.
+**.gitignore**: aggiunti pattern `*.pre_*` e `.pre_*`.
+
+**Regole aggiunte a CONTESTO.md**:
+- D14: MetaEditor va chiuso prima di modificare AI_BRIDGE_EA.mq4.
+- D15: chat fornisce comando apertura + contenuto in un unico messaggio.
+- D16: sempre file completo, mai istruzioni puntuali. Controllo post-modifica.
 
 ### 3. Test O7b-bis superato
 
 Test unitario `read_bridge_result()` (3 casi):
-- `OK: aperto 999999 lotto 0.01` -> status=ok, ticket=999999 ✓
-- `ERR: limite operazioni raggiunto (1)` -> status=err ✓
-- file assente -> status=timeout ✓
+- `OK: aperto 999999 lotto 0.01` -> status=ok, ticket=999999 OK
+- `ERR: limite operazioni raggiunto (1)` -> status=err OK
+- file assente -> status=timeout OK
 - "TUTTI I TEST PASSATI".
 
 ### 4. Orchestratore riavviato
 
 tmux ai_workforce riavviato. Output: "Orchestratore avviato. Sessione: all",
-"Ordini aperti (account.json): 0", "Punteggio combinato: -0.080",
+"Ordini aperti (account.json): 0", "Punteggio combinato: -0.040",
 "Segnale AI: HOLD", "HOLD".
 
-### 5. Da fare prossima sessione
+### 5. Commit Git
 
-- **O11**: password broker fuori da config.json (prossimo passo).
-- O10: news redesign.
-- O8: logica post-apertura.
+Commit manuale: `9fd95ce contesto: O7b-bis + aggiornamento HANDOFF + pulizia
+backup`. Push su origin/main riuscito.
+
+### 6. Da fare prossima sessione
+
+- **O10**: news redesign (prossimo passo).
+- O8: logica post-apertura (break-even, rivalutazione giornaliera,
+  chiusura venerdi').
 - Verifica O7b-bis in produzione al primo BUY reale (non ancora testato
   con ordine vero post-patch).
