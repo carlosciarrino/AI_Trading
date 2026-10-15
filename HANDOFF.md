@@ -23,18 +23,11 @@ Scopo: diario operativo della sessione.
 ### 2. Fatto
 
 O1 - Dashboard unificata (web_app.py, 535 righe). Servizio web-app, porta 5000.
-
-O2 - Fix accumulo orders.json. AI_BRIDGE_EA v3.5. Logica: oggetto chiuso
-copiato invariato.
-
+O2 - Fix accumulo orders.json. AI_BRIDGE_EA v3.5.
 O3 - Supervisor v2. Legge tmux, riavvia critici, audit_status.json ogni 300s.
-
 O4 - Fix crontab Git. 'auto-sync $(date)' -> "auto-sync $(date)".
-
 O5 - Pulizia. 190 MB archiviati, test.mq4/.ex4 rimossi.
-
 O7a - decision_log.jsonl. Tracciabilita' decisioni.
-
 O7b - Fix orchestrator.py: path, regex volume, MAX_OPEN_ORDERS=1,
 soglia da ±0.01 a ±0.10.
 
@@ -53,11 +46,10 @@ Scopo: O7c - indagare perche' 4 segnali su 5 davano sempre score 0.
 
 ### Scoperte
 
-- **news**: ORFANO. news_agent scrive solo /tmp/news_score.txt. Segnale
-  SOSPESO in orchestrator.py. Cantiere O10.
-- **social**: FIXATO. sentiment_score() aggiunto. Segnale ATTIVO (-0.2).
-- **cycle**: FIXATO. MultiIndex yfinance appiattito. Segnale ATTIVO.
-- **volume**: regex orchestratore corretto. Score 0.00 (neutro).
+- **news**: ORFANO. news_agent scrive solo /tmp/news_score.txt. SOSPESO.
+- **social**: FIXATO. sentiment_score() aggiunto. ATTIVO (-0.2).
+- **cycle**: FIXATO. MultiIndex yfinance appiattito. ATTIVO.
+- **volume**: regex orchestratore corretto. Score 0.00.
 - **experience**: -0.2 (3 PERDITE recenti).
 - **final_score**: -0.08. HOLD.
 
@@ -122,11 +114,9 @@ Autore: Carlo + Chat.
 - Permessi 600. md5 config.json = 65985576e9a14f20c2b2437c11b52a92.
 - Backup: config.json.pre_o11.
 
-**Pulizia**: rimossi 25 backup vecchi. Tenuti i principali.
+**Pulizia**: rimossi 25 backup vecchi.
 **.gitignore**: pattern *.pre_* e .pre_*.
-**Regole**: D14 (MetaEditor chiuso), D15 (comando+contenuto in unico
-messaggio), D16 (sempre file completo, mai puntuale).
-
+**Regole**: D14, D15, D16.
 **Commit Git**: `9fd95ce contesto: O7b-bis ...`.
 
 ### 2. Da fare
@@ -176,35 +166,26 @@ Autore: Carlo + Chat.
 ## Sessione 2026-10-15 notte - O8 logica post-apertura (ore 21:00-21:30)
 
 Autore: Carlo + Chat.
-Scopo: implementare logica post-apertura in orchestrator.py.
 
 ### 1. Punto di partenza
 
-- orchestrator.py (330 righe, md5 b99adeb9...) aveva solo check_time_stop
-  (chiusura 24h) e nessuna logica attiva post-apertura.
-- open_time.json e sl_commands.json inesistenti (l'EA legge sl_commands
-  ma nessuno lo scriveva).
-- experiences.json: 84 record storici, nessuna rotazione.
+- orchestrator.py aveva solo check_time_stop (chiusura 24h).
+- open_time.json e sl_commands.json inesistenti.
+- experiences.json: 84 record storici.
 
 ### 2. Progettazione
 
 4 funzioni:
-- **check_time_stop**: chiude ordini aperti da >24h (esistente, riscritta).
-- **check_break_even**: se profitto >= 20 pip, sposta SL a entry ±2 pip.
-- **check_friday_profit (C1)**: venerdi 15:00 UTC, chiude ordini con
-  PNL > 0 (salva-profitto).
-- **check_friday_close (C2)**: venerdi 20:00 UTC, chiude tutto (evita
-  gap weekend).
+- **check_time_stop**: chiude ordini >24h.
+- **check_break_even**: profitto >= 20 pip -> sposta SL a entry ±2 pip.
+- **check_friday_profit (C1)**: venerdi 15:00 UTC, chiude ordini con PNL > 0.
+- **check_friday_close (C2)**: venerdi 20:00 UTC, chiude tutto.
 
-Motivazione C1/C2: caso reale 2026-10-15, ordine chiuso +2 centesimi,
-commissione 6 centesimi -> netto -4 centesimi.
+Motivazione C1/C2: caso reale 2026-10-15, ordine +2 cent, commissione 6
+cent -> netto -4 cent.
 
-Parametri:
-- BREAK_EVEN_PIP = 20
-- BREAK_EVEN_OFFSET_PIP = 2
-- FRIDAY_PROFIT_HOUR_UTC = 15
-- FRIDAY_CLOSE_HOUR_UTC = 20
-- MAIN_LOOP_SLEEP = 300 (5 min)
+Parametri: BREAK_EVEN_PIP=20, BREAK_EVEN_OFFSET_PIP=2,
+FRIDAY_PROFIT_HOUR_UTC=15, FRIDAY_CLOSE_HOUR_UTC=20, MAIN_LOOP_SLEEP=300.
 
 ### 3. Cosa e' stato fatto
 
@@ -212,57 +193,88 @@ Parametri:
 - Nuove funzioni: get_open_order, send_close_command, get_current_price,
   check_break_even, write_sl_command, check_friday_profit,
   check_friday_close.
-- Main loop: chiama 4 check ad ogni ciclo + sleep 300.
+- Main loop: chiama 4 check + sleep 300.
 - md5 orchestrator.py = 76b3b3eecb734c7f4d5a2b9b33e979e9
 - Righe: 489 (prima 330).
-- Backup: orchestrator.py.pre_o8 (md5 b99adeb9...).
+- Backup: orchestrator.py.pre_o8.
 
 ### 4. Verifica
 
-- SINTASSI OK.
-- 15 funzioni definite.
-- Costanti O8 presenti.
-- time.sleep(3600) rimosso (0 occorrenze).
-- Orchestratore riavviato: `Punteggio: -0.020`, HOLD. Nessun errore.
-
-Nota: traceback nel log erano residui del vecchio processo (pre-O8),
-non bug.
+- SINTASSI OK. 15 funzioni. Costanti O8. time.sleep(3600) rimosso.
+- Orchestratore: `Punteggio: -0.020`, HOLD.
+- Traceback nel log: residui vecchio processo, non bug.
 
 ### 5. Decisione nuova
 
-**D17**: nelle regole di calcolo operazioni sono SEMPRE inclusi TP, SL,
-commissioni, spread. PNL letto da orders.json e' netto
-(OrderProfit + OrderCommission + OrderSwap). L'azienda opera con parametri
-ideali. Caso reale: bot su conto reale che non calcola spread.
+**D17**: TP, SL, commissioni, spread sempre inclusi. PNL netto.
 
-### 6. Da fare prossima sessione
+### 6. Commit Git
 
-- **Verifica O8 in produzione**: attendere primo ordine reale, controllare
-  break-even e C1/C2. In assenza di ordini (HOLD), testare con ordine
-  manuale via AI_BRIDGE_CMD.txt.
-- Verifica O7b-bis in produzione.
-- Bug supervisor (falso positivo).
-- Pulizia experiences.json (84 record -> ultimi 20-30).
-- Wrapper zombie tmux PID 1263886.
-- 8 agenti con log vuoti.
+`df60d62 O8: logica post-apertura ... + D17`.
 
-### 7. Riepilogo sessione 2026-10-15
+---
+
+## Sessione 2026-10-15 notte - PENDENZE.md + D18 (ore 21:15-21:30)
+
+Autore: Carlo + Chat.
+Scopo: creare registro delle questioni in sospeso.
+
+### 1. Motivazione
+
+Carlo: "I grandi problemi spesso sono formati da un insieme di tanti
+piccoli problemi." Le questioni non critiche emerse durante le sessioni
+(bug minori, pulizie, debiti tecnici) si perdevano. Serve un registro.
+
+### 2. Fatto
+
+**docs/PENDENZE.md** creato con 11 voci aperte:
+
+- P001: supervisor falso positivo (media)
+- P002: experiences.json senza rotazione (media)
+- P003: wrapper zombie tmux PID 1263886 (bassa)
+- P004: 8 agenti su 11 con log vuoti (media)
+- P005: loop sell non diagnosticato (bassa)
+- P006: docs/STATO_SISTEMA.md auto-generato, chi lo scrive? (bassa)
+- P007: verifica O8 con ordine reale (alta)
+- P008: verifica O7b-bis con ordine reale (alta)
+- P009: .gitignore esclude *.json (bassa)
+- P010: social_agent.log fermo (bassa)
+- P011: agenti esterni in MT4 Navigator (bassa)
+
+Formato: ID [P###], data, priorita', contesto, azione.
+- md5 docs/PENDENZE.md = 4a9203d3c724b45820249cf72c4437c3
+
+**D18** aggiunta a CONTESTO.md: ogni questione in sospeso va registrata
+IMMEDIATAMENTE in docs/PENDENZE.md, anche se rinviata. Quando chiusa, si
+marca [CHIUSA YYYY-MM-DD] e si sposta in fondo.
+
+### 3. Riepilogo sessione 2026-10-15
 
 **Obiettivi completati:**
 - O7b-bis: orchestratore legge AI_BRIDGE_RES.txt.
 - O11: password broker rimossa.
 - O10: news redesign + riattivazione segnale.
 - O8: logica post-apertura (break-even, C1, C2).
-- Pulizia backup, regole D14/D15/D16/D17.
+- PENDENZE.md + D18 (registro pendenze).
+- Pulizia backup, regole D14/D15/D16/D17/D18.
 - Documenti aggiornati.
+
+**Commit Git (5):**
+- 9fd95ce contesto: O7b-bis + HANDOFF + pulizia
+- 744db1b contesto: O11 + D15/D16
+- 7a47e12 O10: news_agent v2 + riattivazione
+- df60d62 O8: logica post-apertura + D17
+- (prossimo) PENDENZE.md + D18
 
 **Stato sistema:**
 - 5/5 segnali attivi. Score -0.02. HOLD.
 - EA v3.5-bis funzionante.
 - Agenti vivi.
 - Conto demo: ~100066 EUR, 0 ordini aperti.
+- 11 pendenze aperte.
 
 **Prossimo:**
-- Verifica O8 (break-even, C1/C2) con ordine reale.
-- Pulizia experiences.json.
-- Bug supervisor.
+- Verifica O8 con ordine reale (P007, alta priorita').
+- Verifica O7b-bis con ordine reale (P008, alta).
+- Pulizia experiences.json (P002).
+- Bug supervisor (P001).

@@ -1,6 +1,6 @@
 # CONTESTO PROGETTO AI_TRADING
 
-Ultimo aggiornamento: 2026-10-15 21:15
+Ultimo aggiornamento: 2026-10-15 21:20
 Autore: Carlo + Chat (decisione congiunta)
 Regola: questo file si aggiorna SOLO a mano, in chat, quando cambia una decisione.
 Nessuno script automatico deve scriverci dentro.
@@ -34,6 +34,7 @@ Obiettivo: azienda digitale semplice, intuitiva, aggiornabile facilmente.
 - AccountWriter.mq4 resta in cartella ma NON viene caricato su nessun grafico.
 - Gli agenti Python girano in tmux sessione "ai_workforce".
 - La dashboard web gira come servizio systemd user "web-app".
+- Registro pendenze: docs/PENDENZE.md (vedi D18).
 
 ## 3b. Segnali dell'orchestratore e pesi
 
@@ -133,21 +134,12 @@ centesimi -> netto -4 centesimi.
 - config.json: password broker rimossa (O11). Permessi 600.
   md5 = 65985576e9a14f20c2b2437c11b52a92
 - account.json: scritto ogni 5s. Conto demo 450000065, ~100066 EUR.
+- docs/PENDENZE.md: registro pendenze (11 voci aperte al 2026-10-15).
 
 ### Cosa e' rotto o incompleto
-- 8 agenti su 11 non scrivono log attivi: social_agent, news_agent,
-  cycle_agent, market_anomaly, kronos_agent, nzt_agent, signal_observer,
-  strategy_validator. Da indagare se fanno qualcosa o sono muti.
-- supervisor: BUG NOTO. Controlla solo esistenza sessione tmux per nome,
-  non il processo figlio. Falso positivo (es. news_agent chiusa ma
-  supervisor dice "active").
-- experiences.json: 84 record storici. Nessuna rotazione. Da pulire
-  (tenere ultimi 20-30).
-- wrapper zombie tmux PID 1263886 (dal 14/10). Non fa danno, sporca pgrep.
-- loop sell: non diagnosticato.
-- Verifica O8 in produzione (break-even e C1/C2) non ancora testata con
-  ordine reale.
-- Verifica O7b-bis in produzione non ancora testata con ordine reale.
+- Vedi docs/PENDENZE.md per l'elenco completo e aggiornato delle pendenze.
+- In sintesi: supervisor falso positivo, experiences.json senza rotazione,
+  wrapper zombie, agenti muti, loop sell, verifica O8/O7b-bis in produzione.
 
 ### Backup attivi (D3)
 - AI_BRIDGE_EA.mq4.pre_v3.5bis, .ex4.pre_v3.5bis
@@ -157,8 +149,8 @@ centesimi -> netto -4 centesimi.
 - news_agent.py.pre_o10
 - supervisor_agent.py.pre_rewrite, .pre_venvfix
 - start_all.sh.pre_venvfix, agents_night_shift.sh.pre_venvfix
-- CONTESTO.md.pre_o10, .pre_o11
-- HANDOFF.md.pre_o10, .pre_o11
+- CONTESTO.md.pre_o10, .pre_o11, .pre_o8
+- HANDOFF.md.pre_o10, .pre_o11, .pre_o8
 
 ## 5. Decisioni prese (non si ridiscutono)
 
@@ -209,6 +201,11 @@ D17. Nelle regole di calcolo delle operazioni sono SEMPRE inclusi take
      profit, stop loss, commissioni e spread. L'azienda opera con parametri
      ideali. Nessun calcolo "lordo" senza costi reali. Il PNL letto da
      orders.json e' netto (OrderProfit + OrderCommission + OrderSwap).
+D18. Ogni questione in sospeso (bug minore, pulizia, debito tecnico)
+     emersa durante una sessione va registrata IMMEDIATAMENTE in
+     docs/PENDENZE.md, anche se non critica e anche se rinviata. Formato:
+     ID [P###], data, priorita', contesto, azione. Nessuna pendenza persa.
+     Quando chiusa, si marca [CHIUSA YYYY-MM-DD] e si sposta in fondo.
 
 ## 6. Ricerca agenti (una tantum, periodica)
 
@@ -255,3 +252,4 @@ Nessuna scrittura automatica. Nessun commit automatico.
 - O9: orario London+NY in config.json (D12). Da fare in produzione.
 - O10: news redesign. FATTO 2026-10-15.
 - O11: password broker fuori da config.json. FATTO 2026-10-15.
+- Pendenze: vedi docs/PENDENZE.md (11 voci aperte al 2026-10-15).
