@@ -1,7 +1,7 @@
 # STATO SISTEMA AI_TRADING
 
 ## 1. Stato rilevato (auto)
-Timestamp: 2026-10-15 01:59:34
+Timestamp: 2026-10-15 02:59:34
 TMUX: ai_workforce: 1 windows (created Wed Oct 14 22:31:56 2026)
 cycle_agent: 1 windows (created Wed Oct 14 22:53:12 2026)
 experience_agent: 1 windows (created Wed Oct 14 21:58:49 2026)
@@ -15,11 +15,11 @@ strategy_validator: 1 windows (created Wed Oct 14 21:58:49 2026)
 supervisor: 1 windows (created Wed Oct 14 21:58:49 2026)
 volume_agent: 1 windows (created Wed Oct 14 21:58:49 2026)
 Servizi systemd user: web-app: active; controllo-remoto: active; ai-trading-agenti: active
-Processi Windows: terminal.exe: carlo    1333698  0.0  0.0   9984  3596 ?        S    ott14   0:00 bash -c wineserver -k; export WINEPREFIX="/home/carlo/.wine_trading_finale"; export WINEDEBUG=-all; cd "/home/carlo/Scrivania/XM MT4" && wine terminal.exe /portable
-carlo    1333702 11.1  1.2 1464320 151208 ?      Sl   ott14  16:40 terminal.exe /portable; metaeditor.exe: carlo    1338542  1.8  1.8 1426680 223868 ?      Ssl  ott14   2:36 Z:\home\carlo\Scrivania\XM MT4\MetaEditor.exe Z:\home\carlo\Scrivania\XM MT4\MQL4\Experts\AI_BRIDGE_EA.mq4
+Processi Windows: terminal.exe: carlo    1333698  0.0  0.0   9984  3584 ?        S    ott14   0:00 bash -c wineserver -k; export WINEPREFIX="/home/carlo/.wine_trading_finale"; export WINEDEBUG=-all; cd "/home/carlo/Scrivania/XM MT4" && wine terminal.exe /portable
+carlo    1333702 11.3  1.2 1464320 150212 ?      Sl   ott14  23:44 terminal.exe /portable; metaeditor.exe: carlo    1338542  1.8  1.8 1426680 222764 ?      Ssl  ott14   3:39 Z:\home\carlo\Scrivania\XM MT4\MetaEditor.exe Z:\home\carlo\Scrivania\XM MT4\MQL4\Experts\AI_BRIDGE_EA.mq4
 File condivisi MT4: orders.json: presente (162 bytes); open_time.json: presente (2002 bytes); sl_commands.json: presente (109 bytes)
 IP Tailscale: 100.77.33.7
-Git: commit 208d353: auto-sync gio 15 ott 2026, 01:00:01, WEST
+Git: commit 40cba0d: auto-sync gio 15 ott 2026, 02:00:01, WEST
 
 ## 2. Diario azioni
 
@@ -61,6 +61,7 @@ Git: commit 208d353: auto-sync gio 15 ott 2026, 01:00:01, WEST
 - 14 October 2026 - f7e0161: auto-sync mer 14 ott 2026, 23:00:02, WEST
 - 15 October 2026 - 43e68a2: auto-sync gio 15 ott 2026, 00:00:02, WEST
 - 15 October 2026 - 208d353: auto-sync gio 15 ott 2026, 01:00:01, WEST
+- 15 October 2026 - 40cba0d: auto-sync gio 15 ott 2026, 02:00:01, WEST
 
 ## 3. Problemi noti
 
