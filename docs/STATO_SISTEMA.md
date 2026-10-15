@@ -1,7 +1,7 @@
 # STATO SISTEMA AI_TRADING
 
 ## 1. Stato rilevato (auto)
-Timestamp: 2026-10-15 19:05:34
+Timestamp: 2026-10-15 19:59:34
 TMUX: ai_workforce: 1 windows (created Wed Oct 14 22:31:56 2026)
 cycle_agent: 1 windows (created Wed Oct 14 22:53:12 2026)
 experience_agent: 1 windows (created Wed Oct 14 21:58:49 2026)
@@ -16,10 +16,10 @@ supervisor: 1 windows (created Wed Oct 14 21:58:49 2026)
 volume_agent: 1 windows (created Wed Oct 14 21:58:49 2026)
 Servizi systemd user: web-app: active; controllo-remoto: active; ai-trading-agenti: active
 Processi Windows: terminal.exe: carlo    1333698  0.0  0.0   9984  2884 ?        S    ott14   0:00 bash -c wineserver -k; export WINEPREFIX="/home/carlo/.wine_trading_finale"; export WINEDEBUG=-all; cd "/home/carlo/Scrivania/XM MT4" && wine terminal.exe /portable
-carlo    1333702 12.5  1.1 1464320 141752 ?      Sl   ott14 147:12 terminal.exe /portable; metaeditor.exe: carlo    1338542  2.0  1.4 1426680 177268 ?      Ssl  ott14  23:58 Z:\home\carlo\Scrivania\XM MT4\MetaEditor.exe Z:\home\carlo\Scrivania\XM MT4\MQL4\Experts\AI_BRIDGE_EA.mq4
+carlo    1333702 12.3  1.1 1464320 141752 ?      Sl   ott14 152:18 terminal.exe /portable; metaeditor.exe: carlo    1338542  2.0  1.4 1426680 177268 ?      Ssl  ott14  24:50 Z:\home\carlo\Scrivania\XM MT4\MetaEditor.exe Z:\home\carlo\Scrivania\XM MT4\MQL4\Experts\AI_BRIDGE_EA.mq4
 File condivisi MT4: orders.json: presente (162 bytes); open_time.json: presente (2002 bytes); sl_commands.json: presente (109 bytes)
 IP Tailscale: 100.77.33.7
-Git: commit a7595b9: auto-sync gio 15 ott 2026, 19:00:01, WEST
+Git: commit 744db1b: contesto: O11 (password broker rimossa) + regole D15/D16 + aggiornamento HANDOFF
 
 ## 2. Diario azioni
 
@@ -79,6 +79,8 @@ Git: commit a7595b9: auto-sync gio 15 ott 2026, 19:00:01, WEST
 - 15 October 2026 - 2a636b1: auto-sync gio 15 ott 2026, 17:00:01, WEST
 - 15 October 2026 - 9c176a5: auto-sync gio 15 ott 2026, 18:00:01, WEST
 - 15 October 2026 - a7595b9: auto-sync gio 15 ott 2026, 19:00:01, WEST
+- 15 October 2026 - 9fd95ce: contesto: O7b-bis (orchestratore legge AI_BRIDGE_RES.txt) + aggiornamento HANDOFF + pulizia backup
+- 15 October 2026 - 744db1b: contesto: O11 (password broker rimossa) + regole D15/D16 + aggiornamento HANDOFF
 
 ## 3. Problemi noti
 
