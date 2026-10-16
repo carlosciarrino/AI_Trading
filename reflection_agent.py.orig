@@ -1,0 +1,135 @@
+#!/usr/bin/env python3
+"""reflection_agent.py - Genera lezioni specifiche da decisioni chiuse.
+
+Ispirato a TradingAgents (reflection.py). Legge decision_log.jsonl e
+experiences.json, per ogni decisione chiusa genera 2-4 frasi di lezione
+specifica via Ollama, la scrive in experiences.json.
+Loop ogni 30 minuti.
+"""
+import json, os, time, requests
+from datetime import datetime
+
+EXPERIENCE_PATH = os.path.expanduser("~/AI_Trading/experiences.json")
+DECISION_LOG = os.path.expanduser("~/AI_Trading/decision_log.jsonl")
+OLLAMA_URL = "http://localhost:11434/api/generate"
+MODEL = "qwen2.5:0.5b"
+
+SYSTEM_PROMPT = (
+    "Sei un analista di trading che rivede una propria decisione passata "
+    "ora che conosce l'esito. Scrivi esattamente 2-4 frasi di prosa semplice "
+    "(no elenchi, no titoli, no markdown).\n\n"
+    "Copri in ordine:\n"
+    "1. Cosa mostra il PNL sulla decisione (cita il valore).\n"
+    "2. Quale parte della tesi e' stata confermata o smentita.\n"
+    "3. Una lezione concreta da applicare alla prossima analisi simile.\n\n"
+    "Sii specifico e conciso. L'output sara' letto da analisi future: "
+    "ogni parola deve servire."
+)
+
+
+def load_json(path, default):
+    try:
+        with open(path) as f:
+            return json.load(f)
+    except Exception:
+        return default
+
+
+def save_experiences(exps):
+    with open(EXPERIENCE_PATH, "w") as f:
+        json.dump(exps, f, indent=2)
+
+
+def load_decision_context(ticket):
+    """Cerca nel decision_log.jsonl la decisione che ha aperto questo ticket."""
+    try:
+        with open(DECISION_LOG) as f:
+            for line in f:
+                try:
+                    d = json.loads(line)
+                except Exception:
+                    continue
+                if d.get("ticket") == str(ticket):
+                    return d
+    except Exception:
+        pass
+    return None
+
+
+def ask_reflection(exp):
+    """Chiede a Ollama la lezione specifica per questa esperienza."""
+    pnl = exp.get("pnl", 0)
+    azione = exp.get("azione", "?")
+    prezzo = exp.get("prezzo", 0)
+    esito = exp.get("esito", "?")
+    ticket = exp.get("ticket", "?")
+
+    # Cerca contesto dal decision_log (scores, signal, reason)
+    ctx = load_decision_context(ticket)
+    ctx_str = ""
+    if ctx:
+        ctx_str = (
+            f"\nContesto decisione:\n"
+            f"- scores: {ctx.get('scores', {})}\n"
+            f"- final_score: {ctx.get('final_score', '?')}\n"
+            f"- signal: {ctx.get('signal', '?')}\n"
+        )
+
+    prompt = (
+        f"Decisione: {azione} a prezzo {prezzo}, ticket {ticket}.\n"
+        f"Esito: {esito}, PNL: {pnl:+.2f} EUR.\n"
+        f"{ctx_str}\n"
+        f"Scrivi 2-4 frasi di lezione specifica per la prossima analisi."
+    )
+
+    try:
+        r = requests.post(
+            OLLAMA_URL,
+            json={"model": MODEL, "prompt": SYSTEM_PROMPT + "\n\n" + prompt,
+                  "stream": False, "options": {"temperature": 0.3}},
+            timeout=60,
+        )
+        r.raise_for_status()
+        text = r.json().get("response", "").strip()
+        # Limita a 600 caratteri
+        return text[:600]
+    except Exception as e:
+        print(f"[reflection] Errore Ollama: {e}", flush=True)
+        return None
+
+
+def process_experiences():
+    """Per ogni esperienza senza lezione specifica, la genera."""
+    exps = load_json(EXPERIENCE_PATH, [])
+    if not exps:
+        print("[reflection] experiences.json vuoto", flush=True)
+        return
+
+    changed = 0
+    generic = "La strategia con questo tipo di parametri ha fallito"
+
+    for exp in exps[-20:]:  # solo ultime 20, per non consumare tempo
+        lezione = exp.get("lezione", "")
+        # Genera solo se manca o se e' la generica
+        if not lezione or generic in lezione:
+            print(f"[reflection] Genero lezione per ticket {exp.get('ticket')}", flush=True)
+            nuova = ask_reflection(exp)
+            if nuova:
+                exp["lezione"] = nuova
+                exp["lezione_generata"] = datetime.now().isoformat()
+                changed += 1
+
+    if changed:
+        save_experiences(exps)
+        print(f"[reflection] {changed} lezioni generate", flush=True)
+    else:
+        print("[reflection] Nessuna lezione da generare", flush=True)
+
+
+if __name__ == "__main__":
+    while True:
+        try:
+            process_experiences()
+        except Exception as e:
+            print(f"[reflection] Errore: {e}", flush=True)
+        time.sleep(1800)  # 30 min

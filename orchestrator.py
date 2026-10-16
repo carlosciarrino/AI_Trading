@@ -155,10 +155,19 @@ def get_signal():
         recent = exps[-3:] if len(exps) >= 3 else exps
         losses = sum(1 for e in recent if e.get('esito') == 'PERDITA')
         wins = sum(1 for e in recent if e.get('esito') == 'PROFITTO')
+        # P031: pesa di piu' se ci sono lezioni specifiche (non generiche)
+        lezioni_specifiche = sum(
+            1 for e in recent
+            if e.get('lezione') and 'La strategia con questo tipo di parametri' not in e['lezione']
+        )
         if losses > wins:
             scores['experience'] = -0.2
+            if lezioni_specifiche >= 2:
+                scores['experience'] = -0.25  # rinforzo negativo
         elif wins > losses:
             scores['experience'] = 0.2
+            if lezioni_specifiche >= 2:
+                scores['experience'] = 0.25  # rinforzo positivo
         else:
             scores['experience'] = 0.0
     except:
