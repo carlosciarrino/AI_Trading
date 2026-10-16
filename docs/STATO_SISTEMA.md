@@ -1,7 +1,7 @@
 # STATO SISTEMA AI_TRADING
 
 ## 1. Stato rilevato (auto)
-Timestamp: 2026-10-16 21:59:34
+Timestamp: 2026-10-16 22:52:34
 TMUX: ai_workforce: 1 windows (created Wed Oct 14 22:31:56 2026)
 cycle_agent: 1 windows (created Wed Oct 14 22:53:12 2026)
 experience_agent: 1 windows (created Wed Oct 14 21:58:49 2026)
@@ -15,11 +15,10 @@ strategy_validator: 1 windows (created Wed Oct 14 21:58:49 2026)
 supervisor: 1 windows (created Wed Oct 14 21:58:49 2026)
 volume_agent: 1 windows (created Wed Oct 14 21:58:49 2026)
 Servizi systemd user: web-app: active; controllo-remoto: active; ai-trading-agenti: active
-Processi Windows: terminal.exe: carlo    1333698  0.0  0.0   9984  2876 ?        S    ott14   0:00 bash -c wineserver -k; export WINEPREFIX="/home/carlo/.wine_trading_finale"; export WINEDEBUG=-all; cd "/home/carlo/Scrivania/XM MT4" && wine terminal.exe /portable
-carlo    1333702 12.1  1.1 1463952 134460 ?      Sl   ott14 338:26 terminal.exe /portable; metaeditor.exe: nessun processo metaeditor.exe
+Processi Windows: terminal.exe: nessun processo terminal.exe; metaeditor.exe: nessun processo metaeditor.exe
 File condivisi MT4: orders.json: presente (294 bytes); open_time.json: presente (2002 bytes); sl_commands.json: presente (109 bytes)
 IP Tailscale: 100.77.33.7
-Git: commit 4b21523: auto-sync ven 16 ott 2026, 21:00:01, WEST
+Git: commit 5325f18: pendenze: P016-P020 (tools fossile, mt4_shared, engram, tests, position_manager)
 
 ## 2. Diario azioni
 
@@ -110,6 +109,9 @@ Git: commit 4b21523: auto-sync ven 16 ott 2026, 21:00:01, WEST
 - 16 October 2026 - 6787984: auto-sync ven 16 ott 2026, 19:00:01, WEST
 - 16 October 2026 - 4452ef2: auto-sync ven 16 ott 2026, 20:00:01, WEST
 - 16 October 2026 - 4b21523: auto-sync ven 16 ott 2026, 21:00:01, WEST
+- 16 October 2026 - 5a11239: auto-sync ven 16 ott 2026, 22:00:01, WEST
+- 16 October 2026 - 298ab8b: P012/P013: fix CLOSE->close + blocco apertura venerdi sera + aggiornamento pendenze
+- 16 October 2026 - 5325f18: pendenze: P016-P020 (tools fossile, mt4_shared, engram, tests, position_manager)
 
 ## 3. Problemi noti
 
