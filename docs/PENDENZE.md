@@ -194,8 +194,69 @@ fondo, in sezione "Chiuse".
   Rischio: se riattivato, conflitto con O8.
 - Azione: verificare contenuto. Archiviare con P016.
 
+### [P021] Doppio mt4_shared: uno in progetto (inutile), uno in home (usato)
+- Data: 2026-10-16
+- Priorita': media
+- Contesto: esistevano due mt4_shared.
+  - /home/carlo/AI_Trading/mt4_shared/ → file vecchi di maggio, nessuno lo
+    usava. Spostato in docs/archive/2026-10/mt4_shared_DEPRECATED.
+  - /home/carlo/mt4_shared/ → symlink orders.json a Scrivania, usato da
+    experience_agent, kronos_agent, nzt_agent, tools/stato_sistema.py.
+- Azione: aggiornare agenti per usare direttamente Scrivania/XM MT4/MQL4/Files/
+  invece del symlink. Rimuovere symlink dopo migrazione.
+
+### [P022] agents_night_shift.sh non in cron
+- Data: 2026-10-16
+- Priorita': bassa
+- Contesto: agents_night_shift.sh avvia 5 agenti di ricerca notturni
+  (github_researcher, skill_researcher, strategy_tester_agent, news_critical,
+  ai_researcher_agent) + audit_agent. Ma non è in crontab. Gli agenti che
+  avvia sono ora in archive/2026-10/py_files_DEPRECATED/.
+- Azione: decidere se riattivare. Se sì, aggiornare percorso script
+  (da archive/) e aggiungere a crontab (2:00).
+
+### [P023] docs/STATO_SISTEMA.md auto-generato: ora sappiamo da chi
+- Data: 2026-10-16
+- Priorita': bassa
+- Contesto: RISOLTO il mistero P006. Il file è generato da
+  tools/stato_sistema.py. Ma quel file è ora in
+  docs/archive/2026-10/tools_DEPRECATED/. Quindi STATO_SISTEMA.md non si
+  aggiornerà più. Verificare se serve.
+- Azione: se utile, ripristinare tools/stato_sistema.py in root e
+  aggiungere a crontab. Altrimenti dismettere STATO_SISTEMA.md.
+
+### [P024] 7 agenti dormienti archiviati (decisione rimandata)
+- Data: 2026-10-16
+- Priorita': media
+- Contesto: ai_researcher_agent, ai_tester_agent, audit_agent,
+  indicator_tester_agent, strategy_tester_agent, tool_updater_agent,
+  youtube_agent sono ora in docs/archive/2026-10/py_files_DEPRECATED/.
+  Utili potenzialmente per O6 (ricerca agenti) e progetto Media.
+- Azione: decidere caso per caso se riattivare. Probabile:
+  - ai_researcher_agent + ai_tester_agent → utili per O6.
+  - indicator_tester_agent → utile per validare segnali.
+  - audit_agent → utile ma duplica supervisor.
+  - youtube_agent, tool_updater_agent → progetto Media.
+  - strategy_tester_agent → progetto Media.
+
 ---
 
 ## Chiuse
+
+### [P016] tools/ e' archivio fossile
+- Data apertura: 2026-10-16
+- [CHIUSA 2026-10-16] 75 file spostati in docs/archive/2026-10/tools_DEPRECATED/.
+
+### [P018] .engram/index.md obsoleto
+- Data apertura: 2026-10-16
+- [CHIUSA 2026-10-16] .engram/ spostato in docs/archive/2026-10/engram_DEPRECATED/.
+
+### [P019] tests/ non aggiornati
+- Data apertura: 2026-10-16
+- [CHIUSA 2026-10-16] spostati in docs/archive/2026-10/tests_DEPRECATED/.
+
+### [P020] tools/position_manager.py duplica O8
+- Data apertura: 2026-10-16
+- [CHIUSA 2026-10-16] in docs/archive/2026-10/tools_DEPRECATED/.
 
 (nessuna per ora)

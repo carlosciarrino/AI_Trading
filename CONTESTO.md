@@ -1,6 +1,6 @@
 # CONTESTO PROGETTO AI_TRADING
 
-Ultimo aggiornamento: 2026-10-15 21:20
+Ultimo aggiornamento: 2026-10-16 23:10
 Autore: Carlo + Chat (decisione congiunta)
 Regola: questo file si aggiorna SOLO a mano, in chat, quando cambia una decisione.
 Nessuno script automatico deve scriverci dentro.
@@ -31,10 +31,13 @@ Obiettivo: azienda digitale semplice, intuitiva, aggiornabile facilmente.
   Motivo: MT4 accetta un solo EA per grafico. Due EA = confusione.
 - account.json viene scritto in:
   /home/carlo/Scrivania/XM MT4/MQL4/Files/account.json
-- AccountWriter.mq4 resta in cartella ma NON viene caricato su nessun grafico.
-- Gli agenti Python girano in tmux sessione "ai_workforce".
-- La dashboard web gira come servizio systemd user "web-app".
+- Gli agenti Python girano in tmux sessioni separate (ai_workforce, supervisor,
+  news_agent, social_agent, cycle_agent, volume_agent, experience_agent,
+  kronos_agent, nzt_agent, market_anomaly, signal_observer, strategy_validator).
+- La dashboard web gira come servizio systemd user "web-app" (porta 5000).
+- Il server controllo remoto gira come servizio systemd user "controllo-remoto".
 - Registro pendenze: docs/PENDENZE.md (vedi D18).
+- Mappa progetto: docs/ORGANIGRAMMA.md + docs/MAPPA_PROGETTO.md (vedi D19).
 
 ## 3b. Segnali dell'orchestratore e pesi
 
@@ -69,25 +72,24 @@ get_signal().
 Formato comando accettato da AI_BRIDGE_EA.mq4 (funzione ExecuteCommand):
   buy  [lots] [sl_price] [tp_price]
   sell [lots] [sl_price] [tp_price]
-  close <ticket>
+  close <ticket>   (minuscolo, NON "CLOSE")
 
 Ciclo file comando:
 - orchestratore scrive "AI_BRIDGE_CMD.txt"
 - EA legge, esegue, FileDelete(CMD_FILE) one-shot
 - EA scrive esito in "AI_BRIDGE_RES.txt" (OK: aperto <ticket>... / ERR: ...)
-- orchestratore LEGGE AI_BRIDGE_RES.txt (fix O7b-bis, 2026-10-15) e logga
-  esito reale in decision_log.jsonl (ticket reale o errore o timeout)
+- orchestratore LEGGE AI_BRIDGE_RES.txt e logga esito reale in
+  decision_log.jsonl (ticket reale o errore o timeout)
 
-Ciclo file SL modification (O8, 2026-10-15):
+Ciclo file SL modification (O8):
 - orchestratore scrive "sl_commands.json" con array di comandi:
   [{"ticket": <int>, "new_sl": <float>}, ...]
-- EA legge (ApplySLModifications, gia' esistente), applica OrderModify,
-  cancella il file one-shot.
+- EA legge (ApplySLModifications), applica OrderModify, cancella one-shot.
 
 Path:
 - MT4_FILES = ~/Scrivania/XM MT4/MQL4/Files
 - AI_BRIDGE_CMD.txt, AI_BRIDGE_RES.txt, orders.json, account.json,
-  sl_commands.json
+  sl_commands.json, open_time.json
 
 ## 3d. Logica post-apertura O8 (2026-10-15)
 
@@ -96,10 +98,8 @@ L'orchestratore esegue 4 controlli ad ogni ciclo (ogni 5 min, anche fuori orario
 1. **check_time_stop**: chiude ordini aperti da >24h.
 2. **check_break_even**: se ordine in profitto >= 20 pip, sposta SL a
    entry +2 pip (BUY) / entry -2 pip (SELL). Scrive sl_commands.json.
-3. **check_friday_profit (C1)**: venerdi 15:00 UTC, chiude ordini con PNL > 0
-   (salva-profitto prima del weekend).
-4. **check_friday_close (C2)**: venerdi 20:00 UTC, chiude tutti gli ordini
-   aperti (protegge da gap weekend).
+3. **check_friday_profit (C1)**: venerdi 15:00 UTC, chiude ordini con PNL > 0.
+4. **check_friday_close (C2)**: venerdi 20:00 UTC, chiude tutti gli ordini.
 
 Parametri:
 - BREAK_EVEN_PIP = 20
@@ -109,15 +109,15 @@ Parametri:
 - MAIN_LOOP_SLEEP = 300 (5 min)
 
 Motivazione C1/C2: evitare che un ordine positivo diventi negativo per gap
-weekend. Caso reale 2026-10-15: ordine chiuso +2 centesimi, commissione 6
-centesimi -> netto -4 centesimi.
+weekend. Caso reale 2026-10-15: ordine +2 centesimi, commissione 6 centesimi
+-> netto -4 centesimi.
 
 ## 4. Stato attuale
 
 ### Cosa funziona
 - MT4 su Wine, terminal.exe attivo.
 - Agenti tmux attivi (12 sessioni).
-- Servizi systemd user attivi: web-app, controllo-remoto, ai-trading-agenti.
+- Servizi systemd user attivi: web-app, controllo-remoto.
 - File condivisi MT4 presenti in /home/carlo/Scrivania/XM MT4/MQL4/Files/:
   orders.json, open_time.json, account.json.
 - GitHub carlosciarrino/AI_Trading: integro, sincronizzato con origin/main.
@@ -128,29 +128,30 @@ centesimi -> netto -4 centesimi.
 - orchestrator.py O7b-bis: legge AI_BRIDGE_RES.txt dopo ogni comando.
 - orchestrator.py O10: news RIATTIVATO.
 - orchestrator.py O8: logica post-apertura (break-even, venerdi C1+C2).
+- orchestrator.py P012: fix bug CLOSE->close (chiusure ora funzionano).
+- orchestrator.py P013: blocco apertura venerdi dopo 19:00 UTC.
   md5 orchestrator.py = 76b3b3eecb734c7f4d5a2b9b33e979e9
 - news_agent.py v2 (O10): Investing.com RSS, sentiment, news_context.txt
   ogni 10 min. md5 = d5b5c99630b8ac0512a9b9440a4edc46
 - config.json: password broker rimossa (O11). Permessi 600.
   md5 = 65985576e9a14f20c2b2437c11b52a92
 - account.json: scritto ogni 5s. Conto demo 450000065, ~100066 EUR.
-- docs/PENDENZE.md: registro pendenze (11 voci aperte al 2026-10-15).
+- docs/PENDENZE.md: registro pendenze (20 voci aperte al 2026-10-16).
+- docs/ORGANIGRAMMA.md + docs/MAPPA_PROGETTO.md: mappe del progetto (2026-10-16).
+- Bonifica 2026-10-16: 32 cartelle + 56 file .py + 40 file vari archiviati
+  in docs/archive/2026-10/.
 
 ### Cosa e' rotto o incompleto
 - Vedi docs/PENDENZE.md per l'elenco completo e aggiornato delle pendenze.
-- In sintesi: supervisor falso positivo, experiences.json senza rotazione,
-  wrapper zombie, agenti muti, loop sell, verifica O8/O7b-bis in produzione.
+- In sintesi: supervisor falso positivo (P001), experiences.json senza
+  rotazione (P002), wrapper zombie (P003), agenti muti (P004), loop sell
+  (P005), verifica O8/O7b-bis in produzione (P007/P008), ordine 319798
+  nel weekend (P015), 7 agenti dormienti (P016), doppio mt4_shared (P021).
 
 ### Backup attivi (D3)
-- AI_BRIDGE_EA.mq4.pre_v3.5bis, .ex4.pre_v3.5bis
-- orders.json.pre_v3.5bis
-- orchestrator.py.pre_o7b_bis, .pre_o10, .pre_o8
-- config.json.pre_o11
-- news_agent.py.pre_o10
-- supervisor_agent.py.pre_rewrite, .pre_venvfix
-- start_all.sh.pre_venvfix, agents_night_shift.sh.pre_venvfix
-- CONTESTO.md.pre_o10, .pre_o11, .pre_o8
-- HANDOFF.md.pre_o10, .pre_o11, .pre_o8
+- AI_BRIDGE_EA.mq4.pre_v3.5bis, .ex4.pre_v3.5bis (in Experts/)
+- orders.json.pre_v3.5bis (in Files/)
+- config.json.pre_o11, news_agent.py.pre_o10 (spostati in archive/2026-10/)
 
 ## 5. Decisioni prese (non si ridiscutono)
 
@@ -189,39 +190,44 @@ D14. MetaEditor va CHIUSO prima di modificare AI_BRIDGE_EA.mq4 da
      memoria. Regola nata dall'incidente 2026-10-14.
 D15. Quando Carlo deve modificare un file, la chat fornisce in un UNICO
      messaggio: comando di apertura + contenuto completo da incollare.
-     Mai spezzare in due messaggi. Motivo: evitare che il file resti
-     aperto e vulnerabile a imprevisti mentre si aspetta il secondo
-     messaggio.
+     Mai spezzare in due messaggi.
 D16. Per modificare un file a mano, Carlo preferisce SEMPRE il file
-     completo (sostituzione totale), mai istruzioni puntuali (es. "cambia
-     riga 5, 20, 40"). Motivo: meno errori (spazi, parentesi), recupero
-     piu' semplice, tempo/token risparmiati. Dopo ogni modifica, sempre
-     un controllo di routine (grep, md5, wc) commisurato alla modifica.
+     completo (sostituzione totale), mai istruzioni puntuali. Dopo ogni
+     modifica, sempre un controllo di routine (grep, md5, wc).
 D17. Nelle regole di calcolo delle operazioni sono SEMPRE inclusi take
-     profit, stop loss, commissioni e spread. L'azienda opera con parametri
-     ideali. Nessun calcolo "lordo" senza costi reali. Il PNL letto da
-     orders.json e' netto (OrderProfit + OrderCommission + OrderSwap).
-D18. Ogni questione in sospeso (bug minore, pulizia, debito tecnico)
-     emersa durante una sessione va registrata IMMEDIATAMENTE in
-     docs/PENDENZE.md, anche se non critica e anche se rinviata. Formato:
-     ID [P###], data, priorita', contesto, azione. Nessuna pendenza persa.
-     Quando chiusa, si marca [CHIUSA YYYY-MM-DD] e si sposta in fondo.
+     profit, stop loss, commissioni e spread. PNL letto da orders.json
+     e' netto (OrderProfit + OrderCommission + OrderSwap).
+D18. Ogni questione in sospeso emersa durante una sessione va registrata
+     IMMEDIATAMENTE in docs/PENDENZE.md, anche se non critica e rinviata.
+     Formato: ID [P###], data, priorita', contesto, azione. Quando chiusa,
+     si marca [CHIUSA YYYY-MM-DD] e si sposta in fondo.
+D19. Ogni chat nuova DEVE leggere prima: docs/ORGANIGRAMMA.md +
+     docs/MAPPA_PROGETTO.md + CONTESTO.md + HANDOFF.md + docs/PENDENZE.md.
+     Se la mappa non esiste o e' incompleta, la chat CHIEDE il censimento
+     prima di procedere. Nessuna modifica senza mappa aggiornata.
+D20. La chat NON PRESUME di conoscere il contenuto del progetto. Non ha
+     accesso autonomo al filesystem. Prima di ogni pianificazione, chiede
+     il censimento di cio' che non vede, o lo esegue se ha il comando.
+     Nessun "credo che...", nessun "probabilmente...". O si vede, o si
+     chiede.
 
 ## 6. Ricerca agenti (una tantum, periodica)
 
 Cercare su GitHub, forum, repo specializzati chi ha costruito agenti di
-comunicazione tra agenti, come li ha costruiti, con quali pattern.
-Non fermarsi ai primi risultati. Verificare codice, stelle, manutenzione,
-licenza. Obiettivo: prendere il meglio e applicarlo a tutti i progetti,
-non solo al trading. Questa ricerca si fa una volta, poi si aggiorna
-periodicamente.
+comunicazione tra agenti. Non fermarsi ai primi risultati. Verificare
+codice, stelle, manutenzione, licenza. Obiettivo: prendere il meglio e
+applicarlo a tutti i progetti, non solo al trading.
 
 Per il progetto trading: cercare al 100% dei risultati, ma limitato al
 settore trading/algo trading/MT4/MT5/bot/EA/signal/dashboard.
 Lingue minime: italiano, inglese, cinese, russo, spagnolo.
 
-Quando passeremo al progetto commerciale: stessa regola, settore
-commerciale.
+Progetti identificati il 2026-10-16 (da studiare):
+- TradingAgents (Tauric Research, ~71k stelle): multi-agente con dibattito.
+- Quant-Agent-Trader: self-evolution con diario trading.
+- AI Trader for MT5: MCP protocol.
+- BettaFish (微舆): 4 agenti per analisi.
+- awesome-skill-forge: 90.000 skill pronte.
 
 ## 7. Prossimo passo (uno solo)
 
@@ -230,8 +236,8 @@ Verifica O8 in produzione. Attendere primo ordine reale e controllare:
 - EA applica il nuovo SL;
 - check_friday_profit/C1 e check_friday_close/C2 funzionano venerdi.
 
-In assenza di ordini reali (HOLD attuale), testare con ordine manuale
-via AI_BRIDGE_CMD.txt.
+Ordine 319798 (SELL) aperto nel weekend (P015). Da verificare domenica
+sera / lunedi.
 
 ## 8. Come si aggiorna questo file
 
@@ -242,8 +248,8 @@ Nessuna scrittura automatica. Nessun commit automatico.
 
 - O4: fix auto-sync Git. FATTO 2026-10-14.
 - O5: pulizia file storici. FATTO 2026-10-14.
-- O6: ricerca agenti (vedi sezione 6).
-- O7: verificare flusso decisione trading orchestratore -> MT4. IN CORSO.
+- O6: ricerca agenti. IN CORSO (5 progetti identificati).
+- O7: verificare flusso decisione trading. IN CORSO.
 - O7a: decision_log.jsonl. FATTO 2026-10-14.
 - O7b: fix orchestrator.py. FATTO 2026-10-14.
 - O7b-bis: orchestratore legge AI_BRIDGE_RES.txt. FATTO 2026-10-15.
@@ -252,4 +258,6 @@ Nessuna scrittura automatica. Nessun commit automatico.
 - O9: orario London+NY in config.json (D12). Da fare in produzione.
 - O10: news redesign. FATTO 2026-10-15.
 - O11: password broker fuori da config.json. FATTO 2026-10-15.
-- Pendenze: vedi docs/PENDENZE.md (11 voci aperte al 2026-10-15).
+- O12: bonifica progetto (archivio 2026-10). FATTO 2026-10-16.
+- O13: organigramma + mappa progetto. FATTO 2026-10-16.
+- Pendenze: vedi docs/PENDENZE.md (20 voci aperte).
