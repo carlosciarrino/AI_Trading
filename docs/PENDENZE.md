@@ -148,6 +148,52 @@ fondo, in sezione "Chiuse".
 - Azione: domenica sera/lunedi mattina: verificare stato. Se ancora aperto
   e in perdita, valutare chiusura manuale. Se ha colpito SL/TP, chiuso.
 
+### [P016] tools/ e' archivio fossile (75+ file, vecchio mondo)
+- Data: 2026-10-16
+- Priorita': media
+- Contesto: tools/ contiene position_manager, verifier, watchdog,
+  reconciliation, telegram_bot, workforce_*, agent_*, strategy_*.
+  Quasi tutti ago/set 2026. Nessuno gira in tmux. E' il vecchio sistema,
+  sostituito da orchestrator.py + *_agent.py + supervisor_agent.py.
+- Azione: archiviare in docs/archive/tools_2026-10/ (mv, non rm). Alcuni
+  script (telegram_bot, auto_researcher) potrebbero tornare utili.
+
+### [P017] mt4_shared/ residuo storico
+- Data: 2026-10-16
+- Priorita': bassa
+- Contesto: mt4_shared/ contiene symlink orders.json -> Scrivania, piu'
+  open_time.json (2002 byte, ott 14) e sl_commands.json (109 byte, ott 6).
+  L'orchestratore attuale usa direttamente ~/Scrivania/XM MT4/MQL4/Files/.
+- Azione: verificare se qualcuno legge ancora da mt4_shared/. Se no,
+  rimuovere symlink e file.
+
+### [P018] .engram/index.md obsoleto (2026-10-07)
+- Data: 2026-10-16
+- Priorita': media
+- Contesto: .engram/index.md descrive il vecchio mondo (position_manager,
+  verifier, watchdog, MAX_OPEN_ORDERS=3, EA v3.3). Ora e' CONTESTO.md +
+  HANDOFF.md + PENDENZE.md a fare quel lavoro.
+- Azione: dismettere .engram/ o aggiornare index.md con rimando a
+  CONTESTO.md. Verificare se .engram/experience/ e .engram/session/
+  contengono dati utili.
+
+### [P019] tests/ non aggiornati e non eseguiti
+- Data: 2026-10-16
+- Priorita': media
+- Contesto: tests/ ha 3 file (test_dashboard, test_orchestrator,
+  test_position_manager), ultimo aggiornamento 2026-10-06. Nessun verifier
+  attivo. Non girano.
+- Azione: valutare se riattivare test automatici (verifier) o dismettere.
+  I test sono utili per non rompere il codice.
+
+### [P020] tools/position_manager.py duplica O8
+- Data: 2026-10-16
+- Priorita': media
+- Contesto: tools/position_manager.py (3823 byte, ott 6) fa break-even e
+  trailing stop, esattamente come O8 in orchestrator.py. Ma non gira.
+  Rischio: se riattivato, conflitto con O8.
+- Azione: verificare contenuto. Archiviare con P016.
+
 ---
 
 ## Chiuse
