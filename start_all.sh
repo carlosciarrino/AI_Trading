@@ -15,3 +15,4 @@ tmux new-session -d -s nzt_agent "cd /home/carlo/AI_Trading && $PY nzt_agent.py 
 tmux new-session -d -s market_anomaly "cd /home/carlo/AI_Trading && $PY market_anomaly_agent.py > /home/carlo/market_anomaly.log 2>&1"
 tmux new-session -d -s signal_observer "cd /home/carlo/AI_Trading && $PY signal_observer_agent.py > /home/carlo/signal_observer.log 2>&1"
 tmux new-session -d -s strategy_validator "cd /home/carlo/AI_Trading && $PY strategy_validator.py > /home/carlo/strategy_validator.log 2>&1"
+tmux new-session -d -s reflection_agent "cd /home/carlo/AI_Trading && $PY reflection_agent.py > /home/carlo/reflection_agent.log 2>&1"
