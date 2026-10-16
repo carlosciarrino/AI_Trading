@@ -239,6 +239,91 @@ fondo, in sezione "Chiuse".
   - youtube_agent, tool_updater_agent → progetto Media.
   - strategy_tester_agent → progetto Media.
 
+### [P031] Memoria con riflessione (da TradingAgents)
+- Data: 2026-10-16
+- Priorita': ALTA
+- Contesto: TradingAgents ha reflection.py che genera 2-4 frasi di lezione
+  specifica per ogni decisione chiusa, reiniettate nei prompt futuri.
+  Il nostro experiences.json ha lezione sempre identica. Il segnale experience
+  legge solo PNL, non lezioni.
+- Azione: aggiungere riflessione a experience_agent.py (o nuovo reflection_agent.py).
+  Usa Ollama per generare lezioni. Reinietta in orchestrator (get_signal).
+- Complessita': media. ~100 righe.
+
+### [P032] Rotazione experiences.json (chiude P002)
+- Data: 2026-10-16
+- Priorita': ALTA
+- Contesto: experiences.json ha 84 record, nessuna rotazione, cresce all'infinito.
+- Azione: tenere ultimi 30, archiviare in docs/archive/experiences/YYYY-MM.json.
+- Complessita': bassa. ~20 righe.
+
+### [P033] Dibattito bull/bear borderline (da TradingAgents)
+- Data: 2026-10-16
+- Priorita': ALTA
+- Contesto: TradingAgents fa dibattere bull vs bear prima di decidere. Noi
+  decidiamo con 1 orchestratore lineare, nessun contraddittorio.
+- Azione: quando final_score e' tra 0.08 e 0.12 (zona grigia), lancia 2 prompt
+  (bull, bear) via Ollama, arbitro decide. Solo in zona grigia, per costi.
+- Complessita': media-alta. Prompt ben scritti.
+
+### [P034] Risk manager separato con size dinamica (da Quant-Agent)
+- Data: 2026-10-16
+- Priorita': ALTA
+- Contesto: Quant-Agent ha risk budget dinamico (volatilita', drawdown,
+  sentiment). TradingAgents ha 3 risk analyst che dibattono. Noi abbiamo solo
+  break-even e time-stop.
+- Azione: agente che calcola size in base a ATR + drawdown corrente. Regola
+  LEVERAGE_MAX e size massima. Non bypassabile.
+- Complessita': alta.
+
+### [P035] Hypothesis library (da Quant-Agent)
+- Data: 2026-10-16
+- Priorita': MEDIA
+- Contesto: Quant-Agent ha configs/hypotheses/*.json con win rate, sample size,
+  stato proposed/verified/deprecated. Ogni ipotesi e' validata con event study.
+- Azione: creare configs/hypotheses/ con prime 3-5 ipotesi (es. "news negativo
+  + social negativo -> SELL"). Validatore notturno con backtest.
+- Complessita': alta.
+
+### [P036] Multi-vendor dati (da TradingAgents)
+- Data: 2026-10-16
+- Priorita': MEDIA
+- Contesto: TradingAgents ha Yahoo + FRED + Alpha Vantage + Polymarket + Reddit.
+  Noi abbiamo solo Investing.com RSS + Google News RSS + yfinance.
+- Azione: aggiungere FRED (macro), Alpha Vantage (fallback), Reddit (sentiment).
+- Complessita': media.
+
+### [P037] Settlement point-in-time (da TradingAgents)
+- Data: 2026-10-16
+- Priorita': MEDIA
+- Contesto: TradingAgents misura alpha vs benchmark (SPY) dopo N giorni, con
+  point-in-time corretto. Noi no.
+- Azione: dopo N giorni, misura PNL reale e alpha vs DXY (benchmark EURUSD).
+- Complessita': media.
+
+### [P038] Multi-provider LLM (da TradingAgents)
+- Data: 2026-10-16
+- Priorita': BASSA
+- Contesto: TradingAgents usa GPT/Gemini/Claude/Grok/Ollama. Noi solo Ollama
+  qwen2.5:0.5b (modello piccolissimo).
+- Azione: valutare se usare modelli piu' grandi (anche solo Ollama con qwen3 o
+  llama3). Rischio costi se API a pagamento.
+- Complessita': media.
+
+### [P039] MCP services (da Quant-Agent)
+- Data: 2026-10-16
+- Priorita': BASSA
+- Contesto: Quant-Agent ha 5 MCP server per math/search/trade/price/memory.
+  Overkill per il nostro sistema attuale.
+- Azione: rimandare. Valutare solo se cresciamo molto.
+- Complessita': alta.
+
+### [P040] Arena web / dashboard React (da Quant-Agent)
+- Data: 2026-10-16
+- Priorita': BASSA
+- Contesto: Quant-Agent ha dashboard React (leaderboard, live).
+- Azione: la nostra Flask funziona. Non serve. Rimandare.
+- Complessita': alta.
 ---
 
 ## Chiuse
