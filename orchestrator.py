@@ -81,7 +81,7 @@ def send_close_command(ticket, reason_log):
         except Exception:
             pass
     with open(cmd_path, "w") as f:
-        f.write(f"CLOSE {ticket}\n")
+        f.write(f"close {ticket}\n")
     status, payload = read_bridge_result(timeout=8)
     if status == "ok":
         print(f"[O8] Chiusura {ticket} confermata ({reason_log})", flush=True)
@@ -417,6 +417,14 @@ def main():
 
             signal, detail = get_signal()
             print(f"Segnale AI: {signal}", flush=True)
+
+            # P013 (2026-10-16): non aprire nuovi ordini il venerdi dopo le 19:00 UTC
+            now_utc = datetime.now(timezone.utc)
+            if signal in ("BUY", "SELL") and now_utc.weekday() == 4 and now_utc.hour >= 19:
+                print("[P013] Venerdi dopo 19:00 UTC: apertura bloccata.", flush=True)
+                write_decision(detail, action_taken="none", reason="p013_friday_late")
+                time.sleep(MAIN_LOOP_SLEEP)
+                continue
 
             if signal in ("BUY", "SELL"):
                 action = "buy" if signal == "BUY" else "sell"

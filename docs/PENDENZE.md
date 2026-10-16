@@ -113,6 +113,41 @@ fondo, in sezione "Chiuse".
 - Azione: verificare se youtube_agent.py e' attivo, chi lo lancia,
   se serve.
 
+### [P012] Bug CLOSE maiuscolo vs close minuscolo
+- Data: 2026-10-16
+- Priorita': alta
+- Contesto: orchestrator.py scriveva `CLOSE <ticket>` (maiuscolo). EA accetta
+  solo `close` (minuscolo). Risultato: `ERR: comando sconosciuto`, C2 e
+  check_time_stop non potevano chiudere ordini.
+- Azione: RISOLTA 2026-10-16. `f.write(f"CLOSE {ticket}\n")` ->
+  `f.write(f"close {ticket}\n")`. md5 orchestrator.py = 8dd00dab8ab706d8ff50b5e83b47369b.
+
+### [P013] Nessun blocco apertura venerdi sera
+- Data: 2026-10-16
+- Priorita': alta
+- Contesto: l'orchestratore ha aperto SELL 319798 alle 20:09 UTC di venerdi.
+  C1 (15:00) era gia' passato, C2 (20:00) e' scattato dopo. Ordine rimasto
+  aperto nel weekend per il bug P012 + mercato chiuso (ERR 132).
+- Azione: RISOLTA 2026-10-16. Aggiunto blocco in main: se venerdi e
+  hour >= 19 UTC, non aprire nuovi ordini.
+
+### [P014] check_friday_close ritenta ogni 5 min se fallisce
+- Data: 2026-10-16
+- Priorita': bassa
+- Contesto: se close fallisce (es. mercato chiuso ERR 132), C2 ritenta ogni
+  5 min fino a fine ora. Rumoroso nei log. Inutile.
+- Azione: aggiungere flag o throttle: dopo un fallimento nella stessa ora,
+  non ritentare.
+
+### [P015] Ordine 319798 aperto nel weekend
+- Data: 2026-10-16
+- Priorita': alta
+- Contesto: SELL 319798 aperto 20:09 UTC 16/10 (1.12358, SL 1.12688,
+  TP 1.11931). Chiusura fallita (P012 + mercato chiuso). PNL -0.39.
+  Passa il weekend aperto. Rischio gap domenica sera.
+- Azione: domenica sera/lunedi mattina: verificare stato. Se ancora aperto
+  e in perdita, valutare chiusura manuale. Se ha colpito SL/TP, chiuso.
+
 ---
 
 ## Chiuse
