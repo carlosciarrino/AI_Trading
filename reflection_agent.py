@@ -1,18 +1,17 @@
 #!/usr/bin/env python3
-"""reflection_agent.py - Genera lezioni specifiche da decisioni chiuse.
+"""reflection_agent.py v2 - Memory log in markdown (formato TradingAgents).
 
-Ispirato a TradingAgents (reflection.py). Legge decision_log.jsonl e
-experiences.json, per ogni decisione chiusa genera 2-4 frasi di lezione
-specifica via Ollama, la scrive in experiences.json.
-Loop ogni 30 minuti.
+Scrive in trading_memory.md append-only, con separatore HTML.
+Legge decision_log.jsonl per contesto. Genera lezioni via Ollama.
 """
 import json, os, time, requests
 from datetime import datetime
 
-EXPERIENCE_PATH = os.path.expanduser("~/AI_Trading/experiences.json")
+MEMORY_PATH = os.path.expanduser("~/AI_Trading/trading_memory.md")
 DECISION_LOG = os.path.expanduser("~/AI_Trading/decision_log.jsonl")
 OLLAMA_URL = "http://localhost:11434/api/generate"
 MODEL = "qwen2.5:0.5b"
+SEPARATOR = "\n\n<!-- ENTRY_END -->\n\n"
 
 SYSTEM_PROMPT = (
     "Sei un analista di trading che rivede una propria decisione passata "
@@ -22,26 +21,39 @@ SYSTEM_PROMPT = (
     "1. Cosa mostra il PNL sulla decisione (cita il valore).\n"
     "2. Quale parte della tesi e' stata confermata o smentita.\n"
     "3. Una lezione concreta da applicare alla prossima analisi simile.\n\n"
-    "Sii specifico e conciso. L'output sara' letto da analisi future: "
-    "ogni parola deve servire."
+    "Sii specifico e conciso."
 )
 
 
-def load_json(path, default):
-    try:
-        with open(path) as f:
-            return json.load(f)
-    except Exception:
-        return default
+def load_memory():
+    """Legge trading_memory.md, ritorna lista di entry (dict)."""
+    if not os.path.exists(MEMORY_PATH):
+        return []
+    with open(MEMORY_PATH) as f:
+        content = f.read()
+    entries = []
+    for block in content.split(SEPARATOR):
+        block = block.strip()
+        if not block:
+            continue
+        # Parse tag [date | ticket | action | pending]
+        if block.startswith("["):
+            end_tag = block.find("]")
+            if end_tag > 0:
+                tag = block[1:end_tag]
+                rest = block[end_tag+1:].strip()
+                entries.append({"tag": tag, "body": rest, "raw": block})
+    return entries
 
 
-def save_experiences(exps):
-    with open(EXPERIENCE_PATH, "w") as f:
-        json.dump(exps, f, indent=2)
+def save_memory(entries):
+    """Riscrive il file con le entry aggiornate."""
+    with open(MEMORY_PATH, "w") as f:
+        for e in entries:
+            f.write(e["raw"] + SEPARATOR)
 
 
 def load_decision_context(ticket):
-    """Cerca nel decision_log.jsonl la decisione che ha aperto questo ticket."""
     try:
         with open(DECISION_LOG) as f:
             for line in f:
@@ -56,20 +68,17 @@ def load_decision_context(ticket):
     return None
 
 
-def ask_reflection(exp):
-    """Chiede a Ollama la lezione specifica per questa esperienza."""
+def ask_reflection(exp, ctx):
     pnl = exp.get("pnl", 0)
     azione = exp.get("azione", "?")
     prezzo = exp.get("prezzo", 0)
     esito = exp.get("esito", "?")
     ticket = exp.get("ticket", "?")
 
-    # Cerca contesto dal decision_log (scores, signal, reason)
-    ctx = load_decision_context(ticket)
     ctx_str = ""
     if ctx:
         ctx_str = (
-            f"\nContesto decisione:\n"
+            f"\nContesto:\n"
             f"- scores: {ctx.get('scores', {})}\n"
             f"- final_score: {ctx.get('final_score', '?')}\n"
             f"- signal: {ctx.get('signal', '?')}\n"
@@ -79,7 +88,7 @@ def ask_reflection(exp):
         f"Decisione: {azione} a prezzo {prezzo}, ticket {ticket}.\n"
         f"Esito: {esito}, PNL: {pnl:+.2f} EUR.\n"
         f"{ctx_str}\n"
-        f"Scrivi 2-4 frasi di lezione specifica per la prossima analisi."
+        f"Scrivi 2-4 frasi di lezione specifica."
     )
 
     try:
@@ -87,51 +96,88 @@ def ask_reflection(exp):
             OLLAMA_URL,
             json={"model": MODEL, "prompt": SYSTEM_PROMPT + "\n\n" + prompt,
                   "stream": False, "options": {"temperature": 0.3}},
-                      timeout=180,
+            timeout=180,
         )
         r.raise_for_status()
         text = r.json().get("response", "").strip()
-        # Limita a 600 caratteri
         return text[:600]
     except Exception as e:
         print(f"[reflection] Errore Ollama: {e}", flush=True)
         return None
 
 
-def process_experiences():
-    """Per ogni esperienza senza lezione specifica, la genera."""
-    exps = load_json(EXPERIENCE_PATH, [])
-    if not exps:
-        print("[reflection] experiences.json vuoto", flush=True)
-        return
+def process_pending():
+    """Trova decisioni chiuse non ancora riflesse, genera lezione."""
+    # Carica decision_log per contesto
+    ctx_map = {}
+    try:
+        with open(DECISION_LOG) as f:
+            for line in f:
+                try:
+                    d = json.loads(line)
+                except Exception:
+                    continue
+                if d.get("ticket"):
+                    ctx_map[str(d["ticket"])] = d
+    except Exception:
+        pass
 
-    changed = 0
-    generic = "La strategia con questo tipo di parametri ha fallito"
+    # Carica orders.json per PNL reali
+    orders = []
+    try:
+        with open(os.path.expanduser("~/Scrivania/XM MT4/MQL4/Files/orders.json")) as f:
+            orders = json.load(f)
+    except Exception:
+        pass
 
-    # P031: 3 per ciclo, Ollama lento su questo hardware
-    pending = [e for e in exps[-30:] if not e.get("lezione") or "La strategia con questo tipo di parametri" in e.get("lezione", "")]
-    for exp in pending[:3]:
-        lezione = exp.get("lezione", "")
-        # Genera solo se manca o se e' la generica
-        if not lezione or generic in lezione:
-            print(f"[reflection] Genero lezione per ticket {exp.get('ticket')}", flush=True)
-            nuova = ask_reflection(exp)
-            if nuova:
-                exp["lezione"] = nuova
-                exp["lezione_generata"] = datetime.now().isoformat()
-                changed += 1
+    closed = [o for o in orders if o.get("status") == "closed"]
 
-    if changed:
-        save_experiences(exps)
-        print(f"[reflection] {changed} lezioni generate", flush=True)
+    # Leggi memoria esistente
+    entries = load_memory()
+    already = set()
+    for e in entries:
+        # tag = "date | ticket | action | pending" o "date | ticket | action | +x% | ..."
+        parts = [p.strip() for p in e["tag"].split("|")]
+        if len(parts) >= 2:
+            already.add(parts[1])
+
+    generated = 0
+    for op in closed[-10:]:  # ultimi 10
+        ticket = str(op.get("ticket", "?"))
+        if ticket in already:
+            continue
+
+        exp = {
+            "ticket": ticket,
+            "azione": op.get("action", "?"),
+            "prezzo": op.get("price", 0),
+            "pnl": op.get("pnl", 0),
+            "esito": "PROFITTO" if op.get("pnl", 0) > 0 else "PERDITA",
+        }
+        ctx = ctx_map.get(ticket)
+        lezione = ask_reflection(exp, ctx)
+        if lezione:
+            date = datetime.now().strftime("%Y-%m-%d")
+            pnl_pct = f"{exp['pnl']:+.2f}EUR"
+            tag = f"[{date} | {ticket} | {exp['azione']} | {pnl_pct} | resolved:{date}]"
+            body = f"DECISION:\n{exp['azione']} @ {exp['prezzo']}\nREFLECTION:\n{lezione}"
+            entries.append({"tag": tag[1:-1], "body": body, "raw": tag + "\n" + body})
+            generated += 1
+            print(f"[reflection] Lezione per {ticket}: {lezione[:80]}...", flush=True)
+        else:
+            print(f"[reflection] Skip {ticket} (Ollama timeout)", flush=True)
+
+    if generated:
+        save_memory(entries)
+        print(f"[reflection] {generated} lezioni scritte in trading_memory.md", flush=True)
     else:
-        print("[reflection] Nessuna lezione da generare", flush=True)
+        print("[reflection] Nessuna nuova lezione", flush=True)
 
 
 if __name__ == "__main__":
     while True:
         try:
-            process_experiences()
+            process_pending()
         except Exception as e:
             print(f"[reflection] Errore: {e}", flush=True)
         time.sleep(1800)  # 30 min
