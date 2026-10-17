@@ -140,6 +140,7 @@ Git: commit 5325f18: pendenze: P016-P020 (tools fossile, mt4_shared, engram, tes
 - 17 October 2026 - d67afc6: auto-sync sab 17 ott 2026, 21:00:01, WEST
 - 17 October 2026 - 0c1c49d: docs: RICERCA_COMMERCIALE (fonti commerciali) + VIBE_TRADING_SKILLS (catalogo 90 skill)
 - 17 October 2026 - 7d3afac: P041: social_agent v2 (volume/intensita) + P031-bis: reflection deterministica + EA v3.5-volume + P048 setup
+- 17 October 2026 - 5ac09b5: auto-sync sab 17 ott 2026, 22:00:01, WEST
 
 ## 3. Problemi noti
 
