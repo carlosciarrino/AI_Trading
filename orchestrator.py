@@ -150,28 +150,28 @@ def get_signal():
     except:
         scores['volume'] = 0.0
     try:
-        with open('/home/carlo/AI_Trading/experiences.json', 'r') as f:
-            exps = json.load(f)
-        recent = exps[-3:] if len(exps) >= 3 else exps
-        losses = sum(1 for e in recent if e.get('esito') == 'PERDITA')
-        wins = sum(1 for e in recent if e.get('esito') == 'PROFITTO')
-        # P031: pesa di piu' se ci sono lezioni specifiche (non generiche)
-        lezioni_specifiche = sum(
-            1 for e in recent
-            if e.get('lezione') and 'La strategia con questo tipo di parametri' not in e['lezione']
-        )
-        if losses > wins:
-            scores['experience'] = -0.2
-            if lezioni_specifiche >= 2:
-                scores['experience'] = -0.25  # rinforzo negativo
-        elif wins > losses:
-            scores['experience'] = 0.2
-            if lezioni_specifiche >= 2:
-                scores['experience'] = 0.25  # rinforzo positivo
+        # P031-bis: legge trading_memory.md (markdown append-only)
+        memory_path = '/home/carlo/AI_Trading/trading_memory.md'
+        if os.path.exists(memory_path):
+            with open(memory_path) as f:
+                content = f.read()
+            # Conta REFLECTION: e cerca parole chiave
+            reflections = content.split('REFLECTION:')
+            recent = reflections[-3:] if len(reflections) >= 3 else reflections
+            text = ' '.join(recent).lower()
+            pos = sum(1 for w in ['positivo', 'successo', 'corretto', 'confermato', 'profitto'] if w in text)
+            neg = sum(1 for w in ['negativo', 'fallito', 'smentito', 'perdita', 'errore'] if w in text)
+            if neg > pos:
+                scores['experience'] = -0.2
+            elif pos > neg:
+                scores['experience'] = 0.2
+            else:
+                scores['experience'] = 0.0
         else:
             scores['experience'] = 0.0
     except:
         scores['experience'] = 0.0
+
     weights = {
         'news': 0.2,
         'social': 0.2,

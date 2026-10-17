@@ -1,16 +1,12 @@
 #!/usr/bin/env python3
-"""reflection_agent.py v2 - Memory log in markdown (formato TradingAgents).
-
-Scrive in trading_memory.md append-only, con separatore HTML.
-Legge decision_log.jsonl per contesto. Genera lezioni via Ollama.
-"""
+"""reflection_agent.py v3 - Memory log markdown + pulizia output tinyllama."""
 import json, os, time, requests
 from datetime import datetime
 
 MEMORY_PATH = os.path.expanduser("~/AI_Trading/trading_memory.md")
 DECISION_LOG = os.path.expanduser("~/AI_Trading/decision_log.jsonl")
 OLLAMA_URL = "http://localhost:11434/api/generate"
-MODEL = "qwen2.5:0.5b"
+MODEL = "tinyllama:latest"
 SEPARATOR = "\n\n<!-- ENTRY_END -->\n\n"
 
 SYSTEM_PROMPT = (
@@ -25,8 +21,23 @@ SYSTEM_PROMPT = (
 )
 
 
+def check_ram(min_mb=500):
+    try:
+        with open("/proc/meminfo") as f:
+            for line in f:
+                if line.startswith("MemAvailable:"):
+                    kb = int(line.split()[1])
+                    mb = kb // 1024
+                    if mb < min_mb:
+                        print(f"[reflection] RAM bassa ({mb} MB < {min_mb}). Salto.", flush=True)
+                        return False
+                    return True
+    except Exception:
+        return True
+    return True
+
+
 def load_memory():
-    """Legge trading_memory.md, ritorna lista di entry (dict)."""
     if not os.path.exists(MEMORY_PATH):
         return []
     with open(MEMORY_PATH) as f:
@@ -36,7 +47,6 @@ def load_memory():
         block = block.strip()
         if not block:
             continue
-        # Parse tag [date | ticket | action | pending]
         if block.startswith("["):
             end_tag = block.find("]")
             if end_tag > 0:
@@ -47,7 +57,6 @@ def load_memory():
 
 
 def save_memory(entries):
-    """Riscrive il file con le entry aggiornate."""
     with open(MEMORY_PATH, "w") as f:
         for e in entries:
             f.write(e["raw"] + SEPARATOR)
@@ -69,46 +78,38 @@ def load_decision_context(ticket):
 
 
 def ask_reflection(exp, ctx):
+    """Genera lezione deterministica, senza LLM."""
     pnl = exp.get("pnl", 0)
     azione = exp.get("azione", "?")
     prezzo = exp.get("prezzo", 0)
     esito = exp.get("esito", "?")
-    ticket = exp.get("ticket", "?")
 
-    ctx_str = ""
+    lezione = f"Decisione {azione} a {prezzo}. PNL {pnl:+.2f} EUR ({esito}). "
+
     if ctx:
-        ctx_str = (
-            f"\nContesto:\n"
-            f"- scores: {ctx.get('scores', {})}\n"
-            f"- final_score: {ctx.get('final_score', '?')}\n"
-            f"- signal: {ctx.get('signal', '?')}\n"
-        )
+        scores = ctx.get("scores", {})
+        signal = ctx.get("signal", "?")
+        final = ctx.get("final_score", 0)
+        # Identifica segnali che hanno contribuito
+        contributi = [f"{k}={v:+.2f}" for k, v in scores.items() if abs(v) > 0.1]
+        lezione += f"Segnale {signal} (score {final:+.2f}, contributi: {', '.join(contributi)}). "
 
-    prompt = (
-        f"Decisione: {azione} a prezzo {prezzo}, ticket {ticket}.\n"
-        f"Esito: {esito}, PNL: {pnl:+.2f} EUR.\n"
-        f"{ctx_str}\n"
-        f"Scrivi 2-4 frasi di lezione specifica."
-    )
+    if pnl < 0:
+        lezione += "La direzione era sbagliata o lo spread/commissioni hanno eroso il margine. "
+        lezione += "Lezione: verificare che il segnale sia forte (score > 0.15) prima di aprire."
+    elif pnl > 0:
+        lezione += "La direzione era corretta. "
+        lezione += "Lezione: replicare quando gli stessi segnali si ripresentano."
+    else:
+        lezione += "Risultato neutro. Lezione: evitare aperture con segnale debole."
 
-    try:
-        r = requests.post(
-            OLLAMA_URL,
-            json={"model": MODEL, "prompt": SYSTEM_PROMPT + "\n\n" + prompt,
-                  "stream": False, "options": {"temperature": 0.3}},
-            timeout=180,
-        )
-        r.raise_for_status()
-        text = r.json().get("response", "").strip()
-        return text[:600]
-    except Exception as e:
-        print(f"[reflection] Errore Ollama: {e}", flush=True)
-        return None
+    return lezione[:800]
 
 
 def process_pending():
-    """Trova decisioni chiuse non ancora riflesse, genera lezione."""
-    # Carica decision_log per contesto
+    if not check_ram(500):
+        return
+
     ctx_map = {}
     try:
         with open(DECISION_LOG) as f:
@@ -122,7 +123,6 @@ def process_pending():
     except Exception:
         pass
 
-    # Carica orders.json per PNL reali
     orders = []
     try:
         with open(os.path.expanduser("~/Scrivania/XM MT4/MQL4/Files/orders.json")) as f:
@@ -132,17 +132,29 @@ def process_pending():
 
     closed = [o for o in orders if o.get("status") == "closed"]
 
-    # Leggi memoria esistente
     entries = load_memory()
     already = set()
     for e in entries:
-        # tag = "date | ticket | action | pending" o "date | ticket | action | +x% | ..."
         parts = [p.strip() for p in e["tag"].split("|")]
         if len(parts) >= 2:
             already.add(parts[1])
 
+    # P031-bis: forza rigenerazione se la lezione e' di bassa qualita'
+    bad_words = ["impresa", "Ligne", "riferirsi a tali eventi", "condividendo l'errore",
+                 "smerta", "Confermato che la decisione di acquistare"]
+    bad_tickets = set()
+    for e in entries:
+        body = e.get("body", "").lower()
+        if any(w.lower() in body for w in bad_words):
+            parts = [p.strip() for p in e["tag"].split("|")]
+            if len(parts) >= 2:
+                bad_tickets.add(parts[1])
+    already = already - bad_tickets
+    entries = [e for e in entries if not any(w.lower() in e.get("body", "").lower() for w in bad_words)
+               and e.get("body", "").count("ha causato") < 2]
+
     generated = 0
-    for op in closed[-10:]:  # ultimi 10
+    for op in closed[-10:]:
         ticket = str(op.get("ticket", "?"))
         if ticket in already:
             continue
