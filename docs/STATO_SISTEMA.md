@@ -150,6 +150,7 @@ Git: commit 5325f18: pendenze: P016-P020 (tools fossile, mt4_shared, engram, tes
 - 18 October 2026 - 3335adf: auto-sync dom 18 ott 2026, 05:00:01, WEST
 - 18 October 2026 - adf09e0: auto-sync dom 18 ott 2026, 06:00:01, WEST
 - 18 October 2026 - 27c9b42: auto-sync dom 18 ott 2026, 07:00:01, WEST
+- 18 October 2026 - 9c114ee: auto-sync dom 18 ott 2026, 08:00:01, WEST
 
 ## 3. Problemi noti
 
