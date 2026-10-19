@@ -6,3 +6,11 @@ Decisione buy a 1.11664. PNL -0.04 EUR (PERDITA). La direzione era sbagliata o l
 
 <!-- ENTRY_END -->
 
+[2026-10-19 | 319798 | sell | +3.77EUR | resolved:2026-10-19]
+DECISION:
+sell @ 1.12358
+REFLECTION:
+Decisione sell a 1.12358. PNL +3.77 EUR (PROFITTO). Segnale SELL (score -0.14, contributi: news=-0.30, social=-0.20, experience=-0.20). La direzione era corretta. Lezione: replicare quando gli stessi segnali si ripresentano.
+
+<!-- ENTRY_END -->
+
