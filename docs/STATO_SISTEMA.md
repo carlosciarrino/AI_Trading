@@ -179,6 +179,8 @@ Git: commit 5325f18: pendenze: P016-P020 (tools fossile, mt4_shared, engram, tes
 - 19 October 2026 - 559ceda: auto-sync lun 19 ott 2026, 10:00:01, WEST
 - 19 October 2026 - 6883e40: auto-sync lun 19 ott 2026, 11:00:02, WEST
 - 19 October 2026 - 134c0f0: auto-sync lun 19 ott 2026, 12:00:02, WEST
+- 19 October 2026 - bd1c124: auto-sync lun 19 ott 2026, 13:00:01, WEST
+- 19 October 2026 - 0294055: P048: volume_agent v2 legge volume_data.json (Tick Volume MT4) + divergenza prezzo-volume + trading_memory 319798
 
 ## 3. Problemi noti
 
