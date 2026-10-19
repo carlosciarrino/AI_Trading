@@ -14,3 +14,11 @@ Decisione sell a 1.12358. PNL +3.77 EUR (PROFITTO). Segnale SELL (score -0.14, c
 
 <!-- ENTRY_END -->
 
+[2026-10-19 | 338596 | buy | -1.47EUR | resolved:2026-10-19]
+DECISION:
+buy @ 1.12202
+REFLECTION:
+Decisione buy a 1.12202. PNL -1.47 EUR (PERDITA). Segnale BUY (score +0.17, contributi: news=+0.30, social=+0.20, volume=+0.30). La direzione era sbagliata o lo spread/commissioni hanno eroso il margine. Lezione: verificare che il segnale sia forte (score > 0.15) prima di aprire.
+
+<!-- ENTRY_END -->
+
