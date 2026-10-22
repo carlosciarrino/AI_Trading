@@ -7,6 +7,7 @@ OLLAMA_URL = "http://localhost:11434/api/generate"
 MODEL = "qwen2.5:0.5b"
 MAX_OPEN_ORDERS = 1
 MT4_FILES = os.path.expanduser("~/Scrivania/XM MT4/MQL4/Files")
+MAX_ORDERS_FILE = os.path.join(MT4_FILES, "max_orders.txt")
 ORDERS_JSON = "/home/carlo/Scrivania/XM MT4/MQL4/Files/orders.json"
 OPEN_TIME_FILE = "/home/carlo/Scrivania/XM MT4/MQL4/Files/open_time.json"
 ACCOUNT_JSON = "/home/carlo/Scrivania/XM MT4/MQL4/Files/account.json"
@@ -14,13 +15,12 @@ SL_COMMANDS_FILE = "/home/carlo/Scrivania/XM MT4/MQL4/Files/sl_commands.json"
 LOCK_FILE = "/tmp/orchestrator.lock"
 DECISION_LOG = "/home/carlo/AI_Trading/decision_log.jsonl"
 
-# O8 - parametri logica post-apertura
-BREAK_EVEN_PIP = 20       # attivazione: profitto >= 20 pip
-BREAK_EVEN_OFFSET_PIP = 2 # SL spostato a entry +/- 2 pip
-FRIDAY_PROFIT_HOUR_UTC = 15  # C1: venerdi 15:00 UTC, chiudi se PNL > 0
-FRIDAY_CLOSE_HOUR_UTC = 20   # C2: venerdi 20:00 UTC, chiudi tutto
-MAIN_LOOP_SLEEP = 300        # 5 minuti
-
+# O8 - parametri logica post-apertura (definizioni)
+BREAK_EVEN_PIP = 20
+BREAK_EVEN_OFFSET_PIP = 2
+FRIDAY_PROFIT_HOUR_UTC = 15
+FRIDAY_CLOSE_HOUR_UTC = 20
+MAIN_LOOP_SLEEP = 300
 
 def load_config():
     with open(CONFIG_PATH) as f:
@@ -419,7 +419,13 @@ def main():
                 continue
 
             open_count = count_open_orders()
-            if open_count >= MAX_OPEN_ORDERS:
+            # Leggi limite da max_orders.txt (modificabile da MT4 o telefono)
+            try:
+                with open(MAX_ORDERS_FILE) as f:
+                    max_orders = int(f.read().strip())
+            except:
+                max_orders = MAX_OPEN_ORDERS            
+            if open_count >= max_orders:
                 print("Limite operazioni raggiunto.", flush=True)
                 time.sleep(MAIN_LOOP_SLEEP)
                 continue
