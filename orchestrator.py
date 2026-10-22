@@ -1,4 +1,5 @@
 import yfinance as yf
+import risk_manager
 import json, time, os, requests
 from datetime import datetime, timezone, timedelta
 
@@ -455,7 +456,17 @@ def main():
                         tp = float(tp)
                     sl = round(sl, 5)
                     tp = round(tp, 5)
-                    cmd = f"{action} 0.01 {sl} {tp}"
+                    # P044: size dinamico da risk_manager
+                    risk = risk_manager.get_risk_decision(abs(atr) if 'atr' in dir() else 0.001)
+                    if risk["halt"]:
+                        print(f"[RISK] Halt: {risk['reason']}", flush=True)
+                        write_decision(detail, action_taken="none", reason=f"risk_halt: {risk['reason']}")
+                        time.sleep(MAIN_LOOP_SLEEP)
+                        continue
+                    lots = risk["lots"]
+                    if lots <= 0:
+                        lots = 0.01
+                    cmd = f"{action} {lots} {sl} {tp}"
                     print(f"Ordine {action} inviato con SL={sl} TP={tp}", flush=True)
                 except Exception as e:
                     print(f"Errore calcolo ATR, uso default: {e}", flush=True)
