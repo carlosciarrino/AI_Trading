@@ -374,3 +374,12 @@ fondo, in sezione "Chiuse".
   Non posso aprirli direttamente. Serve testo o sintesi.
 - Azione: quando Carlo incolla i testi, analizzare per trading/commerciale.
 (nessuna per ora)
+
+### [P053] P033: dibattito borderline (rinviato)
+- Data: 2026-10-22
+- Priorita': bassa
+- Contesto: implementato e poi rimosso (produceva rumore, non segnale).
+  L'idea (dibattito bull/bear quando score e' borderline) resta valida.
+  Ma richiede LLM veloce (Ollama lento su i3) o euristiche migliori.
+- Azione: rivalutare quando hardware migliore (Gemma 4 12B) o quando
+  avremo piu' dati per calibrare le soglie.

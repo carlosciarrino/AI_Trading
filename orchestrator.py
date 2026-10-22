@@ -1,7 +1,7 @@
 import yfinance as yf
-import risk_manager
 import json, time, os, requests
 from datetime import datetime, timezone, timedelta
+import risk_manager
 
 CONFIG_PATH = os.path.expanduser("~/AI_Trading/config.json")
 OLLAMA_URL = "http://localhost:11434/api/generate"
@@ -31,7 +31,6 @@ def load_config():
 
 
 def get_max_orders():
-    """Legge MaxOrders da ea_params.json (scritto dall'EA). Fallback: max_orders.txt."""
     try:
         with open(EA_PARAMS_FILE) as f:
             data = json.load(f)
@@ -456,8 +455,9 @@ def main():
                         tp = float(tp)
                     sl = round(sl, 5)
                     tp = round(tp, 5)
+                    
                     # P044: size dinamico da risk_manager
-                    risk = risk_manager.get_risk_decision(abs(atr) if 'atr' in dir() else 0.001)
+                    risk = risk_manager.get_risk_decision(float(atr))
                     if risk["halt"]:
                         print(f"[RISK] Halt: {risk['reason']}", flush=True)
                         write_decision(detail, action_taken="none", reason=f"risk_halt: {risk['reason']}")
@@ -466,8 +466,9 @@ def main():
                     lots = risk["lots"]
                     if lots <= 0:
                         lots = 0.01
+                    
                     cmd = f"{action} {lots} {sl} {tp}"
-                    print(f"Ordine {action} inviato con SL={sl} TP={tp}", flush=True)
+                    print(f"Ordine {action} {lots} inviato con SL={sl} TP={tp}", flush=True)
                 except Exception as e:
                     print(f"Errore calcolo ATR, uso default: {e}", flush=True)
                     cmd = action
