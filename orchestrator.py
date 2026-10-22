@@ -190,9 +190,9 @@ def get_signal():
         weight_sum += weights[key]
     final_score = total / weight_sum if weight_sum > 0 else 0.0
     print(f"Punteggio combinato: {final_score:.3f}", flush=True)
-    if final_score > 0.10:
+    if final_score > 0.06:
         signal = "BUY"
-    elif final_score < -0.10:
+    elif final_score < -0.06:
         signal = "SELL"
     else:
         signal = "HOLD"
