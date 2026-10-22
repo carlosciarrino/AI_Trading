@@ -46,3 +46,11 @@ Decisione buy a 1.12228. PNL +2.06 EUR (PROFITTO). Segnale BUY (score +0.12, con
 
 <!-- ENTRY_END -->
 
+[2026-10-22 | 409626 | sell | +3.18EUR | resolved:2026-10-22]
+DECISION:
+sell @ 1.12438
+REFLECTION:
+Decisione sell a 1.12438. PNL +3.18 EUR (PROFITTO). Segnale SELL (score -0.14, contributi: news=-0.30, volume=-0.30). La direzione era corretta. Lezione: replicare quando gli stessi segnali si ripresentano.
+
+<!-- ENTRY_END -->
+
