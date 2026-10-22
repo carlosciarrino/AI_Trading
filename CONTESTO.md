@@ -1,6 +1,6 @@
 # CONTESTO PROGETTO AI_TRADING
 
-Ultimo aggiornamento: 2026-10-16 23:10
+Ultimo aggiornamento: 2026-10-22 16:50
 Autore: Carlo + Chat (decisione congiunta)
 Regola: questo file si aggiorna SOLO a mano, in chat, quando cambia una decisione.
 Nessuno script automatico deve scriverci dentro.
@@ -28,12 +28,8 @@ Obiettivo: azienda digitale semplice, intuitiva, aggiornabile facilmente.
 - L'EA di trading si chiama AI_BRIDGE_EA.mq4 e risiede in:
   /home/carlo/Scrivania/XM MT4/MQL4/Experts/AI_BRIDGE_EA.mq4
 - La telemetria (account.json) sta DENTRO AI_BRIDGE_EA, non in un EA separato.
-  Motivo: MT4 accetta un solo EA per grafico. Due EA = confusione.
-- account.json viene scritto in:
-  /home/carlo/Scrivania/XM MT4/MQL4/Files/account.json
-- Gli agenti Python girano in tmux sessioni separate (ai_workforce, supervisor,
-  news_agent, social_agent, cycle_agent, volume_agent, experience_agent,
-  kronos_agent, nzt_agent, market_anomaly, signal_observer, strategy_validator).
+- account.json viene scritto in: /home/carlo/Scrivania/XM MT4/MQL4/Files/account.json
+- Gli agenti Python girano in tmux sessioni separate (14 sessioni).
 - La dashboard web gira come servizio systemd user "web-app" (porta 5000).
 - Il server controllo remoto gira come servizio systemd user "controllo-remoto".
 - Registro pendenze: docs/PENDENZE.md (vedi D18).
@@ -41,33 +37,28 @@ Obiettivo: azienda digitale semplice, intuitiva, aggiornabile facilmente.
 
 ## 3b. Segnali dell'orchestratore e pesi
 
-L'orchestratore legge 5 file di contesto, assegna uno score a ciascuno,
-moltiplica per un peso, somma e divide per la somma dei pesi.
-
 | Segnale      | Fonte file                 | Peso  | Range score    |
 |--------------|----------------------------|-------|----------------|
 | news         | news_context.txt           | 0.20  | -0.3 / 0 / +0.3|
 | social       | social_context.txt         | 0.20  | -0.2 / 0 / +0.2|
 | cycle        | cycles_context.txt         | 0.15  | -0.2 / 0 / +0.2|
-| volume       | volume_context.txt         | 0.25  | variabile      |
-| experience   | experiences.json           | 0.20  | -0.2 / 0 / +0.2|
+| volume       | volume_context.txt         | 0.25  | variabile (-0.3/0/+0.3)|
+| experience   | trading_memory.md          | 0.20  | -0.2 / 0 / +0.2|
 |--------------|----------------------------|-------|----------------|
 | SOMMA PESI   |                            | 1.00  |                |
+
+Segnale technical (technical_context.txt): calcolato ma **PESO 0** (solo log, per validazione futura).
 
 Soglie decisionali:
 - final_score > +0.10  ->  BUY
 - final_score < -0.10  ->  SELL
 - altrimenti           ->  HOLD
 
-TUTTI I 5 SEGNALI SONO ATTIVI (post O10, 2026-10-15).
+Punteggio attuale: variabile (0.04-0.17). HOLD o BUY/SELL.
 
-Punteggio attuale: -0.02 (news +0.06, social -0.04, experience -0.04,
-cycle e volume 0). Risultato: HOLD.
+Riferimento codice: /home/carlo/AI_Trading/orchestrator.py, funzione get_signal().
 
-Riferimento codice: /home/carlo/AI_Trading/orchestrator.py, funzione
-get_signal().
-
-## 3c. Contratto orchestratore <-> EA (confermato 2026-10-14, esteso 2026-10-15)
+## 3c. Contratto orchestratore <-> EA
 
 Formato comando accettato da AI_BRIDGE_EA.mq4 (funzione ExecuteCommand):
   buy  [lots] [sl_price] [tp_price]
@@ -78,20 +69,28 @@ Ciclo file comando:
 - orchestratore scrive "AI_BRIDGE_CMD.txt"
 - EA legge, esegue, FileDelete(CMD_FILE) one-shot
 - EA scrive esito in "AI_BRIDGE_RES.txt" (OK: aperto <ticket>... / ERR: ...)
-- orchestratore LEGGE AI_BRIDGE_RES.txt e logga esito reale in
-  decision_log.jsonl (ticket reale o errore o timeout)
+- orchestratore LEGGE AI_BRIDGE_RES.txt e logga esito reale in decision_log.jsonl
 
 Ciclo file SL modification (O8):
-- orchestratore scrive "sl_commands.json" con array di comandi:
-  [{"ticket": <int>, "new_sl": <float>}, ...]
-- EA legge (ApplySLModifications), applica OrderModify, cancella one-shot.
+- orchestratore scrive "sl_commands.json" con array di comandi
+- EA legge, applica OrderModify, cancella one-shot.
+
+Ciclo file parametri EA (P049):
+- EA scrive "ea_params.json" con MaxOrders, LotSize, StopLoss, TakeProfit.
+- orchestratore legge MaxOrders da ea_params.json (modificabile da MT4).
+- Fallback: max_orders.txt.
+
+Ciclo file volume (P048):
+- EA scrive "volume_data.json" (Tick Volume reale) ogni 5s.
+- volume_agent legge, calcola divergenza prezzo-volume, scrive volume_context.txt.
+- technical_agent legge per OBV.
 
 Path:
 - MT4_FILES = ~/Scrivania/XM MT4/MQL4/Files
 - AI_BRIDGE_CMD.txt, AI_BRIDGE_RES.txt, orders.json, account.json,
-  sl_commands.json, open_time.json
+  sl_commands.json, open_time.json, volume_data.json, ea_params.json, max_orders.txt
 
-## 3d. Logica post-apertura O8 (2026-10-15)
+## 3d. Logica post-apertura O8
 
 L'orchestratore esegue 4 controlli ad ogni ciclo (ogni 5 min, anche fuori orario):
 
@@ -108,50 +107,47 @@ Parametri:
 - FRIDAY_CLOSE_HOUR_UTC = 20
 - MAIN_LOOP_SLEEP = 300 (5 min)
 
-Motivazione C1/C2: evitare che un ordine positivo diventi negativo per gap
-weekend. Caso reale 2026-10-15: ordine +2 centesimi, commissione 6 centesimi
--> netto -4 centesimi.
+## 3e. Controllo remoto
+
+- File: controllo_remoto/server.py
+- Servizio systemd user: controllo-remoto (attivo, PID 1045)
+- Funzione: da definire (P050).
 
 ## 4. Stato attuale
 
 ### Cosa funziona
 - MT4 su Wine, terminal.exe attivo.
-- Agenti tmux attivi (12 sessioni).
+- Agenti tmux attivi (14 sessioni).
 - Servizi systemd user attivi: web-app, controllo-remoto.
-- File condivisi MT4 presenti in /home/carlo/Scrivania/XM MT4/MQL4/Files/:
-  orders.json, open_time.json, account.json.
 - GitHub carlosciarrino/AI_Trading: integro, sincronizzato con origin/main.
-- AI_BRIDGE_EA.mq4 v3.5-bis: FUNZIONANTE in MT4.
-  Compila 0 errori, 0 warning. Test end-to-end superato 2026-10-14 23:41.
-  md5 .mq4 = c728dfa14c3246268dedd260a0542418
-  md5 .ex4 = e9df7b1d225b52b9e756d3df72c19f27
-- orchestrator.py O7b-bis: legge AI_BRIDGE_RES.txt dopo ogni comando.
-- orchestrator.py O10: news RIATTIVATO.
-- orchestrator.py O8: logica post-apertura (break-even, venerdi C1+C2).
-- orchestrator.py P012: fix bug CLOSE->close (chiusure ora funzionano).
-- orchestrator.py P013: blocco apertura venerdi dopo 19:00 UTC.
-  md5 orchestrator.py = 76b3b3eecb734c7f4d5a2b9b33e979e9
-- news_agent.py v2 (O10): Investing.com RSS, sentiment, news_context.txt
-  ogni 10 min. md5 = d5b5c99630b8ac0512a9b9440a4edc46
+- AI_BRIDGE_EA.mq4 v3.5-volume: FUNZIONANTE in MT4.
+  Scrive account.json, orders.json, volume_data.json, ea_params.json.
+  Compila 0 errori, 0 warning.
+- orchestrator.py: legge AI_BRIDGE_RES.txt, O8 attivo, MaxOrders da ea_params.json.
+- news_agent.py v2 (O10): Investing.com RSS, sentiment, news_context.txt ogni 10 min.
+- social_agent.py v2 (P041): sentiment + volume + intensita + storico.
+- volume_agent.py v2 (P048): legge volume_data.json, divergenza prezzo-volume.
+- technical_agent.py (P042): EMA, RSI, ADX, OBV (OBV da volume_data.json). Peso 0.
+- reflection_agent.py (P031-bis): trading_memory.md, deterministico (no LLM).
 - config.json: password broker rimossa (O11). Permessi 600.
-  md5 = 65985576e9a14f20c2b2437c11b52a92
-- account.json: scritto ogni 5s. Conto demo 450000065, ~100066 EUR.
-- docs/PENDENZE.md: registro pendenze (20 voci aperte al 2026-10-16).
-- docs/ORGANIGRAMMA.md + docs/MAPPA_PROGETTO.md: mappe del progetto (2026-10-16).
-- Bonifica 2026-10-16: 32 cartelle + 56 file .py + 40 file vari archiviati
-  in docs/archive/2026-10/.
+- account.json: scritto ogni 5s. Conto demo 450000065, ~100074 EUR.
+- docs/PENDENZE.md: registro pendenze (aggiornato).
+- docs/ORGANIGRAMMA.md + docs/MAPPA_PROGETTO.md: mappe del progetto.
+- docs/VIBE_TRADING_SKILLS.md: catalogo 90 skill.
+- docs/CONFRONTO_ESTERNO.md: confronto TradingAgents + Quant-Agent.
+- docs/RICERCA_COMMERCIALE.md: fonti commerciali (Palanca, Rizzo, MuseSpark).
 
 ### Cosa e' rotto o incompleto
 - Vedi docs/PENDENZE.md per l'elenco completo e aggiornato delle pendenze.
-- In sintesi: supervisor falso positivo (P001), experiences.json senza
-  rotazione (P002), wrapper zombie (P003), agenti muti (P004), loop sell
-  (P005), verifica O8/O7b-bis in produzione (P007/P008), ordine 319798
-  nel weekend (P015), 7 agenti dormienti (P016), doppio mt4_shared (P021).
+- In sintesi: supervisor falso positivo (P001), agenti muti (P004), loop sell
+  (P005), verifica O8/O7b-bis in produzione (P007/P008), 7 agenti dormienti
+  archiviati (P024), 2 ordini aperti (test MaxOrders=1).
 
 ### Backup attivi (D3)
-- AI_BRIDGE_EA.mq4.pre_v3.5bis, .ex4.pre_v3.5bis (in Experts/)
-- orders.json.pre_v3.5bis (in Files/)
-- config.json.pre_o11, news_agent.py.pre_o10 (spostati in archive/2026-10/)
+- AI_BRIDGE_EA.mq4.pre_volume, .pre_volume_master
+- orchestrator.py.pre_*, volume_agent.py.pre_p048, technical_agent.py.pre_obv
+- config.json.pre_o11, social_agent.py.pre_p041, reflection_agent.py.pre_*
+- docs/archive/2026-10/ (32 cartelle + 56 .py + 40 file vari DEPRECATED)
 
 ## 5. Decisioni prese (non si ridiscutono)
 
@@ -162,102 +158,69 @@ D3. Ogni modifica a un file di produzione richiede backup con md5sum
     prima/dopo. Il backup non si cancella finche' la modifica non e'
     confermata su demo per almeno 24h.
 D4. Kilo non decide mai. Esegue, e se ha dubbi si ferma.
-D5. I comandi a Kilo hanno intestazione fissa (5 righe): ID, file target,
-    cosa fare, cosa NON fare, dove salvare evidenza.
-D6. La chat non incolla codice in mezzo al testo: i comandi a Kilo e i
-    comandi al terminale Linux sono sempre in blocchi separati, etichettati
-    fuori dal blocco.
+D5. I comandi a Kilo hanno intestazione fissa (5 righe).
+D6. La chat non incolla codice in mezzo al testo: comandi in blocchi separati.
 D7. La chat dichiara, prima di ogni comando a Kilo, cosa contiene il file
     target e cosa cambia. Carlo autorizza solo dopo aver letto.
-D8. La ricerca online va fatta in almeno 3 lingue (italiano, inglese,
-    cinese) e su almeno 4 fonti (GitHub, forum specializzati, Reddit/HN,
-    repo minori). Non ci si ferma ai primi 3 risultati.
+D8. La ricerca online va fatta in almeno 3 lingue e 4 fonti minime.
 D9. Il ripristino di AI_BRIDGE_EA.mq4 v3.3 e la patch a v3.4 sono fatti
-    DIRETTAMENTE dalla chat, non da Kilo. Kilo non tocca questo file.
+    DIRETTAMENTE dalla chat, non da Kilo.
 D10. Solo Carlo e la Chat decidono modifiche a backup PC e a GitHub.
-     Kilo non ha voce in capitolo su questo.
-D11. La dashboard legge da account.json la telemetria conto. Non da
-     orders.json per il saldo. orders.json serve solo per ordini aperti.
-D12. IN PRODUZIONE l'orchestratore deve operare SOLO durante i mercati
-     Londra (8-17 UTC) e New York (13-22 UTC). Non deve operare di notte.
-     Attualmente config.json ha session: 'all' per fare test. Va cambiato
-     a 'london_newyork' prima della messa in produzione.
-D13. Ogni decisione dell'orchestratore (anche HOLD) va loggata in
-     decision_log.jsonl con score, pesi, punteggio finale, azione presa.
-     Nessuna decisione senza tracciabilita'.
-D14. MetaEditor va CHIUSO prima di modificare AI_BRIDGE_EA.mq4 da
-     terminale. Se aperto, sovrascrive il file su disco con la copia in
-     memoria. Regola nata dall'incidente 2026-10-14.
+D11. La dashboard legge da account.json la telemetria conto.
+D12. IN PRODUZIONE l'orchestratore opera SOLO durante i mercati Londra e NY.
+D13. Ogni decisione dell'orchestratore va loggata in decision_log.jsonl.
+D14. MetaEditor va CHIUSO prima di modificare AI_BRIDGE_EA.mq4 da terminale.
 D15. Quando Carlo deve modificare un file, la chat fornisce in un UNICO
-     messaggio: comando di apertura + contenuto completo da incollare.
-     Mai spezzare in due messaggi.
+    messaggio: comando di apertura + contenuto completo da incollare.
 D16. Per modificare un file a mano, Carlo preferisce SEMPRE il file
-     completo (sostituzione totale), mai istruzioni puntuali. Dopo ogni
-     modifica, sempre un controllo di routine (grep, md5, wc).
+    completo (sostituzione totale), mai istruzioni puntuali.
 D17. Nelle regole di calcolo delle operazioni sono SEMPRE inclusi take
-     profit, stop loss, commissioni e spread. PNL letto da orders.json
-     e' netto (OrderProfit + OrderCommission + OrderSwap).
+    profit, stop loss, commissioni e spread.
 D18. Ogni questione in sospeso emersa durante una sessione va registrata
-     IMMEDIATAMENTE in docs/PENDENZE.md, anche se non critica e rinviata.
-     Formato: ID [P###], data, priorita', contesto, azione. Quando chiusa,
-     si marca [CHIUSA YYYY-MM-DD] e si sposta in fondo.
+    IMMEDIATAMENTE in docs/PENDENZE.md.
 D19. Ogni chat nuova DEVE leggere prima: docs/ORGANIGRAMMA.md +
-     docs/MAPPA_PROGETTO.md + CONTESTO.md + HANDOFF.md + docs/PENDENZE.md.
-     Se la mappa non esiste o e' incompleta, la chat CHIEDE il censimento
-     prima di procedere. Nessuna modifica senza mappa aggiornata.
+    docs/MAPPA_PROGETTO.md + CONTESTO.md + HANDOFF.md + docs/PENDENZE.md.
 D20. La chat NON PRESUME di conoscere il contenuto del progetto. Non ha
-     accesso autonomo al filesystem. Prima di ogni pianificazione, chiede
-     il censimento di cio' che non vede, o lo esegue se ha il comando.
-     Nessun "credo che...", nessun "probabilmente...". O si vede, o si
-     chiede.
+    accesso autonomo al filesystem. Chiede il censimento o lo esegue.
 
 ## 6. Ricerca agenti (una tantum, periodica)
 
 Cercare su GitHub, forum, repo specializzati chi ha costruito agenti di
 comunicazione tra agenti. Non fermarsi ai primi risultati. Verificare
-codice, stelle, manutenzione, licenza. Obiettivo: prendere il meglio e
-applicarlo a tutti i progetti, non solo al trading.
+codice, stelle, manutenzione, licenza. Obiettivo: prendere il meglio.
 
-Per il progetto trading: cercare al 100% dei risultati, ma limitato al
-settore trading/algo trading/MT4/MT5/bot/EA/signal/dashboard.
-Lingue minime: italiano, inglese, cinese, russo, spagnolo.
-
-Progetti identificati il 2026-10-16 (da studiare):
-- TradingAgents (Tauric Research, ~71k stelle): multi-agente con dibattito.
+Progetti identificati (docs/CONFRONTO_ESTERNO.md):
+- TradingAgents (Tauric Research): multi-agente con dibattito.
 - Quant-Agent-Trader: self-evolution con diario trading.
-- AI Trader for MT5: MCP protocol.
-- BettaFish (微舆): 4 agenti per analisi.
-- awesome-skill-forge: 90.000 skill pronte.
+- Vibe-Trading (HKUDS): 90 skill, shadow account, swarm (docs/VIBE_TRADING_SKILLS.md).
 
 ## 7. Prossimo passo (uno solo)
 
-Verifica O8 in produzione. Attendere primo ordine reale e controllare:
-- check_break_even scrive sl_commands.json quando profitto >= 20 pip;
-- EA applica il nuovo SL;
-- check_friday_profit/C1 e check_friday_close/C2 funzionano venerdi.
-
-Ordine 319798 (SELL) aperto nel weekend (P015). Da verificare domenica
-sera / lunedi.
+P044: risk manager separato con size dinamica (da Quant-Agent/Vibe-Trading).
+Oppure P033: dibattito bull/bear borderline (da TradingAgents).
 
 ## 8. Come si aggiorna questo file
 
 Solo in chat, solo a mano, solo quando Carlo dice "aggiorna CONTESTO.md".
-Nessuna scrittura automatica. Nessun commit automatico.
 
 ## 9. Prossimi obiettivi in coda (non attivi, solo promemoria)
 
 - O4: fix auto-sync Git. FATTO 2026-10-14.
 - O5: pulizia file storici. FATTO 2026-10-14.
-- O6: ricerca agenti. IN CORSO (5 progetti identificati).
+- O6: ricerca agenti. IN CORSO.
 - O7: verificare flusso decisione trading. IN CORSO.
 - O7a: decision_log.jsonl. FATTO 2026-10-14.
 - O7b: fix orchestrator.py. FATTO 2026-10-14.
 - O7b-bis: orchestratore legge AI_BRIDGE_RES.txt. FATTO 2026-10-15.
 - O7c: diagnosi 4 segnali. CHIUSO 2026-10-14.
 - O8: logica post-apertura. FATTO 2026-10-15. Verifica in corso.
-- O9: orario London+NY in config.json (D12). Da fare in produzione.
+- O9: orario London+NY in config.json. Da fare in produzione.
 - O10: news redesign. FATTO 2026-10-15.
 - O11: password broker fuori da config.json. FATTO 2026-10-15.
-- O12: bonifica progetto (archivio 2026-10). FATTO 2026-10-16.
+- O12: bonifica progetto. FATTO 2026-10-16.
 - O13: organigramma + mappa progetto. FATTO 2026-10-16.
-- Pendenze: vedi docs/PENDENZE.md (20 voci aperte).
+- P041: social_agent v2. FATTO 2026-10-19.
+- P042: technical_agent. FATTO 2026-10-22.
+- P048: volume_agent v2. FATTO 2026-10-19.
+- P049: MaxOrders da MT4. FATTO 2026-10-22.
+- Pendenze: vedi docs/PENDENZE.md.

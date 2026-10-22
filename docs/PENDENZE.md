@@ -344,4 +344,33 @@ fondo, in sezione "Chiuse".
 - Data apertura: 2026-10-16
 - [CHIUSA 2026-10-16] in docs/archive/2026-10/tools_DEPRECATED/.
 
+### [P049] MaxOrders da MT4 a orchestratore
+- Data: 2026-10-22
+- Priorita': ALTA
+- Contesto: orchestratore aveva MAX_OPEN_ORDERS hardcoded. Non modificabile
+  senza toccare codice.
+- Azione: RISOLTA 2026-10-22. EA scrive ea_params.json con MaxOrders.
+  Orchestratore legge da lì. Modifica da MT4, nessun codice.
+
+### [P050] controllo_remoto: funzione da definire
+- Data: 2026-10-22
+- Priorita': media
+- Contesto: servizio controllo-remoto attivo (PID 1045, 3 giorni) ma non
+  documentato in CONTESTO.md. Cosa fa? Come si usa?
+- Azione: leggere controllo_remoto/server.py e documentare.
+
+### [P051] 2 ordini aperti (test MaxOrders)
+- Data: 2026-10-22
+- Priorita': alta
+- Contesto: 420485 (BUY) e 433116 (BUY) aperti. MaxOrders=1. Orchestratore
+  blocca nuove aperture. Rischio doppio.
+- Azione: monitorare break-even e time-stop. Decidere se chiudere 433116.
+
+### [P052] Video Instagram da analizzare
+- Data: 2026-10-22
+- Priorita': bassa
+- Contesto: Carlo ha incollato 10 link di reel Instagram (Palanca, Rizzo,
+  ai_swarm_solutions, gabriaprile, coco.satoru, rianmedeiros, Dori).
+  Non posso aprirli direttamente. Serve testo o sintesi.
+- Azione: quando Carlo incolla i testi, analizzare per trading/commerciale.
 (nessuna per ora)
