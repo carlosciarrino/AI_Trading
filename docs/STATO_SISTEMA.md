@@ -22,7 +22,6 @@ Git: commit 5325f18: pendenze: P016-P020 (tools fossile, mt4_shared, engram, tes
 
 ## 2. Diario azioni
 
-- 15 October 2026 - 208d353: auto-sync gio 15 ott 2026, 01:00:01, WEST
 - 15 October 2026 - 40cba0d: auto-sync gio 15 ott 2026, 02:00:01, WEST
 - 15 October 2026 - 926ad5f: auto-sync gio 15 ott 2026, 03:00:01, WEST
 - 15 October 2026 - 4b32b4a: auto-sync gio 15 ott 2026, 04:00:01, WEST
@@ -222,6 +221,7 @@ Git: commit 5325f18: pendenze: P016-P020 (tools fossile, mt4_shared, engram, tes
 - 22 October 2026 - f493408: P049: orchestratore legge MaxOrders da ea_params.json (scritto dall'EA)
 - 22 October 2026 - 2240f09: P042: technical_agent (EMA, RSI, ADX, OBV) + OBV da volume_data.json + start_all.sh
 - 22 October 2026 - 5752928: contesto: aggiornamento 2026-10-22 (P042, P048, P049, 2 ordini test)
+- 22 October 2026 - 3828320: auto-sync gio 22 ott 2026, 17:00:02, WEST
 
 ## 3. Problemi noti
 
