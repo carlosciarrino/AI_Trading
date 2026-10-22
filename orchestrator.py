@@ -8,6 +8,7 @@ MODEL = "qwen2.5:0.5b"
 MAX_OPEN_ORDERS = 1
 MT4_FILES = os.path.expanduser("~/Scrivania/XM MT4/MQL4/Files")
 MAX_ORDERS_FILE = os.path.join(MT4_FILES, "max_orders.txt")
+EA_PARAMS_FILE = os.path.join(MT4_FILES, "ea_params.json")
 ORDERS_JSON = "/home/carlo/Scrivania/XM MT4/MQL4/Files/orders.json"
 OPEN_TIME_FILE = "/home/carlo/Scrivania/XM MT4/MQL4/Files/open_time.json"
 ACCOUNT_JSON = "/home/carlo/Scrivania/XM MT4/MQL4/Files/account.json"
@@ -15,16 +16,32 @@ SL_COMMANDS_FILE = "/home/carlo/Scrivania/XM MT4/MQL4/Files/sl_commands.json"
 LOCK_FILE = "/tmp/orchestrator.lock"
 DECISION_LOG = "/home/carlo/AI_Trading/decision_log.jsonl"
 
-# O8 - parametri logica post-apertura (definizioni)
+# O8 - parametri logica post-apertura
 BREAK_EVEN_PIP = 20
 BREAK_EVEN_OFFSET_PIP = 2
 FRIDAY_PROFIT_HOUR_UTC = 15
 FRIDAY_CLOSE_HOUR_UTC = 20
 MAIN_LOOP_SLEEP = 300
 
+
 def load_config():
     with open(CONFIG_PATH) as f:
         return json.load(f)
+
+
+def get_max_orders():
+    """Legge MaxOrders da ea_params.json (scritto dall'EA). Fallback: max_orders.txt."""
+    try:
+        with open(EA_PARAMS_FILE) as f:
+            data = json.load(f)
+            return int(data.get("MaxOrders", MAX_OPEN_ORDERS))
+    except:
+        pass
+    try:
+        with open(MAX_ORDERS_FILE) as f:
+            return int(f.read().strip())
+    except:
+        return MAX_OPEN_ORDERS
 
 
 def is_trading_hours(session):
@@ -55,10 +72,6 @@ def count_open_orders():
 
 
 def get_open_order():
-    """Ritorna il primo ordine aperto da orders.json, o None.
-    Formato tipico: {"action":"buy","lots":0.01,"price":1.11664,"sl":1.11614,
-    "tp":1.11764,"time":...,"status":"open","ticket":"253699","pnl":0}
-    """
     try:
         with open(ORDERS_JSON) as f:
             orders = json.load(f)
@@ -72,7 +85,6 @@ def get_open_order():
 
 
 def send_close_command(ticket, reason_log):
-    """Invia comando CLOSE <ticket> all'EA e legge esito. Logga su stdout."""
     cmd_path = os.path.join(MT4_FILES, "AI_BRIDGE_CMD.txt")
     res_path = os.path.join(MT4_FILES, "AI_BRIDGE_RES.txt")
     if os.path.exists(res_path):
@@ -90,10 +102,9 @@ def send_close_command(ticket, reason_log):
     else:
         print(f"[O8] Chiusura {ticket} timeout EA ({reason_log})", flush=True)
 
+
 def get_signal():
     scores = {}
-    # O10 (2026-10-15): news RIATTIVATO. news_agent v2 scrive news_context.txt
-    # fresco (ogni 10 min) con riga "Sentiment: positivo|negativo|neutro".
     try:
         with open('/home/carlo/AI_Trading/news_context.txt', 'r') as f:
             text = f.read().lower()
@@ -108,9 +119,9 @@ def get_signal():
     try:
         with open('/home/carlo/AI_Trading/social_context.txt', 'r') as f:
             text = f.read().lower()
-            if 'positivo' in text:
+            if 'sentiment: positivo' in text:
                 scores['social'] = 0.2
-            elif 'negativo' in text:
+            elif 'sentiment: negativo' in text:
                 scores['social'] = -0.2
             else:
                 scores['social'] = 0.0
@@ -142,7 +153,7 @@ def get_signal():
         with open('/home/carlo/AI_Trading/volume_context.txt', 'r') as f:
             text = f.read().lower()
             import re
-            match = re.search(r'(?:score|punteggio)[:\s]+(-?\d+\.\d+)', text)
+            match = re.search(r'(?:punteggio|score)[:\s]+(-?\d+\.\d+)', text)
             if match:
                 scores['volume'] = float(match.group(1))
             else:
@@ -150,28 +161,21 @@ def get_signal():
     except:
         scores['volume'] = 0.0
     try:
-        # P031-bis: legge trading_memory.md (markdown append-only)
-        memory_path = '/home/carlo/AI_Trading/trading_memory.md'
-        if os.path.exists(memory_path):
-            with open(memory_path) as f:
-                content = f.read()
-            # Conta REFLECTION: e cerca parole chiave
-            reflections = content.split('REFLECTION:')
-            recent = reflections[-3:] if len(reflections) >= 3 else reflections
-            text = ' '.join(recent).lower()
-            pos = sum(1 for w in ['positivo', 'successo', 'corretto', 'confermato', 'profitto'] if w in text)
-            neg = sum(1 for w in ['negativo', 'fallito', 'smentito', 'perdita', 'errore'] if w in text)
-            if neg > pos:
-                scores['experience'] = -0.2
-            elif pos > neg:
-                scores['experience'] = 0.2
-            else:
-                scores['experience'] = 0.0
+        with open('/home/carlo/AI_Trading/trading_memory.md', 'r') as f:
+            content = f.read()
+        reflections = content.split('REFLECTION:')
+        recent = reflections[-3:] if len(reflections) >= 3 else reflections
+        text = ' '.join(recent).lower()
+        pos = sum(1 for w in ['positivo', 'successo', 'corretto', 'confermato', 'profitto'] if w in text)
+        neg = sum(1 for w in ['negativo', 'fallito', 'smentito', 'perdita', 'errore'] if w in text)
+        if neg > pos:
+            scores['experience'] = -0.2
+        elif pos > neg:
+            scores['experience'] = 0.2
         else:
             scores['experience'] = 0.0
     except:
         scores['experience'] = 0.0
-
     weights = {
         'news': 0.2,
         'social': 0.2,
@@ -200,8 +204,8 @@ def get_signal():
     }
     return signal, detail
 
+
 def check_time_stop():
-    """Chiude ordini aperti da piu' di 24h."""
     order = get_open_order()
     if not order:
         return
@@ -223,7 +227,6 @@ def check_time_stop():
     if datetime.now() - open_dt > timedelta(hours=24):
         print(f"[O8] Ordine {ticket} aperto da >24h. Chiusura.", flush=True)
         send_close_command(ticket, "time_stop_24h")
-        # Rimuovi da open_times
         try:
             del open_times[str(ticket)]
             with open(OPEN_TIME_FILE, "w") as f:
@@ -233,7 +236,6 @@ def check_time_stop():
 
 
 def get_current_price():
-    """Scarica prezzo corrente EURUSD (Close ultima candela 15m)."""
     try:
         df = yf.download("EURUSD=X", period="1d", interval="15m", progress=False)
         if df.empty:
@@ -250,14 +252,11 @@ def get_current_price():
 
 
 def check_break_even():
-    """Se ordine in profitto >= BREAK_EVEN_PIP, sposta SL a entry+offset.
-    Scrive sl_commands.json, l'EA lo applica al timer successivo.
-    """
     order = get_open_order()
     if not order:
         return
     ticket = order.get('ticket')
-    action = order.get('action')  # buy|sell
+    action = order.get('action')
     entry = order.get('price')
     current_sl = order.get('sl')
     if not all([ticket, action, entry, current_sl is not None]):
@@ -267,12 +266,11 @@ def check_break_even():
     current_price = get_current_price()
     if current_price is None:
         return
-    pip = 0.0001  # 1 pip EURUSD = 0.0001
+    pip = 0.0001
     offset = BREAK_EVEN_OFFSET_PIP * pip
 
     if action == "buy":
         profit_pips = (current_price - entry) / pip
-        # Attiva se profitto >= soglia e SL ancora sotto entry
         if profit_pips >= BREAK_EVEN_PIP and current_sl < entry:
             new_sl = round(entry + offset, 5)
             write_sl_command(ticket, new_sl)
@@ -284,10 +282,8 @@ def check_break_even():
 
 
 def write_sl_command(ticket, new_sl):
-    """Scrive sl_commands.json. L'EA legge e applica, poi cancella il file."""
     try:
         cmd = {"ticket": int(ticket), "new_sl": float(new_sl)}
-        # L'EA legge un array di comandi (anche se ne scriviamo uno solo)
         existing = []
         if os.path.exists(SL_COMMANDS_FILE):
             try:
@@ -306,9 +302,8 @@ def write_sl_command(ticket, new_sl):
 
 
 def check_friday_profit():
-    """C1: venerdi 15:00 UTC. Chiudi ordini con PNL > 0 (salva-profitto)."""
     now = datetime.now(timezone.utc)
-    if now.weekday() != 4:  # 4 = venerdi
+    if now.weekday() != 4:
         return
     if now.hour != FRIDAY_PROFIT_HOUR_UTC:
         return
@@ -327,7 +322,6 @@ def check_friday_profit():
 
 
 def check_friday_close():
-    """C2: venerdi 20:00 UTC. Chiudi tutti gli ordini aperti."""
     now = datetime.now(timezone.utc)
     if now.weekday() != 4:
         return
@@ -340,8 +334,8 @@ def check_friday_close():
     print(f"[O8] C2 venerdi: chiusura forzata ordine {ticket}.", flush=True)
     send_close_command(ticket, "friday_close_all")
 
+
 def read_bridge_result(timeout=8):
-    """Legge AI_BRIDGE_RES.txt dopo invio comando. Ritorna (status, payload)."""
     res_path = os.path.join(MT4_FILES, "AI_BRIDGE_RES.txt")
     start = time.time()
     while time.time() - start < timeout:
@@ -386,8 +380,8 @@ def write_decision(detail, action_taken, ticket=None, reason=None, error=None):
     except Exception as e:
         print(f"Errore write_decision: {e}", flush=True)
 
+
 def main():
-    # Lock esclusivo
     if os.path.exists(LOCK_FILE):
         try:
             with open(LOCK_FILE) as f:
@@ -407,7 +401,6 @@ def main():
         print(f"Orchestratore avviato. Sessione: {session}", flush=True)
 
         while True:
-            # O8: logica post-apertura (sempre attiva, anche fuori orario)
             check_time_stop()
             check_break_even()
             check_friday_profit()
@@ -419,21 +412,15 @@ def main():
                 continue
 
             open_count = count_open_orders()
-            # Leggi limite da max_orders.txt (modificabile da MT4 o telefono)
-            try:
-                with open(MAX_ORDERS_FILE) as f:
-                    max_orders = int(f.read().strip())
-            except:
-                max_orders = MAX_OPEN_ORDERS            
+            max_orders = get_max_orders()
             if open_count >= max_orders:
-                print("Limite operazioni raggiunto.", flush=True)
+                print(f"Limite operazioni raggiunto ({open_count}/{max_orders}).", flush=True)
                 time.sleep(MAIN_LOOP_SLEEP)
                 continue
 
             signal, detail = get_signal()
             print(f"Segnale AI: {signal}", flush=True)
 
-            # P013 (2026-10-16): non aprire nuovi ordini il venerdi dopo le 19:00 UTC
             now_utc = datetime.now(timezone.utc)
             if signal in ("BUY", "SELL") and now_utc.weekday() == 4 and now_utc.hour >= 19:
                 print("[P013] Venerdi dopo 19:00 UTC: apertura bloccata.", flush=True)
@@ -508,5 +495,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
-
