@@ -370,8 +370,17 @@ def check_friday_close():
     if not order:
         return
     ticket = order.get('ticket')
-    print(f"[O8] C2 venerdi: chiusura forzata ordine {ticket}.", flush=True)
-    send_close_command(ticket, "friday_close_all")
+    pnl = order.get('pnl', 0)
+    try:
+        pnl = float(pnl)
+    except Exception:
+        pnl = 0.0
+    # Chiudi solo se in profitto o perdita contenuta (< 5 EUR)
+    if pnl > 0 or pnl > -5.0:
+        print(f"[O8] C2 venerdi: chiusura ordine {ticket} (PNL {pnl:+.2f}).", flush=True)
+        send_close_command(ticket, "friday_close_all")
+    else:
+        print(f"[O8] C2 venerdi: ordine {ticket} in perdita ({pnl:+.2f}). Lascio aperto.", flush=True)
 
 
 def read_bridge_result(timeout=8):
