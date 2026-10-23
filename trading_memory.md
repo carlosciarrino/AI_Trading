@@ -70,3 +70,11 @@ Decisione buy a 1.12054. PNL -1.33 EUR (PERDITA). Segnale BUY (score +0.17, cont
 
 <!-- ENTRY_END -->
 
+[2026-10-23 | 452817 | buy | +0.00EUR | resolved:2026-10-23]
+DECISION:
+buy @ 1.1194
+REFLECTION:
+Decisione buy a 1.1194. PNL +0.00 EUR (PERDITA). Segnale BUY (score +0.07, contributi: news=+0.30, social=+0.20, volume=-0.30, experience=+0.20). Risultato neutro. Lezione: evitare aperture con segnale debole.
+
+<!-- ENTRY_END -->
+
