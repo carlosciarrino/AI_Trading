@@ -84,6 +84,20 @@ def get_open_order():
         return None
 
 
+def get_technical_trend():
+    """Legge technical_context.txt e ritorna 'bull', 'bear', 'neutral' o None."""
+    try:
+        with open('/home/carlo/AI_Trading/technical_context.txt') as f:
+            text = f.read().lower()
+        if 'trend: bull=true' in text:
+            return 'bull'
+        if 'trend: bear=true' in text:
+            return 'bear'
+        return 'neutral'
+    except:
+        return None
+
+
 def send_close_command(ticket, reason_log):
     cmd_path = os.path.join(MT4_FILES, "AI_BRIDGE_CMD.txt")
     res_path = os.path.join(MT4_FILES, "AI_BRIDGE_RES.txt")
@@ -190,9 +204,9 @@ def get_signal():
         weight_sum += weights[key]
     final_score = total / weight_sum if weight_sum > 0 else 0.0
     print(f"Punteggio combinato: {final_score:.3f}", flush=True)
-    if final_score > 0.06:
+    if final_score > 0.08:
         signal = "BUY"
-    elif final_score < -0.06:
+    elif final_score < -0.08:
         signal = "SELL"
     else:
         signal = "HOLD"
@@ -251,6 +265,24 @@ def get_current_price():
         return None
 
 
+def get_atr():
+    """Scarica ATR da yfinance (15m)."""
+    try:
+        df = yf.download("EURUSD=X", period="1d", interval="15m", progress=False)
+        if df.empty:
+            return None
+        df['ATR'] = df['High'].rolling(14).max() - df['Low'].rolling(14).min()
+        atr = df['ATR'].iloc[-1]
+        if hasattr(atr, 'iloc'):
+            atr = float(atr.iloc[0])
+        else:
+            atr = float(atr)
+        return atr
+    except Exception as e:
+        print(f"[BE] Errore get_atr: {e}", flush=True)
+        return None
+
+
 def check_break_even():
     order = get_open_order()
     if not order:
@@ -269,14 +301,21 @@ def check_break_even():
     pip = 0.0001
     offset = BREAK_EVEN_OFFSET_PIP * pip
 
+    # P056: soglia dinamica = max(20, ATR * 2)
+    atr = get_atr()
+    if atr is None:
+        atr = 0.0010  # fallback 10 pip
+    soglia_pip = max(20, (atr / pip) * 2.0)
+    print(f"[BE] Soglia dinamica: {soglia_pip:.0f} pip (ATR {atr/pip:.1f} pip)", flush=True)
+
     if action == "buy":
         profit_pips = (current_price - entry) / pip
-        if profit_pips >= BREAK_EVEN_PIP and current_sl < entry:
+        if profit_pips >= soglia_pip and current_sl < entry:
             new_sl = round(entry + offset, 5)
             write_sl_command(ticket, new_sl)
     elif action == "sell":
         profit_pips = (entry - current_price) / pip
-        if profit_pips >= BREAK_EVEN_PIP and current_sl > entry:
+        if profit_pips >= soglia_pip and current_sl > entry:
             new_sl = round(entry - offset, 5)
             write_sl_command(ticket, new_sl)
 
@@ -425,6 +464,19 @@ def main():
             if signal in ("BUY", "SELL") and now_utc.weekday() == 4 and now_utc.hour >= 19:
                 print("[P013] Venerdi dopo 19:00 UTC: apertura bloccata.", flush=True)
                 write_decision(detail, action_taken="none", reason="p013_friday_late")
+                time.sleep(MAIN_LOOP_SLEEP)
+                continue
+
+            # P055: filtro trend (blocca controtendenza)
+            tech = get_technical_trend()
+            if tech == "bear" and signal == "BUY":
+                print("[P055] Trend bear, BUY bloccato.", flush=True)
+                write_decision(detail, action_taken="none", reason="p055_trend_bear")
+                time.sleep(MAIN_LOOP_SLEEP)
+                continue
+            if tech == "bull" and signal == "SELL":
+                print("[P055] Trend bull, SELL bloccato.", flush=True)
+                write_decision(detail, action_taken="none", reason="p055_trend_bull")
                 time.sleep(MAIN_LOOP_SLEEP)
                 continue
 
