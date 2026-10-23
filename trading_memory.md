@@ -62,3 +62,11 @@ Decisione buy a 1.11935. PNL +2.93 EUR (PROFITTO). Segnale BUY (score +0.17, con
 
 <!-- ENTRY_END -->
 
+[2026-10-23 | 436060 | buy | -1.33EUR | resolved:2026-10-23]
+DECISION:
+buy @ 1.12054
+REFLECTION:
+Decisione buy a 1.12054. PNL -1.33 EUR (PERDITA). Segnale BUY (score +0.17, contributi: news=+0.30, social=+0.20, volume=+0.30). La direzione era sbagliata o lo spread/commissioni hanno eroso il margine. Lezione: verificare che il segnale sia forte (score > 0.15) prima di aprire.
+
+<!-- ENTRY_END -->
+

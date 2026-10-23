@@ -22,7 +22,6 @@ Git: commit 5325f18: pendenze: P016-P020 (tools fossile, mt4_shared, engram, tes
 
 ## 2. Diario azioni
 
-- 15 October 2026 - a7595b9: auto-sync gio 15 ott 2026, 19:00:01, WEST
 - 15 October 2026 - 9fd95ce: contesto: O7b-bis (orchestratore legge AI_BRIDGE_RES.txt) + aggiornamento HANDOFF + pulizia backup
 - 15 October 2026 - 744db1b: contesto: O11 (password broker rimossa) + regole D15/D16 + aggiornamento HANDOFF
 - 15 October 2026 - f646d04: auto-sync gio 15 ott 2026, 20:00:01, WEST
@@ -222,6 +221,7 @@ Git: commit 5325f18: pendenze: P016-P020 (tools fossile, mt4_shared, engram, tes
 - 23 October 2026 - bc81e64: auto-sync ven 23 ott 2026, 05:00:01, WEST
 - 23 October 2026 - cf72047: auto-sync ven 23 ott 2026, 06:00:01, WEST
 - 23 October 2026 - c3f6e0e: auto-sync ven 23 ott 2026, 07:00:01, WEST
+- 23 October 2026 - 46b231f: auto-sync ven 23 ott 2026, 08:00:01, WEST
 
 ## 3. Problemi noti
 
