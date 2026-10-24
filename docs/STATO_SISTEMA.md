@@ -22,7 +22,6 @@ Git: commit 5325f18: pendenze: P016-P020 (tools fossile, mt4_shared, engram, tes
 
 ## 2. Diario azioni
 
-- 16 October 2026 - 4ae2872: auto-sync ven 16 ott 2026, 23:00:01, WEST
 - 16 October 2026 - 945ff99: Bonifica 2026-10: archivio 2026-10 (32 cartelle + 56 .py + 40 file) + ORGANIGRAMMA.md + MAPPA_PROGETTO.md + D19/D20 + pendenze P021-P024
 - 16 October 2026 - 511855c: P031-P040: confronto TradingAgents + Quant-Agent + 10 nuove pendenze
 - 17 October 2026 - e52974e: auto-sync sab 17 ott 2026, 00:00:01, WEST
@@ -222,6 +221,7 @@ Git: commit 5325f18: pendenze: P016-P020 (tools fossile, mt4_shared, engram, tes
 - 24 October 2026 - e4ed6ae: auto-sync sab 24 ott 2026, 14:00:01, WEST
 - 24 October 2026 - 39b8b51: auto-sync sab 24 ott 2026, 15:00:01, WEST
 - 24 October 2026 - 2ef8fd5: auto-sync sab 24 ott 2026, 16:00:01, WEST
+- 24 October 2026 - a469513: auto-sync sab 24 ott 2026, 17:00:01, WEST
 
 ## 3. Problemi noti
 
