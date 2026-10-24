@@ -111,10 +111,20 @@ def send_close_command(ticket, reason_log):
     status, payload = read_bridge_result(timeout=8)
     if status == "ok":
         print(f"[O8] Chiusura {ticket} confermata ({reason_log})", flush=True)
+        # P007: traccia chiusura O8 in decision_log
+        write_decision({}, action_taken="close", ticket=ticket, reason=reason_log)
     elif status == "err":
         print(f"[O8] Chiusura {ticket} fallita ({reason_log}): {payload.get('error')}", flush=True)
+        # P007: traccia errore chiusura
+        write_decision({}, action_taken="none", ticket=ticket,
+                       reason=reason_log + "_err",
+                       error=payload.get("error"))
     else:
         print(f"[O8] Chiusura {ticket} timeout EA ({reason_log})", flush=True)
+        # P007: traccia timeout
+        write_decision({}, action_taken="none", ticket=ticket,
+                       reason=reason_log + "_timeout",
+                       error="timeout_ea")
 
 
 def get_signal():
@@ -204,6 +214,8 @@ def get_signal():
         weight_sum += weights[key]
     final_score = total / weight_sum if weight_sum > 0 else 0.0
     print(f"Punteggio combinato: {final_score:.3f}", flush=True)
+    # P007: diagnostica scores su stdout
+    print(f"[SCORES] {scores}", flush=True)
     if final_score > 0.08:
         signal = "BUY"
     elif final_score < -0.08:
@@ -376,7 +388,7 @@ def check_friday_close():
     except Exception:
         pnl = 0.0
     # Chiudi solo se in profitto o perdita contenuta (< 5 EUR)
-    if pnl > 0 or pnl > -5.0:
+    if pnl > -5.0:
         print(f"[O8] C2 venerdi: chiusura ordine {ticket} (PNL {pnl:+.2f}).", flush=True)
         send_close_command(ticket, "friday_close_all")
     else:
@@ -392,6 +404,8 @@ def read_bridge_result(timeout=8):
                 if time.time() - os.path.getmtime(res_path) < timeout:
                     with open(res_path) as f:
                         content = f.read().strip()
+                    # P007: diagnostica bridge su stdout
+                    print(f"[BRIDGE] raw={content}", flush=True)
                     if content.startswith("OK:"):
                         parts = content.split()
                         ticket = None
@@ -516,7 +530,7 @@ def main():
                         tp = float(tp)
                     sl = round(sl, 5)
                     tp = round(tp, 5)
-                    
+
                     # P044: size dinamico da risk_manager
                     risk = risk_manager.get_risk_decision(float(atr))
                     if risk["halt"]:
@@ -527,7 +541,7 @@ def main():
                     lots = risk["lots"]
                     if lots <= 0:
                         lots = 0.01
-                    
+
                     cmd = f"{action} {lots} {sl} {tp}"
                     print(f"Ordine {action} {lots} inviato con SL={sl} TP={tp}", flush=True)
                 except Exception as e:
@@ -544,6 +558,8 @@ def main():
                 with open(cmd_path, "w") as f:
                     f.write(f"{cmd}\n")
                 status, payload = read_bridge_result(timeout=8)
+                # P007: diagnostica esito bridge su stdout
+                print(f"[BRIDGE] status={status} payload={payload}", flush=True)
                 if status == "ok":
                     write_decision(detail, action_taken=action,
                                    ticket=payload.get("ticket"),

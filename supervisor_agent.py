@@ -1,72 +1,104 @@
 #!/usr/bin/env python3
 """
-Supervisor Agent - v2
-Riscritto 2026-10-14.
-Legge stato agenti da tmux, riavvia i critici fermi, aggiorna audit_status.json.
+Supervisor Agent - v3-bis (P001, 2026-10-24)
+Legge stato agenti con ps -eo comm,args: cerca python3 <script>.py.
+Esclude il wrapper bash. Riavvia i critici morti. Aggiorna audit_status.json.
+
+P001 fix: pane_current_command non e' affidabile (riporta il wrapper bash,
+non il python3 figlio). pgrep -f matcha anche il wrapper (il testo del
+comando bash -c contiene 'python3 ... script.py'). Usiamo ps e filtriamo
+per comm == python3/python, args contiene script.py.
+scouting_agent gira via cron, non in tmux: escluso dal check.
 """
 import os
 import json
 import subprocess
+import time
 from datetime import datetime
 
 BASE = os.path.expanduser("~/AI_Trading")
 AUDIT_JSON = os.path.join(BASE, "audit_status.json")
 RESTART_LOG = os.path.join(BASE, "restart_log.json")
-INTERVAL = 300  # secondi tra cicli (5 minuti)
+INTERVAL = 300
 
-AGENTS = {
-    "ai_workforce": "Orchestratore principale",
-    "cycle_agent": "Cicli storici",
-    "experience_agent": "Memoria errori",
-    "kronos_agent": "Timing",
-    "market_anomaly": "Anomalie mercato",
-    "news_agent": "Notizie macro",
-    "nzt_agent": "Strategia NZT",
-    "signal_observer": "Osserva segnali",
-    "social_agent": "Sentiment social",
-    "strategy_validator": "Valida strategie",
-    "supervisor": "Supervisione",
-    "volume_agent": "Volumi",
+PY = "/home/carlo/AI_Trading_Agents/venv/bin/python3"
+
+SCRIPTS = {
+    "ai_workforce": "orchestrator.py",
+    "supervisor": "supervisor_agent.py",
+    "news_agent": "news_agent.py",
+    "social_agent": "social_agent.py",
+    "cycle_agent": "cycle_agent.py",
+    "volume_agent": "volume_agent.py",
+    "experience_agent": "experience_agent.py",
+    "kronos_agent": "kronos_agent.py",
+    "nzt_agent": "nzt_agent.py",
+    "market_anomaly": "market_anomaly_agent.py",
+    "signal_observer": "signal_observer_agent.py",
+    "strategy_validator": "strategy_validator.py",
+    "reflection_agent": "reflection_agent.py",
+    "technical_agent": "technical_agent.py",
 }
 
+AGENTS = {name: name for name in SCRIPTS}
 CRITICAL = ["ai_workforce", "news_agent", "social_agent", "cycle_agent"]
 
-VENV = "/home/carlo/AI_Trading_Agents/venv/bin/activate"
-
 START_COMMANDS = {
-    "ai_workforce": f"tmux new-session -d -s ai_workforce 'cd /home/carlo/AI_Trading && source {VENV} && python3 orchestrator.py'",
-    "news_agent": f"tmux new-session -d -s news_agent 'cd /home/carlo/AI_Trading && source {VENV} && python3 news_agent.py'",
-    "social_agent": f"tmux new-session -d -s social_agent 'cd /home/carlo/AI_Trading && source {VENV} && python3 social_agent.py'",
-    "cycle_agent": f"tmux new-session -d -s cycle_agent 'cd /home/carlo/AI_Trading && source {VENV} && python3 cycle_agent.py'",
+    "ai_workforce":     f"tmux new-session -d -s ai_workforce 'cd /home/carlo/AI_Trading && {PY} orchestrator.py > /home/carlo/ai_workforce.log 2>&1'",
+    "supervisor":       f"tmux new-session -d -s supervisor 'cd /home/carlo/AI_Trading && {PY} supervisor_agent.py > /home/carlo/supervisor.log 2>&1'",
+    "news_agent":       f"tmux new-session -d -s news_agent 'cd /home/carlo/AI_Trading && {PY} news_agent.py > /home/carlo/news_agent.log 2>&1'",
+    "social_agent":     f"tmux new-session -d -s social_agent 'cd /home/carlo/AI_Trading && {PY} social_agent.py > /home/carlo/social_agent.log 2>&1'",
+    "cycle_agent":      f"tmux new-session -d -s cycle_agent 'cd /home/carlo/AI_Trading && {PY} cycle_agent.py > /home/carlo/cycle_agent.log 2>&1'",
+    "volume_agent":     f"tmux new-session -d -s volume_agent 'cd /home/carlo/AI_Trading && {PY} volume_agent.py > /home/carlo/volume_agent.log 2>&1'",
+    "experience_agent": f"tmux new-session -d -s experience_agent 'cd /home/carlo/AI_Trading && {PY} experience_agent.py > /home/carlo/experience_agent.log 2>&1'",
+    "kronos_agent":     f"tmux new-session -d -s kronos_agent 'cd /home/carlo/AI_Trading && {PY} kronos_agent.py > /home/carlo/kronos_agent.log 2>&1'",
+    "nzt_agent":        f"tmux new-session -d -s nzt_agent 'cd /home/carlo/AI_Trading && {PY} nzt_agent.py > /home/carlo/nzt_agent.log 2>&1'",
+    "market_anomaly":   f"tmux new-session -d -s market_anomaly 'cd /home/carlo/AI_Trading && {PY} market_anomaly_agent.py > /home/carlo/market_anomaly.log 2>&1'",
+    "signal_observer":  f"tmux new-session -d -s signal_observer 'cd /home/carlo/AI_Trading && {PY} signal_observer_agent.py > /home/carlo/signal_observer.log 2>&1'",
+    "strategy_validator": f"tmux new-session -d -s strategy_validator 'cd /home/carlo/AI_Trading && {PY} strategy_validator.py > /home/carlo/strategy_validator.log 2>&1'",
+    "reflection_agent": f"tmux new-session -d -s reflection_agent 'cd /home/carlo/AI_Trading && {PY} reflection_agent.py > /home/carlo/reflection_agent.log 2>&1'",
+    "technical_agent":  f"tmux new-session -d -s technical_agent 'cd /home/carlo/AI_Trading && {PY} technical_agent.py > /home/carlo/technical_agent.log 2>&1'",
 }
+
+
 def log(msg):
     ts = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
     print(f"[{ts}] {msg}", flush=True)
 
 
-def tmux_sessions():
+def agent_alive(name):
+    """True se esiste un processo python3/python con args contenente <script>.py.
+    Esclude il wrapper bash (comm=bash, args='bash -c ... python3 ...')."""
+    script = SCRIPTS.get(name)
+    if not script:
+        return False
     try:
-        out = subprocess.run(
-            ["tmux", "ls"],
+        r = subprocess.run(
+            ["ps", "-eo", "comm,args"],
             capture_output=True, text=True, timeout=5
         )
-        if out.returncode != 0:
-            return []
-        sessions = []
-        for line in out.stdout.splitlines():
-            name = line.split(":")[0].strip()
-            if name:
-                sessions.append(name)
-        return sessions
+        if r.returncode != 0:
+            return False
+        for line in r.stdout.splitlines():
+            line = line.strip()
+            if not line:
+                continue
+            parts = line.split(None, 1)
+            if len(parts) < 2:
+                continue
+            comm, args = parts[0], parts[1]
+            if comm in ("python3", "python") and script in args:
+                return True
+        return False
     except Exception as e:
-        log(f"ERRORE tmux_sessions: {e}")
-        return []
+        log(f"ERRORE ps {name}: {e}")
+        return False
 
 
-def agent_status(sessions):
+def agent_status():
     status = {}
-    for name in AGENTS:
-        status[name] = "active" if name in sessions else "stopped"
+    for name in SCRIPTS:
+        status[name] = "active" if agent_alive(name) else "stopped"
     return status
 
 
@@ -85,10 +117,9 @@ def read_orders_summary():
         return {"open": 0, "closed": 0, "last": None}
 
 
-def write_audit(sessions, status):
+def write_audit(status):
     audit = {
         "timestamp": datetime.now().isoformat(),
-        "sessions": "\n".join(f"{s}: 1 windows" for s in sessions) + "\n" if sessions else "",
         "orders": read_orders_summary(),
         "agents": status,
         "critical": {c: status.get(c, "stopped") for c in CRITICAL},
@@ -125,40 +156,42 @@ def log_restart(agent, reason="stopped"):
         log(f"ERRORE log_restart: {e}")
 
 
-def restart_agent(agent):
+def restart_agent(agent, reason="stopped"):
     cmd = START_COMMANDS.get(agent)
     if not cmd:
         log(f"Nessun comando di start per {agent}")
         return False
     try:
+        subprocess.run(["tmux", "kill-session", "-t", agent],
+                       capture_output=True, timeout=5)
+    except Exception:
+        pass
+    try:
         subprocess.run(cmd, shell=True, timeout=15)
-        log(f"Riavvio {agent}")
-        log_restart(agent)
+        log(f"Riavvio {agent} (motivo: {reason})")
+        log_restart(agent, reason=reason)
         return True
     except Exception as e:
         log(f"ERRORE restart {agent}: {e}")
         return False
+
+
 def main():
-    log("Supervisor agent v2 avviato. Intervallo: " + str(INTERVAL) + "s")
+    log("Supervisor agent v3-bis (P001 ps) avviato. Intervallo: " + str(INTERVAL) + "s")
     while True:
         try:
-            sessions = tmux_sessions()
-            status = agent_status(sessions)
-            write_audit(sessions, status)
-
-            stopped_critical = [c for c in CRITICAL if status.get(c) == "stopped"]
-            if stopped_critical:
-                log(f"Critici fermi: {', '.join(stopped_critical)}")
-                for agent in stopped_critical:
-                    restart_agent(agent)
+            status = agent_status()
+            write_audit(status)
+            to_restart = [c for c in CRITICAL if status.get(c) == "stopped"]
+            if to_restart:
+                log(f"Critici fermi: {', '.join(to_restart)}")
+                for agent in to_restart:
+                    restart_agent(agent, reason="stopped")
             else:
                 log("Tutti i critici attivi. Nessuna azione.")
-
         except Exception as e:
             log(f"ERRORE nel ciclo principale: {e}")
-
         try:
-            import time
             time.sleep(INTERVAL)
         except KeyboardInterrupt:
             log("Interrotto manualmente. Uscita.")

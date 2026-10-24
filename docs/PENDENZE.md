@@ -17,13 +17,14 @@ fondo, in sezione "Chiuse".
 
 ## Aperte
 
-### [P001] Supervisor falso positivo su news_agent (e altri)
+### [P001] Supervisor falso positivo su news_agent (e altri) [CHIUSA 2026-10-24]
 - Data: 2026-10-15
 - Priorita': media
-- Contesto: supervisor_agent.py controlla solo esistenza sessione tmux per
-  nome. Se una sessione e' chiusa ma il supervisor la vede in audit_status,
-  dice "active" -> falso positivo. Osservato con news_agent il 2026-10-15.
-- Azione: far controllare anche il processo figlio (ps --ppid <pane_pid>).
+- Contesto: supervisor_agent.py controllava solo esistenza sessione tmux.
+- Azione: RISOLTA. supervisor_agent.py v3-bis (md5 a074dba2...): check con
+  `ps -eo comm,args` filtrando comm in (python3, python) e script in args.
+  Esclude il wrapper bash. Testato: tutti i 14 agenti -> active, has_issue
+  False, zero duplicate session. Backup: supervisor_agent.py.pre_p001_v2.
 
 ### [P002] experiences.json cresce senza rotazione
 - Data: 2026-10-15
@@ -34,23 +35,24 @@ fondo, in sezione "Chiuse".
 - Azione: tenere ultimi 20-30 record, archiviare i vecchi in
   docs/archive/experiences_YYYYMM.json.
 
-### [P003] Wrapper zombie tmux PID 1263886
+### [P003] Wrapper zombie tmux PID 1263886 [CHIUSA 2026-10-24]
 - Data: 2026-10-15
 - Priorita': bassa
-- Contesto: `tmux new-session -d -s ai_workforce ...` dal 14/10, rimasto
-  appeso dopo l'avvio iniziale. Non fa danno, sporca pgrep.
-- Azione: kill dopo aver verificato che l'orchestratore attuale e' il
-  processo figlio, non il wrapper.
+- Contesto: si sospettava uno zombie tmux.
+- Azione: SMENTITO. Verifica 2026-10-24: tutti i processi agenti sono
+  `Ss+`/`Sl+` (sleeping in foreground, normale per tmux detached). Nessuno
+  zombie. PID 1263886 e' il server tmux del 14/10, vivo e funzionante.
 
-### [P004] 8 agenti su 11 con log vuoti
+### [P004] 8 agenti su 11 con log vuoti [CHIUSA 2026-10-24]
 - Data: 2026-10-15
 - Priorita': media
-- Contesto: social_agent, news_agent, cycle_agent, market_anomaly,
-  kronos_agent, nzt_agent, signal_observer, strategy_validator hanno log
-  da 0 byte. Non significa morti (processi vivi) ma non scrivono nulla.
-  Solo cycle_agent e experience_agent scrivono log.
-- Azione: verificare per ciascuno se scrive su file di contesto (allora
-  il log vuoto e' ok) o se e' muto (allora inutile).
+- Contesto: si sospettavano agenti muti.
+- Azione: RISOLTA parzialmente. Verifica 2026-10-24: solo cycle_agent era
+  rotto (sessione tmux con bash invece di python3). Riavviato 20:04 con
+  python3; cycles_context.txt aggiornato 20:05. Gli altri agenti scrivono
+  i context file (news, social, volume, technical freschi). Log vuoti
+  perche' Python bufferizza stdout: vedi P067. Monitoraggio 24h: se
+  cycles_context.txt resta fermo al 24/10, yfinance fallisce.
 
 ### [P005] Loop sell non diagnosticato
 - Data: 2026-10-14
@@ -69,7 +71,7 @@ fondo, in sezione "Chiuse".
 - Azione: cercare in /etc/cron.d/, crontab -l, systemd --user list-timers,
   ~/.config/systemd/user/. Documentare in CONTESTO.md sez. 3.
 
-### [P007] Verifica O8 con ordine reale
+### [P007] Verifica O8 con ordine reale [CHIUSA 2026-10-24, verifica finale lunedì]
 - Data: 2026-10-15
 - Priorita': alta
 - Contesto: O8 (break-even, C1 venerdi profitto, C2 venerdi chiusura) e'
@@ -79,14 +81,16 @@ fondo, in sezione "Chiuse".
   - check_break_even scrive sl_commands.json quando profitto >= 20 pip;
   - EA applica nuovo SL (log MT4);
   - C1 e C2 funzionano al primo venerdi (2026-10-16 e successivi).
+- Nota 2026-10-24: orchestrator.py patchato (md5 d4ea2900..., 586 righe). Aggiunti [BRIDGE] raw/status su stdout, write_decision in send_close_command (ok/err/timeout). Backup: orchestrator.py.pre_p007 (md5 33dd1ac8...). Verifica finale: lunedì con ordine reale, guardare [O8]/[BE]/[BRIDGE] in ai_workforce.log e action_taken:close in decision_log.jsonl.
 
-### [P008] Verifica O7b-bis con ordine reale
+### [P008] Verifica O7b-bis con ordine reale [CHIUSA 2026-10-24, verifica finale lunedì]
 - Data: 2026-10-15
 - Priorita': alta
 - Contesto: O7b-bis (orchestratore legge AI_BRIDGE_RES.txt) testato solo
   con unit test (mock file). Mai testato con ordine reale post-patch.
 - Azione: al primo BUY/SELL reale, verificare decision_log.jsonl registra
   ticket reale (non null) se EA risponde OK.
+- Nota 2026-10-24: O7b-bis gia' funzionante (campo error in decision_log.jsonl). read_bridge_result ora logga [BRIDGE] raw su stdout. Verifica finale: lunedì con ordine reale, guardare campo error in decision_log.jsonl.
 
 ### [P009] .gitignore esclude *.json (anche config utili)
 - Data: 2026-10-15
@@ -96,7 +100,7 @@ fondo, in sezione "Chiuse".
   di config utili. Da valutare eccezioni.
 - Azione: aggiungere !configs/*.json o simile, se serve.
 
-### [P010] social_agent.log fermo
+### [P010] social_agent.log fermo [DA RICONTROLLARE 2026-10-24]
 - Data: 2026-10-15
 - Priorita': bassa
 - Contesto: social_agent.log 290 byte, ultimo aggiornamento 14/10 22:42.
@@ -205,7 +209,7 @@ fondo, in sezione "Chiuse".
 - Azione: aggiornare agenti per usare direttamente Scrivania/XM MT4/MQL4/Files/
   invece del symlink. Rimuovere symlink dopo migrazione.
 
-### [P022] agents_night_shift.sh non in cron
+### [P022] agents_night_shift.sh non in cron [CHIUSA 2026-10-24, obsoleto]
 - Data: 2026-10-16
 - Priorita': bassa
 - Contesto: agents_night_shift.sh avvia 5 agenti di ricerca notturni
@@ -215,6 +219,7 @@ fondo, in sezione "Chiuse".
 - Azione: decidere se riattivare. Se sì, aggiornare percorso script
   (da archive/) e aggiungere a crontab (2:00).
 
+- Nota 2026-10-24: script referenziava 6 .py inesistenti (github_researcher, skill_researcher, strategy_tester_agent, news_critical, ai_researcher_agent, audit_agent). Tutti MISS. Script archiviato in docs/archive/2026-10/agents_night_shift.sh.OBSOLETO. Nessun cron aggiunto: scouting_agent.py gia' in cron 6:00 e funzionante.
 ### [P023] docs/STATO_SISTEMA.md auto-generato: ora sappiamo da chi
 - Data: 2026-10-16
 - Priorita': bassa
@@ -325,6 +330,48 @@ fondo, in sezione "Chiuse".
 - Azione: la nostra Flask funziona. Non serve. Rimandare.
 - Complessita': alta.
 ---
+
+### [P067] cycle_agent.py non flusha stdout
+- Data: 2026-10-24
+- Priorita': bassa
+- Contesto: cycle_agent.log resta 0 byte anche quando cycles_context.txt
+  viene aggiornato. Python bufferizza stdout quando non e' tty.
+- Azione: aggiungere flush=True ai print di cycle_agent.py.
+
+### [P068] supervisor matcha python3 -c "script.py"
+- Data: 2026-10-24
+- Priorita': bassa
+- Contesto: agent_alive() matcha qualunque python3 con <script>.py negli
+  args, incluso `python3 -c "...script.py..."`. Non accade in produzione,
+  ma e' un falso positivo potenziale.
+- Azione: aggiungere `and " -c " not in args` alla condizione.
+
+### [P069] restart_log.json 4 record falsi
+- Data: 2026-10-24
+- Priorita': bassa
+- Contesto: il supervisor v3 (pgrep, poi scartato) ha scritto 4 record
+  "restart" alle 20:08 per agenti mai riavviati (duplicate session).
+  Backup: restart_log.json.pre_p001_falsi.
+- Azione: verificare che la pulizia (record < 2026-10-24T20:08) sia
+  andata a buon fine.
+
+### [P070] open_time.json non pulito dei ticket chiusi
+- Data: 2026-10-24
+- Priorita': bassa
+- Contesto: open_time.json contiene 9 ticket tutti chiusi. check_time_stop
+  fa del solo quando chiude per >24h. Se l'ordine chiude per TP/SL/C1/C2,
+  il ticket resta per sempre. Accumulo infinito.
+- Azione: in check_time_stop (o check separato), rimuovere i ticket non
+  piu' presenti in orders.json come open.
+
+### [P071] check_break_even puo' riscrivere SL
+- Data: 2026-10-24
+- Priorita': bassa
+- Contesto: se orders.json non e' aggiornato dall'EA (ogni 5s) e il ciclo
+  orchestratore (5 min) legge il vecchio SL, riscrive sl_commands.json.
+  Al massimo 1 riscrittura extra, non loop.
+- Azione: tracciare ultimo SL inviato per ticket, non riscrivere se
+  identico.
 
 ## Chiuse
 
