@@ -383,3 +383,27 @@ fondo, in sezione "Chiuse".
   Ma richiede LLM veloce (Ollama lento su i3) o euristiche migliori.
 - Azione: rivalutare quando hardware migliore (Gemma 4 12B) o quando
   avremo piu' dati per calibrare le soglie.
+
+### [P059] Studio Harness2 (google-research/harness2)
+- Data: 2026-10-24
+- Priorita': media (futuro)
+- Contesto: framework che auto-migliora l'harness di un agente (Propose-Probe-Compose).
+  Trovato da scouting_agent. Non per trading immediato, ma concetto utile
+  per migliorare il sistema nel tempo.
+- Azione: leggere paper/codice quando avremo piu' dati e stabilita'.
+
+### [P060] Studio replica-skill (Jakeschincariol/replica-skill)
+- Data: 2026-10-24
+- Priorita': bassa (commerciale)
+- Contesto: skill per clonare app (reverse-engineer, rebuild, bug-fix).
+  Trovata da scouting_agent. Utile solo per il progetto commerciale (se
+  dovremo replicare UI/funzionalita' di app esistenti).
+- Azione: valutare quando parte il progetto commerciale.
+
+### [P061] Test Decima-small (decision model)
+- Data: 2026-10-24
+- Priorita': alta
+- Contesto: decision model open source (122M parametri, CPU, ~20 ms).
+  Potrebbe sostituire le regole fisse (trend, risk) con decisioni probabilistiche.
+- Azione: scaricare Decima-small, testarlo su "trend bull/bear", valutare
+  integrazione in orchestrator.py.
