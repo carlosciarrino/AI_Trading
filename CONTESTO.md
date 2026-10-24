@@ -182,7 +182,11 @@ D19. Ogni chat nuova DEVE leggere prima: docs/ORGANIGRAMMA.md +
     docs/MAPPA_PROGETTO.md + CONTESTO.md + HANDOFF.md + docs/PENDENZE.md.
 D20. La chat NON PRESUME di conoscere il contenuto del progetto. Non ha
     accesso autonomo al filesystem. Chiede il censimento o lo esegue.
-
+D21. Una soluzione non e' "ok" finche' non e' attiva, verificata e produce
+     output. Non basta che il file esista. Va aggiunta a start_all.sh,
+     avviata in tmux, schedulata in cron (se periodica), e testata con un
+     ciclo manuale. Solo allora si dice "fatto". Regola nata dall'incidente
+     2026-10-24 (agenti di ricerca creati ma mai attivati).
 ## 6. Ricerca agenti (una tantum, periodica)
 
 Cercare su GitHub, forum, repo specializzati chi ha costruito agenti di

@@ -17,3 +17,4 @@ tmux new-session -d -s signal_observer "cd /home/carlo/AI_Trading && $PY signal_
 tmux new-session -d -s strategy_validator "cd /home/carlo/AI_Trading && $PY strategy_validator.py > /home/carlo/strategy_validator.log 2>&1"
 tmux new-session -d -s reflection_agent "cd /home/carlo/AI_Trading && $PY reflection_agent.py > /home/carlo/reflection_agent.log 2>&1"
 tmux new-session -d -s technical_agent "cd /home/carlo/AI_Trading && $PY technical_agent.py > /home/carlo/technical_agent.log 2>&1"
+tmux new-session -d -s scouting_agent "cd /home/carlo/AI_Trading && $PY scouting_agent.py > /home/carlo/scouting_agent.log 2>&1"
