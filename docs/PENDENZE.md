@@ -407,3 +407,27 @@ fondo, in sezione "Chiuse".
   Potrebbe sostituire le regole fisse (trend, risk) con decisioni probabilistiche.
 - Azione: scaricare Decima-small, testarlo su "trend bull/bear", valutare
   integrazione in orchestrator.py.
+
+### [P062] Studio TimesFM (Mistral) - previsione serie storiche
+- Data: 2026-10-24
+- Priorita': bassa
+- Contesto: modello decoder-only per zero-shot forecasting. Utile per
+  previsioni di volume/volatilità, non per direzione prezzo. Richiede dati
+  puliti e test statistici. Non integrare ora.
+- Azione: rivalutare solo se in futuro vorremo prevedere volume/volatilità.
+
+### [P063] Gettrade.ai - NON USARE (sospetto)
+- Data: 2026-10-24
+- Priorita': nessuna (da evitare)
+- Contesto: servizio che analizza screenshot di grafici e dà "segnali".
+  Recensioni indipendenti lo definiscono inaffidabile: sviluppatori anonimi,
+  paywall, follower social comprati. Probabile wrapper di modello generico.
+- Azione: NON integrare. Il nostro sistema è trasparente e tracciato.
+
+### [P064] Test Limite 1B Violetto (Paradigma)
+- Data: 2026-10-24
+- Priorita': media
+- Contesto: modello 1B open source (Apache 2.0), specializzato in matematica,
+  senza "personalità da assistente". Gira su CPU. Potrebbe essere usato come
+  calcolatore per position sizing/risk o validazione logica.
+- Azione: testare quando avremo tempo. Non è un modello di trading.
