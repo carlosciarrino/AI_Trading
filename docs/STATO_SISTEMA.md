@@ -22,11 +22,6 @@ Git: commit 5325f18: pendenze: P016-P020 (tools fossile, mt4_shared, engram, tes
 
 ## 2. Diario azioni
 
-- 16 October 2026 - 511855c: P031-P040: confronto TradingAgents + Quant-Agent + 10 nuove pendenze
-- 17 October 2026 - e52974e: auto-sync sab 17 ott 2026, 00:00:01, WEST
-- 17 October 2026 - b0717da: P031: memoria con riflessione (reflection_agent genera lezioni specifiche via Ollama) + integrazione in experience_agent + get_signal
-- 17 October 2026 - 9698013: auto-sync sab 17 ott 2026, 01:00:01, WEST
-- 17 October 2026 - be88d0c: auto-sync sab 17 ott 2026, 02:00:02, WEST
 - 17 October 2026 - f7b13a5: auto-sync sab 17 ott 2026, 03:00:01, WEST
 - 17 October 2026 - 1ff5cc7: auto-sync sab 17 ott 2026, 04:00:01, WEST
 - 17 October 2026 - fa98eec: auto-sync sab 17 ott 2026, 05:00:01, WEST
@@ -222,6 +217,11 @@ Git: commit 5325f18: pendenze: P016-P020 (tools fossile, mt4_shared, engram, tes
 - 24 October 2026 - 2ef8fd5: auto-sync sab 24 ott 2026, 16:00:01, WEST
 - 24 October 2026 - a469513: auto-sync sab 24 ott 2026, 17:00:01, WEST
 - 24 October 2026 - 511d00f: auto-sync sab 24 ott 2026, 18:00:01, WEST
+- 24 October 2026 - 884b795: auto-sync sab 24 ott 2026, 19:00:01, WEST
+- 24 October 2026 - e1f0610: P058: scouting_agent (ricerca giornaliera GitHub/HF) + D21 (soluzione attiva solo se produce output)
+- 24 October 2026 - 24ffd84: pendenze: P059 (Harness2), P060 (replica-skill), P061 (Decima-small)
+- 24 October 2026 - 14b81e6: pendenze: P062 (TimesFM), P063 (Gettrade da evitare), P064 (Limite 1B)
+- 24 October 2026 - 7112d97: P065: Decima-small scartato (classifica male notizie macro) + pulizia venv_decima
 
 ## 3. Problemi noti
 

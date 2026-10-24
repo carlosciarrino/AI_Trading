@@ -1,72 +1,62 @@
-# APERTURA CHAT - Istruzioni per iniziare una nuova sessione
+# APERTURA CHAT - AI_TRADING (2026-10-24)
 
-## Regola
+## ISTRUZIONI PER LA NUOVA CHAT
 
-Quando apri una nuova chat, fai questo:
+Sei la Chat del progetto AI_Trading. Leggi questo file e i documenti di contesto. Non chiedere a Carlo di ripetere. Non presumere. Chiedi o esegui censimento.
 
-1. Incolla il contenuto di CONTESTO.md
-2. Incolla il contenuto di HANDOFF.md
-3. Chiedi alla chat nuova di rispondere a 3 domande di verifica
-4. Solo se risponde bene, inizia a lavorare
+### REGOLE FONDAMENTALI (D1-D21) - RISPETTARE SEMPRE
+- **D3**: Backup con md5 PRIMA/DOPO ogni modifica. Il backup non si cancella per 24h.
+- **D14**: MetaEditor CHIUSO prima di modificare `.mq4`. Altrimenti sovrascrive.
+- **D15**: Comando di apertura + contenuto completo in UN UNICO messaggio. Mai spezzare.
+- **D16**: SEMPRE file completo per modifiche manuali. Mai istruzioni puntuali ("cambia riga X").
+- **D19**: Leggere ORGANIGRAMMA.md + MAPPA_PROGETTO.md + CONTESTO.md + HANDOFF.md + PENDENZE.md.
+- **D20**: NON PRESUMERE. Non hai accesso al filesystem. Chiedi o esegui censimento.
+- **D21**: Una soluzione è "ok" solo se è ATTIVA (in start_all.sh, tmux, cron) e produce output. Non basta che il file esista.
 
-Per generare al volo il pacchetto completo (CONTESTO.md + HANDOFF.md),
-esegui da terminale Linux:
+### ERRORI PASSATI DA EVITARE (Non ripeterli)
+1. **Indentazione Python rotta**: quando modifichi `orchestrator.py` con `python3 - <<'PYEOF'`, usa sempre `python3 -m py_compile` per verificare. Se fallisce, ripristina backup.
+2. **Editare a mano file lunghi**: Carlo non è programmatore. Non dargli istruzioni "vai alla riga X". DAGLI IL FILE COMPLETO.
+3. **Ollama lento**: non usare LLM locali per compiti ripetitivi (reflection, classificazione). Usa regole deterministiche. Ollama va in timeout su i3.
+4. **Presumere che i file esistano**: verifica sempre con `ls` o `grep` prima di modificare.
+5. **Ticket inesistenti**: non chiudere ticket che non sono in `orders.json`. Controlla prima.
+6. **File corrotti da heredoc**: quando usi `cat > file <<'EOF'`, verifica sempre con `wc -l` e `head -5` dopo. Se il file è troncato, ricrealo.
 
-    cat CONTESTO.md HANDOFF.md
+### STATO ATTUALE (2026-10-24)
+- **Orchestratore**: vivo, soglia ±0.08, filtro trend (P055), BE dinamico (P056), C2 solo se PNL > -5 (P057).
+- **Risk manager**: attivo (P044). Size 0.02. Drawdown halt.
+- **MaxOrders**: 3 (da `ea_params.json`, modificabile da MT4).
+- **Agenti attivi (15 tmux)**: ai_workforce, supervisor, news, social, cycle, volume, experience, kronos, nzt, market_anomaly, signal_observer, strategy_validator, reflection, technical, scouting.
+- **Scouting**: `scouting_agent.py` attivo, cron 6:00, scrive `docs/NOVITA_ESTERNE.md`.
+- **Balance**: ~100077 EUR (demo).
+- **Win rate**: 71.4% (7 chiusi, dati vecchi).
+- **Ordini aperti**: 0 (chiusi venerdì).
+- **Prossimo passo**: P066 (pre-classificazione deterministica nel scouting_agent).
 
-E incolla l'output come primo messaggio della nuova chat, preceduto da:
+### ULTIMI TEST (SCARTATI)
+- **Decima-small**: testato, scarta notizie macro come "aziendale" (84.8% confidenza). **SCARTATO** (P065).
+- **LFM2.5-24B-A2B**: richiede 14.5 GB RAM. **SCARTATO** (RAM insufficiente).
+- **P033 (dibattito borderline)**: rimosso, produceva rumore. Salvato come P053.
 
-    "Riprendiamo il progetto AI_Trading. Leggi tutto e rispondi alle 3
-    domande di verifica. Poi aspetta istruzioni."
+### FILE CHIAVE
+- `orchestrator.py`: cervello del sistema.
+- `risk_manager.py`: size dinamico.
+- `reflection_agent.py`: lezioni deterministiche.
+- `scouting_agent.py`: ricerca novità.
+- `technical_agent.py`: indicatori (peso 0, solo log).
+- `config/risk_budget.json`: limiti rischio.
+- `docs/PENDENZE.md`: 60+ voci.
+- `docs/NOVITA_ESTERNE.md`: report scouting.
 
-## 3 domande di verifica (la chat nuova deve rispondere a tutte)
+### COMANDO PER INIZIARE
+Carlo incollerà nella nuova chat il contenuto di:
+- `CONTESTO.md`
+- `HANDOFF.md`
+- `docs/PENDENZE.md` (solo titoli)
+- Questo file (`APERTURA_CHAT.md`)
 
-1. Cosa e' O7c e perche' e' il prossimo passo?
-2. Elenca i 5 segnali dell'orchestratore e i loro pesi.
-3. Stato attuale di: orchestratore, MT4, dashboard?
+Poi scriverà: "Riprendiamo. Leggi e dimmi lo stato."
 
-Se la chat nuova risponde correttamente a tutte e 3, e' in pari.
-Se sbaglia una o piu' domande, manca contesto: incolla di nuovo i file.
-
-## Cosa NON incollare
-
-- Non incollare STATO_SISTEMA.md (log automatico, rumore).
-- Non incollare interi log (ai_workforce.log, supervisor.log): sono grandi.
-- Non incollare git log: si puo' fare dopo, se serve.
-- Non incollare i backup (.pre_*): non servono all'inizio.
-
-## Cosa fare se la chat nuova NON risponde bene
-
-1. Reincolla CONTESTO.md.
-2. Poi HANDOFF.md.
-3. Poi le 3 domande.
-4. Ripeti finche' risponde bene.
-
-Se dopo 2 tentativi non risponde bene, la chat nuova ha un problema:
-chiudila e aprine un'altra. Non continuare con una chat che non ha
-letto il contesto.
-
-## Comando di check-stato (opzionale, dopo le 3 domande)
-
-Da terminale Linux, per verificare che il sistema e' come lo abbiamo
-lasciato:
-
-    tmux ls | grep -E "ai_workforce|supervisor"
-    systemctl --user is-active web-app
-    tail -3 /home/carlo/AI_Trading/decision_log.jsonl
-    cat /home/carlo/Scrivania/XM MT4/MQL4/Files/account.json
-
-Atteso:
-- ai_workforce e supervisor attive
-- web-app active
-- decision_log.jsonl cresce di 1 riga ogni ora (HOLD o BUY/SELL)
-- account.json aggiornato
-
-## Regola per la vecchia chat
-
-Prima di chiudere la vecchia chat, assicurati che:
-- CONTESTO.md sia aggiornato (data, sezione 4, sezione 7).
-- HANDOFF.md sia aggiornato (diario della sessione).
-- I file .pre_* siano stati creati (backup del turno precedente).
-
-Se questi 3 punti sono veri, la nuova chat partira' senza perdere nulla.
+### TONO
+- Diretto, tecnico, senza fuffa.
+- Se Carlo dice "comando unico", dà UN blocco bash con tutto.
+- Se sbagli, ammetti e ripristina backup.
