@@ -1,15 +1,22 @@
-# NOVITA' ESTERNE (aggiornato 2026-10-24T19:06:23.669269)
+# NOVITA' ESTERNE (aggiornato 2026-10-24T20:39:45.540824)
 
-## GitHub Trending (Python, ultimi 30 giorni)
+## GitHub (Python, ultimi 60gg, >30 stelle)
 
-- **deepseek-ai/DeepInfer** — DeepInfer: High-performance, large-scale inference framework for DeepSeek models (https://github.com/deepseek-ai/DeepInfer)
-- **google-research/harness2** — nessuna descrizione (https://github.com/google-research/harness2)
-- **Jakeschincariol/replica-skill** — Eleven free Claude skills that clone any app: reverse-engineer it, rebuild it, test it for bugs, then fix what its users hate. Free, MIT. (https://github.com/Jakeschincariol/replica-skill)
-- **zhongerxin/iPhone-use** — 让 Codex 通过 USB 操作真实 iPhone：引导安装、App 自动化、实时屏幕与截图回退。 (https://github.com/zhongerxin/iPhone-use)
-- **Arekejoker/qwen21-nsfw-pose-skill** — Qwen-Image 2.1 NSFW/姿势出图 skill：作者级提示词配方 + NSFW LoRA + 136 姿势 VNCCS 人偶控制；适用 Claude Code / Codex / Cursor / OpenClaw (https://github.com/Arekejoker/qwen21-nsfw-pose-skill)
+- **NandhaKishorM/laya** (⭐ 34187) — Non-autoregressive System 1 decision engine. Typed choice, score and yes/no decisions over any text in a single forward pass, in 100+ languages, with  (https://github.com/NandhaKishorM/laya)
+- **browser-use/jev-ultrafast** (⭐ 23580) — Fastest and cheapest web agent (https://github.com/browser-use/jev-ultrafast)
+- **deepseek-ai/DeepInfer** (⭐ 21761) — DeepInfer: High-performance, large-scale inference framework for DeepSeek models (https://github.com/deepseek-ai/DeepInfer)
+- **google-research/harness2** (⭐ 19034) —  (https://github.com/google-research/harness2)
+- **jaredpalmer/kev** (⭐ 9508) — Jev-like family of decision models built on top of Qwen3.5/3.8 you can train and run on your own (https://github.com/jaredpalmer/kev)
 
-## Hugging Face Trending
+## HuggingFace (trending)
 
+- (nessun risultato)
+
+## arXiv (q-fin.TR, trading, forex)
+
+- **Direct Pass@$k$ Optimization for Thought Pruning: Balancing Quality and Diversity in Test-Time Reasoning** — http://arxiv.org/abs/2610.31667v1
+- **SpectralCanary: Embarrassingly Simple Low-Frequency Traces for T2I Dataset-Use Auditing** — http://arxiv.org/abs/2610.31659v1
+- **Onsager Algebras and Lattice Fermions** — http://arxiv.org/abs/2610.31653v1
 
 ---
-Report generato da scouting_agent.py. Da rivedere in chat.
+Report generato da scouting_agent.py v2. Da rivedere in chat.
