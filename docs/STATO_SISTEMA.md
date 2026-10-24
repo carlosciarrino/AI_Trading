@@ -22,7 +22,6 @@ Git: commit 5325f18: pendenze: P016-P020 (tools fossile, mt4_shared, engram, tes
 
 ## 2. Diario azioni
 
-- 17 October 2026 - fa98eec: auto-sync sab 17 ott 2026, 05:00:01, WEST
 - 17 October 2026 - 5505e57: auto-sync sab 17 ott 2026, 06:00:01, WEST
 - 17 October 2026 - 733ce9a: auto-sync sab 17 ott 2026, 07:00:01, WEST
 - 17 October 2026 - f3c2223: auto-sync sab 17 ott 2026, 08:00:01, WEST
@@ -222,6 +221,7 @@ Git: commit 5325f18: pendenze: P016-P020 (tools fossile, mt4_shared, engram, tes
 - 24 October 2026 - 7112d97: P065: Decima-small scartato (classifica male notizie macro) + pulizia venv_decima
 - 24 October 2026 - e14e987: auto-sync sab 24 ott 2026, 20:00:01, WEST
 - 24 October 2026 - 65a7611: P001/P003/P004/P007/P008/P022 chiusi; P067-P071 nuove; orchestratore+supervisor patchati
+- 24 October 2026 - 3227dbb: auto-sync sab 24 ott 2026, 21:00:02, WEST
 
 ## 3. Problemi noti
 
