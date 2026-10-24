@@ -431,3 +431,12 @@ fondo, in sezione "Chiuse".
   senza "personalità da assistente". Gira su CPU. Potrebbe essere usato come
   calcolatore per position sizing/risk o validazione logica.
 - Azione: testare quando avremo tempo. Non è un modello di trading.
+
+### [P065] Decima-small testato - SCARTATO
+- Data: 2026-10-24
+- Priorita': nessuna (scartato)
+- Contesto: testato Decima-small (122M, decision model). Classifica
+  "Fed raises rates" come "aziendale" (84.8% confidenza) invece di "macro".
+  Sbaglia con sicurezza. Inutile per notizie finanziarie.
+- Azione: scartato. Il filtro trend deterministico (P055) e' meglio.
+  venv_decima (144 MB) puo' essere cancellato.
