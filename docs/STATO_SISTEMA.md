@@ -22,8 +22,6 @@ Git: commit 5325f18: pendenze: P016-P020 (tools fossile, mt4_shared, engram, tes
 
 ## 2. Diario azioni
 
-- 17 October 2026 - 7d3afac: P041: social_agent v2 (volume/intensita) + P031-bis: reflection deterministica + EA v3.5-volume + P048 setup
-- 17 October 2026 - 5ac09b5: auto-sync sab 17 ott 2026, 22:00:01, WEST
 - 17 October 2026 - e366fd4: auto-sync sab 17 ott 2026, 23:00:01, WEST
 - 18 October 2026 - 0d2fd08: auto-sync dom 18 ott 2026, 00:00:01, WEST
 - 18 October 2026 - a7b39a2: auto-sync dom 18 ott 2026, 01:00:01, WEST
@@ -222,6 +220,8 @@ Git: commit 5325f18: pendenze: P016-P020 (tools fossile, mt4_shared, engram, tes
 - 25 October 2026 - 974d877: auto-sync dom 25 ott 2026, 11:00:01, WET
 - 25 October 2026 - 450976f: auto-sync dom 25 ott 2026, 12:00:01, WET
 - 25 October 2026 - 741e077: auto-sync dom 25 ott 2026, 13:00:01, WET
+- 25 October 2026 - a0cfe29: auto-sync dom 25 ott 2026, 14:00:01, WET
+- 25 October 2026 - 92fd374: P066 chiusa (decision model non fattibile i3); P072/P073/P074 aggiunte
 
 ## 3. Problemi noti
 
