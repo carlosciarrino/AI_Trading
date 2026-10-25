@@ -373,6 +373,30 @@ fondo, in sezione "Chiuse".
 - Azione: tracciare ultimo SL inviato per ticket, non riscrivere se
   identico.
 
+### [P066] Pre-classificazione deterministica nel scouting_agent [CHIUSA 2026-10-25, decision model non fattibile i3]
+- Data: 2026-10-20
+- Priorita': media
+- Contesto: obiettivo era sostituire Ollama (lento) con decision model veloce per classificare news (macro/geopolitica/aziendale/rumore + impatto EURUSD). Testati 3 modelli.
+- Azione: CHIUSA. Decima-small: SCARTATO (P065, "Fed raises rates" -> "aziendale" 84.8%). Laya: SCARTATO (zero-shot 0.36 vs baseline 0.318, serve fine-tuning). Eikos-4B-INT4: SCARTATO (serve.py crasha: huggingface-hub incompatibile, poi KeyError qwen3_5, architettura non supportata da Transformers; vLLM richiede GPU). Hardware i3 12GB non sufficiente. Restiamo su regole deterministiche (news_context.txt + keyword).
+
+### [P072] Bonsai 2 (ternary LLM 27B) non fattibile i3
+- Data: 2026-10-25
+- Priorita': bassa
+- Contesto: Bonsai 2 = compressione ternary Qwen3.8-27B, pesi {-1,0,+1}, 1.76 bit/param. Footprint 5.9 GB, 98.2% performance FP16. GGUF PQ2_0 7.2 GB (include vision). Richiede fork llama.cpp PrismML. Throughput laptop M5 Pro: 28.1 tok/s TG128.
+- Azione: NON fattibile su i3 (3.8 GB liberi < 5.9 GB modello). Studio futuro per hardware 12+ GB RAM. Riferimento: prism-ml/Bonsai-demo.
+
+### [P073] Graphify (knowledge graph codebase) richiede LLM
+- Data: 2026-10-25
+- Priorita': bassa
+- Contesto: graphify trasforma codebase/docs/PDF in knowledge graph (25 linguaggi, Leiden clustering, HTML interattivo). Richiede LLM (Claude Code/Codex) per estrazione semantica. Costo API. Su i3, lento.
+- Azione: studio futuro. Non integrabile ora. Riferimento: Graphify-Labs/graphify.
+
+### [P074] Mini-graphify locale per AI_Trading (solo AST, no LLM)
+- Data: 2026-10-25
+- Priorita': bassa
+- Contesto: spunto da Graphify. La parte utile (AST parsing deterministico + clustering) non richiede LLM. Possibile replicare localmente con `ast` Python o `tree-sitter`: mappare funzioni/import/chiamate in orchestrator.py, supervisor_agent.py, news_agent.py, ecc. Output graph.json o graph.html. Zero API, zero costi.
+- Azione: prototipo futuro. Bassa priorita'. Utile per capire dipendenze tra moduli senza leggere 570 righe.
+
 ## Chiuse
 
 ### [P016] tools/ e' archivio fossile
