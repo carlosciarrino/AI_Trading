@@ -1,12 +1,12 @@
-# NOVITA' ESTERNE (aggiornato 2026-10-24T20:39:45.540824)
+# NOVITA' ESTERNE (aggiornato 2026-10-25T06:00:07.685059)
 
 ## GitHub (Python, ultimi 60gg, >30 stelle)
 
-- **NandhaKishorM/laya** (⭐ 34187) — Non-autoregressive System 1 decision engine. Typed choice, score and yes/no decisions over any text in a single forward pass, in 100+ languages, with  (https://github.com/NandhaKishorM/laya)
-- **browser-use/jev-ultrafast** (⭐ 23580) — Fastest and cheapest web agent (https://github.com/browser-use/jev-ultrafast)
-- **deepseek-ai/DeepInfer** (⭐ 21761) — DeepInfer: High-performance, large-scale inference framework for DeepSeek models (https://github.com/deepseek-ai/DeepInfer)
-- **google-research/harness2** (⭐ 19034) —  (https://github.com/google-research/harness2)
-- **jaredpalmer/kev** (⭐ 9508) — Jev-like family of decision models built on top of Qwen3.5/3.8 you can train and run on your own (https://github.com/jaredpalmer/kev)
+- **NandhaKishorM/laya** (⭐ 34222) — Non-autoregressive System 1 decision engine. Typed choice, score and yes/no decisions over any text in a single forward pass, in 100+ languages, with  (https://github.com/NandhaKishorM/laya)
+- **browser-use/jev-ultrafast** (⭐ 23611) — Fastest and cheapest web agent (https://github.com/browser-use/jev-ultrafast)
+- **deepseek-ai/DeepInfer** (⭐ 21989) — DeepInfer: High-performance, large-scale inference framework for DeepSeek models (https://github.com/deepseek-ai/DeepInfer)
+- **google-research/harness2** (⭐ 19200) —  (https://github.com/google-research/harness2)
+- **jaredpalmer/kev** (⭐ 9512) — Jev-like family of decision models built on top of Qwen3.5/3.8 you can train and run on your own (https://github.com/jaredpalmer/kev)
 
 ## HuggingFace (trending)
 
