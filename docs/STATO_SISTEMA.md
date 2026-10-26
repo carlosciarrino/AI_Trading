@@ -22,7 +22,6 @@ Git: commit 5325f18: pendenze: P016-P020 (tools fossile, mt4_shared, engram, tes
 
 ## 2. Diario azioni
 
-- 18 October 2026 - 77ce6a9: auto-sync dom 18 ott 2026, 19:00:01, WEST
 - 18 October 2026 - 5a3fa26: auto-sync dom 18 ott 2026, 20:00:01, WEST
 - 18 October 2026 - 8d3b651: auto-sync dom 18 ott 2026, 21:00:01, WEST
 - 18 October 2026 - 46868a8: auto-sync dom 18 ott 2026, 22:00:02, WEST
@@ -222,6 +221,7 @@ Git: commit 5325f18: pendenze: P016-P020 (tools fossile, mt4_shared, engram, tes
 - 26 October 2026 - 6ec2b73: auto-sync lun 26 ott 2026, 05:00:01, -03
 - 26 October 2026 - 4308c97: auto-sync lun 26 ott 2026, 06:00:01, -03
 - 26 October 2026 - a4ca053: auto-sync lun 26 ott 2026, 07:00:01, -03
+- 26 October 2026 - 0d5152f: auto-sync lun 26 ott 2026, 08:00:01, -03
 
 ## 3. Problemi noti
 
