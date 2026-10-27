@@ -22,7 +22,6 @@ Git: commit 5325f18: pendenze: P016-P020 (tools fossile, mt4_shared, engram, tes
 
 ## 2. Diario azioni
 
-- 19 October 2026 - 6883e40: auto-sync lun 19 ott 2026, 11:00:02, WEST
 - 19 October 2026 - 134c0f0: auto-sync lun 19 ott 2026, 12:00:02, WEST
 - 19 October 2026 - bd1c124: auto-sync lun 19 ott 2026, 13:00:01, WEST
 - 19 October 2026 - 0294055: P048: volume_agent v2 legge volume_data.json (Tick Volume MT4) + divergenza prezzo-volume + trading_memory 319798
@@ -222,6 +221,7 @@ Git: commit 5325f18: pendenze: P016-P020 (tools fossile, mt4_shared, engram, tes
 - 26 October 2026 - 50f4d11: auto-sync lun 26 ott 2026, 21:00:01, -03
 - 26 October 2026 - 35e1797: auto-sync lun 26 ott 2026, 22:00:01, -03
 - 26 October 2026 - 3995a83: auto-sync lun 26 ott 2026, 23:00:01, -03
+- 27 October 2026 - 330ddfd: auto-sync mar 27 ott 2026, 00:00:01, -03
 
 ## 3. Problemi noti
 
