@@ -18,3 +18,8 @@ tmux new-session -d -s strategy_validator "cd /home/carlo/AI_Trading && $PY stra
 tmux new-session -d -s reflection_agent "cd /home/carlo/AI_Trading && $PY reflection_agent.py > /home/carlo/reflection_agent.log 2>&1"
 tmux new-session -d -s technical_agent "cd /home/carlo/AI_Trading && $PY technical_agent.py > /home/carlo/technical_agent.log 2>&1"
 tmux new-session -d -s scouting_agent "cd /home/carlo/AI_Trading && $PY scouting_agent.py > /home/carlo/scouting_agent.log 2>&1"
+
+# Scouting agenti (P022-bis, 2026-10-27)
+tmux new-session -d -s scout_github "cd /home/carlo/AI_Trading && $PY scout_github.py > /home/carlo/scout_github.log 2>&1"
+tmux new-session -d -s scout_hf "cd /home/carlo/AI_Trading && $PY scout_hf.py > /home/carlo/scout_hf.log 2>&1"
+tmux new-session -d -s scout_arxiv "cd /home/carlo/AI_Trading && $PY scout_arxiv.py > /home/carlo/scout_arxiv.log 2>&1"
