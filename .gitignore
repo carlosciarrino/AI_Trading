@@ -58,3 +58,5 @@ requirements_backup_local.txt
 # Backup file (pattern .pre_*)
 *.pre_*
 .pre_*
+token github*
+secrets.env
