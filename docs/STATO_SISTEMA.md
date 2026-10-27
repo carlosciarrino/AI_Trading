@@ -22,11 +22,6 @@ Git: commit 5325f18: pendenze: P016-P020 (tools fossile, mt4_shared, engram, tes
 
 ## 2. Diario azioni
 
-- 20 October 2026 - 1d17294: auto-sync mar 20 ott 2026, 01:00:01, WEST
-- 20 October 2026 - d828def: auto-sync mar 20 ott 2026, 02:00:01, WEST
-- 20 October 2026 - 96b2b48: auto-sync mar 20 ott 2026, 03:00:01, WEST
-- 20 October 2026 - 6e8e61b: auto-sync mar 20 ott 2026, 04:00:01, WEST
-- 20 October 2026 - 9bbcf2c: auto-sync mar 20 ott 2026, 05:00:01, WEST
 - 20 October 2026 - a08921d: auto-sync mar 20 ott 2026, 06:00:01, WEST
 - 20 October 2026 - 0826b68: auto-sync mar 20 ott 2026, 07:00:01, WEST
 - 20 October 2026 - c88a6b6: auto-sync mar 20 ott 2026, 08:00:01, WEST
@@ -222,6 +217,11 @@ Git: commit 5325f18: pendenze: P016-P020 (tools fossile, mt4_shared, engram, tes
 - 27 October 2026 - 0cf3458: auto-sync mar 27 ott 2026, 12:00:01, -03
 - 27 October 2026 - a3ff620: auto-sync mar 27 ott 2026, 13:00:01, -03
 - 27 October 2026 - 12aa114: auto-sync mar 27 ott 2026, 14:00:01, -03
+- 27 October 2026 - bc093ed: auto-sync mar 27 ott 2026, 15:00:01, -03
+- 27 October 2026 - ec68541: P022-bis: 3 scout attivi in cron (GitHub, HF, arXiv). Supervisor pulito.
+- 27 October 2026 - c0d29b7: P022-bis: 3 scout attivi in cron (GitHub, HF, arXiv). Supervisor pulito.
+- 27 October 2026 - 97b349e: Security: rimossi file token dalla root e aggiunti a gitignore
+- 27 October 2026 - cbebc18: Strategia: news_agent piu' conservativo (+2 soglia); orchestrator filtro RSI (70/30)
 
 ## 3. Problemi noti
 
