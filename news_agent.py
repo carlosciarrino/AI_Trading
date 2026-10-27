@@ -70,9 +70,9 @@ def sentiment_score(titles):
     text = " ".join(titles).lower()
     pos = sum(1 for w in POSITIVE_WORDS if w in text)
     neg = sum(1 for w in NEGATIVE_WORDS if w in text)
-    if pos > neg:
+    if pos > neg + 1:
         return "positivo"
-    if neg > pos:
+    if neg > pos + 1:
         return "negativo"
     return "neutro"
 

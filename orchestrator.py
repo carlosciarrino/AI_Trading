@@ -98,6 +98,18 @@ def get_technical_trend():
         return None
 
 
+def get_rsi():
+    try:
+        with open('/home/carlo/AI_Trading/technical_context.txt') as f:
+            text = f.read().lower()
+        import re
+        match = re.search(r'rsi[\s:]+([0-9.]+)', text)
+        if match:
+            return float(match.group(1))
+    except Exception as e:
+        print(f"[RSI] Errore lettura: {e}", flush=True)
+    return None
+
 def send_close_command(ticket, reason_log):
     cmd_path = os.path.join(MT4_FILES, "AI_BRIDGE_CMD.txt")
     res_path = os.path.join(MT4_FILES, "AI_BRIDGE_RES.txt")
@@ -502,6 +514,19 @@ def main():
                 write_decision(detail, action_taken="none", reason="p055_trend_bull")
                 time.sleep(MAIN_LOOP_SLEEP)
                 continue
+
+            rsi = get_rsi()
+            if rsi is not None:
+                if signal == "BUY" and rsi > 70:
+                    print(f"[RSI] Ipercomprato (RSI {rsi:.1f}), BUY bloccato.", flush=True)
+                    write_decision(detail, action_taken="none", reason=f"rsi_overbought_{rsi:.1f}")
+                    time.sleep(MAIN_LOOP_SLEEP)
+                    continue
+                if signal == "SELL" and rsi < 30:
+                    print(f"[RSI] Ipervenduto (RSI {rsi:.1f}), SELL bloccato.", flush=True)
+                    write_decision(detail, action_taken="none", reason=f"rsi_oversold_{rsi:.1f}")
+                    time.sleep(MAIN_LOOP_SLEEP)
+                    continue
 
             if signal in ("BUY", "SELL"):
                 action = "buy" if signal == "BUY" else "sell"
