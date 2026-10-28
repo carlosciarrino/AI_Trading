@@ -1,42 +1,42 @@
-# SCOUT ARXIV (aggiornato 2026-10-27T15:49:05.489203)
+# SCOUT ARXIV (aggiornato 2026-10-28T04:20:02.270930)
 
-### Fuji: The Shape, Composition, and Spread of Demand Bursts on Robinhood Chain
-- **Link**: http://arxiv.org/abs/2610.35738v1
-- **Abstract**: Demand on blockchain-based marketplaces arrives in bursts and at a high rate. On these platforms the data are completely visible, which makes it feasible to compare the bursty demand against the usual...
+### Honeycomb-Surfels: Compact Hexagonal Primitives for Efficient Scene Rendering and Reconstruction
+- **Link**: http://arxiv.org/abs/2610.37668v1
+- **Abstract**: Novel view synthesis and 3D reconstruction have advanced rapidly with radiance fields and splatting, yet their memory and computational demands limit their use in resource-constrained settings. We int...
 
-### Preference-Guided Cooperation in Multi-Objective Multi-Agent Reinforcement Learning
-- **Link**: http://arxiv.org/abs/2610.35736v1
-- **Abstract**: Multi-objective multi-agent reinforcement learning (MOMARL) addresses agent coordination and objective trade-offs simultaneously while optimising overall system performance. Existing work tends to tre...
+### Heads of Security: Learned Attention Gates Improve Prompt Injection Robustness
+- **Link**: http://arxiv.org/abs/2610.37657v1
+- **Abstract**: We introduce Heads of Security (HoS), a prompt injection defense that enforces instruction-data separation via a small set of learned per-head attention gates. HoS learns how each head should redistri...
 
-### TRACE: Memory-Efficient Time Series Class-Incremental Learning via Temporal-Spectral Reconstruction
-- **Link**: http://arxiv.org/abs/2610.35727v1
-- **Abstract**: Web-connected sensing applications continuously generate multivariate time series with evolving behavioral categories, making Time Series Class-Incremental Learning (TSCIL) essential for adapting to n...
+### Optimal Order Placement under a State-Dependent Hawkes Process Limit Order Book model
+- **Link**: http://arxiv.org/abs/2610.37324v1
+- **Abstract**: We study optimal quote placement for a market maker facing order flow modeled by a state-dependent Hawkes process. A block-based linear demand specification links market-order counts to execution volu...
 
-### Quantitative Generalization Bounds for Multi-Layer Transformers: A Few Long Strings can Beat Many Short Ones
-- **Link**: http://arxiv.org/abs/2610.35715v1
-- **Abstract**: Transformer-based language models exhibit an astonishing capacity to generalize to longer and more difficult problem instances than those seen in training. However, theoretical understanding of this p...
+### Depositing More Should Not Earn Less: Supplier Income Monotonicity and Rate Curve Design in Pooled Lending Markets
+- **Link**: http://arxiv.org/abs/2610.36899v1
+- **Abstract**: In utilization dependent interest rate models, adding liquidity can reduce a supplier's total interest income even as the supplier's balance increases. A supplier holding a fraction $α$ of final pool ...
 
-### Triage: Skip, Skim, or Refine Attention Tiles in Video Diffusion Transformers
-- **Link**: http://arxiv.org/abs/2610.35706v1
-- **Abstract**: Attention over tens of thousands of visual tokens dominates the inference of video diffusion transformers (DiTs). Existing methods reduce this cost through sparsity, low precision, or both, but use a ...
+### PREEN: Exemplar-Based Color Style Transfer with Smartphone Editor Presets
+- **Link**: http://arxiv.org/abs/2610.36896v1
+- **Abstract**: We present PREEN (Preset Regression via an Exemplar-based Editor Network), which casts color style transfer as regression onto the 29 parameters of a deterministic image editor. Given a content image ...
 
-### Distributed Predictive Flocking for a Swarm of Miniature Vibration-Driven Robots in a Confined Arena
-- **Link**: http://arxiv.org/abs/2610.35582v1
-- **Abstract**: Coordinating many miniature robots in a confined arena, with no leader, central planner, or global map, is a core challenge for swarm robotics. As the swarm grows denser, collision avoidance becomes t...
+### Evaluating AlphaEarth Embeddings for Crop Classification: Separability, Temporal Dynamics, and Cross-Regional Transferability
+- **Link**: http://arxiv.org/abs/2610.36857v1
+- **Abstract**: Earth Observation (EO)-based agricultural monitoring is shifting from pixel-level spectral analysis toward representation-driven modeling, yet systematic evaluation of learned representations across s...
 
-### Balanced Sampling in Stochastic Multi-objective Bandits
-- **Link**: http://arxiv.org/abs/2610.35551v1
-- **Abstract**: In stochastic multi-objective bandits, Pareto optimal arms may represent different trade-offs among objectives. Balanced sampling across them is important in practical settings such as online advertis...
+### Split Federated Unlearning
+- **Link**: http://arxiv.org/abs/2610.36465v1
+- **Abstract**: Split federated learning (SFL) combines partitioned model execution with federated aggregation to support collaborative learning across distributed Web and edge environments. However, removing learned...
 
-### DAC-Loop: Distillation-Aware Compression for Remote Sensing CNN
-- **Link**: http://arxiv.org/abs/2610.35175v1
-- **Abstract**: While large-scale models achieve strong results in remote sensing scene classification, deploying them on edge devices remains difficult due to limited compute, memory, and energy budgets. Compact CNN...
+### ORBITAL: Optimization of Robust Brain--Computer Inference Through Architecture-Aware Low-Precision Compression
+- **Link**: http://arxiv.org/abs/2610.36411v1
+- **Abstract**: Compact electroencephalography (EEG) decoders enable embedded brain--computer interfaces (BCIs), but compression can alter adversarial robustness without proportional hardware savings. We present ORBI...
 
-### Locked In: Multi-Objective RL for the AI Data Center Build-Out
-- **Link**: http://arxiv.org/abs/2610.35147v1
-- **Abstract**: AI data center build-out is a multi-trillion-dollar, multi-decade infrastructure program. Yet siting, power procurement, and cooling decisions are still made with static, single-point scoring tools. T...
+### SpecLST: Spectral-Enhanced Long-Short Term Spatio-Temporal Multimodal Modeling for Traffic Forecasting
+- **Link**: http://arxiv.org/abs/2610.36393v1
+- **Abstract**: Modeling multi-scale dynamics in urban road networks is essential for intelligent transportation systems but is often hindered by the computational cost of long-range historical context and the challe...
 
-### Priority-Preserving Advantage Aggregation for Multi-Reward Policy Optimization
-- **Link**: http://arxiv.org/abs/2610.34862v1
-- **Abstract**: LLM post-training often optimizes multiple objectives with unequal priorities, such as correctness and reasoning efficiency. However, the widely used additive reward aggregation in RL can violate thes...
+### AHEAD: Adaptive Neural Acceleration for Large-Scale Linear Programming
+- **Link**: http://arxiv.org/abs/2610.36321v1
+- **Abstract**: Large-scale linear programs with millions of variables and constraints strain time and memory budgets. First-order methods such as the primal-dual hybrid gradient scale to this regime because they avo...
 
