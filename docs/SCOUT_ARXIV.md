@@ -1,4 +1,4 @@
-# SCOUT ARXIV (aggiornato 2026-10-28T04:20:02.270930)
+# SCOUT ARXIV (aggiornato 2026-10-29T04:20:02.507052)
 
 ### Honeycomb-Surfels: Compact Hexagonal Primitives for Efficient Scene Rendering and Reconstruction
 - **Link**: http://arxiv.org/abs/2610.37668v1
