@@ -89,10 +89,11 @@ def get_technical_trend():
     try:
         with open('/home/carlo/AI_Trading/technical_context.txt') as f:
             text = f.read().lower()
-        if 'trend: bull=true' in text:
-            return 'bull'
-        if 'trend: bear=true' in text:
+        # Match piu' robusto: cerca 'bear=true' o 'bull=true' ovunque nella riga Trend
+        if 'bear=true' in text:
             return 'bear'
+        if 'bull=true' in text:
+            return 'bull'
         return 'neutral'
     except:
         return None
@@ -213,11 +214,11 @@ def get_signal():
     except:
         scores['experience'] = 0.0
     weights = {
-        'news': 0.2,
-        'social': 0.2,
+        'news': 0.1,
+        'social': 0.15,
         'cycle': 0.15,
-        'volume': 0.25,
-        'experience': 0.2,
+        'volume': 0.30,
+        'experience': 0.30,
     }
     total = 0.0
     weight_sum = 0.0
