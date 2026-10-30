@@ -155,17 +155,56 @@ def kill_orchestrator():
         return False
 
 
+def generate_diagnosis():
+    """Analizza gli ultimi ordini per capire la causa delle perdite."""
+    try:
+        with open(ORDERS_JSON) as f:
+            orders = json.load(f)
+        closed = [o for o in orders if o.get("status") == "closed"]
+        recent = closed[-5:] if len(closed) >= 5 else closed
+        
+        buys = sum(1 for o in recent if o.get("action") == "buy")
+        sells = sum(1 for o in recent if o.get("action") == "sell")
+        losses = sum(1 for o in recent if float(o.get("pnl", 0)) < 0)
+        
+        diag = []
+        if buys == len(recent):
+            diag.append("Il sistema ha aperto solo BUY. Verifica se il trend era effettivamente rialzista.")
+        if sells == len(recent):
+            diag.append("Il sistema ha aperto solo SELL. Verifica se il trend era effettivamente ribassista.")
+        if losses == len(recent):
+            diag.append("Tutte le ultime operazioni sono in perdita. La strategia e' contro-trend o i filtri non funzionano.")
+            
+        # Controlla il trend attuale
+        try:
+            with open('/home/carlo/AI_Trading/technical_context.txt') as f:
+                tech = f.read().lower()
+                if 'bear=true' in tech and buys > 0:
+                    diag.append("ATTENZIONE: Trend BEAR rilevato ma il sistema ha aperto BUY. Il filtro P055 non ha bloccato.")
+                if 'bull=true' in tech and sells > 0:
+                    diag.append("ATTENZIONE: Trend BULL rilevato ma il sistema ha aperto SELL. Il filtro P055 non ha bloccato.")
+        except Exception:
+            pass
+
+        if not diag:
+            diag.append("Nessun pattern evidente nei log. Analizzare manualmente.")
+        return "\n".join(f"- {d}" for d in diag)
+    except Exception as e:
+        return f"- Errore durante la diagnosi: {e}"
+
 def write_alert(reason):
     ts = datetime.now().isoformat()
+    diagnosis = generate_diagnosis()
     with open(ALERT_MD, "w") as f:
         f.write(f"# ALLARME SUPERVISORE ({ts})\n\n")
         f.write(f"Il supervisore ha bloccato l'orchestratore.\n")
-        f.write(f"Motivo: {reason}\n\n")
-        f.write("Azioni richieste:\n")
+        f.write(f"**Motivo:** {reason}\n\n")
+        f.write(f"## Diagnosi Automatica\n{diagnosis}\n\n")
+        f.write("## Azioni richieste:\n")
         f.write("1. Verificare il conto e le operazioni aperte.\n")
-        f.write("2. Analizzare i log (ai_workforce.log, decision_log.jsonl).\n")
+        f.write("2. Leggere la diagnosi sopra.\n")
         f.write("3. Correggere la strategia.\n")
-        f.write("4. Riavviare manualmente: tmux new-session -d -s ai_workforce '...'\n")
+        f.write("4. Riavviare manualmente: `tmux new-session -d -s ai_workforce '...'`\n")
         f.write("5. Rimuovere questo file dopo aver risolto.\n")
 
 

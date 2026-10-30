@@ -10,8 +10,31 @@ def read_file(path):
             return f.read()
     return ""
 
+def filter_github(text):
+    """Filtra i repo GitHub scartando quelli con licenza sconosciuta o senza release."""
+    lines = text.split('\n')
+    filtered = []
+    current_repo = []
+    keep = True
+    for line in lines:
+        if line.startswith('### ') and '⭐' in line:
+            if current_repo and keep:
+                filtered.extend(current_repo)
+            current_repo = [line]
+            keep = True
+        elif line.startswith('- **Desc**:') or line.startswith('- **URL**:') or line.startswith('- **Creato**:'):
+            current_repo.append(line)
+        elif line.startswith('- **License**:'):
+            if 'unknown' in line.lower() or 'n/a' in line.lower():
+                keep = False
+            current_repo.append(line)
+    if current_repo and keep:
+        filtered.extend(current_repo)
+    return '\n'.join(filtered)
+
 def main():
     gh = read_file(os.path.join(BASE, "SCOUT_GITHUB.md"))
+    gh_filtered = filter_github(gh)
     hf = read_file(os.path.join(BASE, "SCOUT_HF.md"))
     arxiv = read_file(os.path.join(BASE, "SCOUT_ARXIV.md"))
 
@@ -20,7 +43,7 @@ def main():
         f.write("Questo file unisce i risultati dei 3 scout. Da qui puoi estrarre idee per testare nuove strategie, modelli o librerie.\n\n")
         
         f.write("## 1. Repository GitHub interessanti\n")
-        f.write(gh.replace("# SCOUT GITHUB", "### GitHub") + "\n\n")
+        f.write(gh_filtered.replace("# SCOUT GITHUB", "### GitHub (filtrati)") + "\n\n")
         
         f.write("## 2. Modelli Hugging Face\n")
         f.write(hf.replace("# SCOUT HUGGING FACE", "### Hugging Face") + "\n\n")
