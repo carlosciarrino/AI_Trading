@@ -22,7 +22,6 @@ Git: commit 5325f18: pendenze: P016-P020 (tools fossile, mt4_shared, engram, tes
 
 ## 2. Diario azioni
 
-- 22 October 2026 - 356944b: auto-sync gio 22 ott 2026, 18:00:01, WEST
 - 22 October 2026 - 520f1f3: P044: risk manager separato (size dinamico da ATR + drawdown halt)
 - 22 October 2026 - 984c148: revert P033 (dibattito borderline rimosso, salvato come P053) + P044 integrato
 - 22 October 2026 - 2eb51a4: P054: soglia decisionale ±0.06 (da ±0.10) per aumentare operatività
@@ -222,6 +221,7 @@ Git: commit 5325f18: pendenze: P016-P020 (tools fossile, mt4_shared, engram, tes
 - 30 October 2026 - eb0850b: auto-sync ven 30 ott 2026, 04:00:01, -03
 - 30 October 2026 - c4176b8: auto-sync ven 30 ott 2026, 05:00:02, -03
 - 30 October 2026 - 632ce2d: auto-sync ven 30 ott 2026, 06:00:01, -03
+- 30 October 2026 - b65b64f: auto-sync ven 30 ott 2026, 07:00:01, -03
 
 ## 3. Problemi noti
 
