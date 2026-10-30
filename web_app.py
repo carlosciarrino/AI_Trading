@@ -237,6 +237,21 @@ def index():
 # =====================
 @app.route('/trading')
 def trading():
+    # --- Inizio Financial Guard ---
+    audit = read_audit()
+    audit_color = "green"
+    audit_label = "OK"
+    alert_banner = ""
+    if audit and not audit.get("financial", {}).get("ok", True):
+        audit_color = "red"
+        audit_label = "BLOCCATO"
+        alert_banner = f'<div style="background:#ff1744;color:white;padding:12px;border-radius:8px;margin-bottom:20px;font-weight:bold;">⚠️ ALLARME: {audit["financial"].get("reason", "Motivo sconosciuto")}. Controlla ALERT.md</div>'
+    elif audit and audit.get("has_issue", False):
+        audit_color = "red"
+        audit_label = "ATTENZIONE"
+        alert_banner = '<div style="background:#ff9100;color:white;padding:12px;border-radius:8px;margin-bottom:20px;font-weight:bold;">⚠️ Attenzione: agenti critici fermi o problemi rilevati.</div>'
+    # --- Fine Financial Guard ---
+
     account = read_json(ACCOUNT_JSON) or {}
     orders = read_json(ORDERS_JSON) or []
     if not isinstance(orders, list):
