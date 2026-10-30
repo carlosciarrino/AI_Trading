@@ -18,6 +18,7 @@ app = Flask(__name__)
 MT4_FILES = "/home/carlo/Scrivania/XM MT4/MQL4/Files"
 ACCOUNT_JSON = os.path.join(MT4_FILES, "account.json")
 ORDERS_JSON  = os.path.join(MT4_FILES, "orders.json")
+AUDIT_JSON   = os.path.join(os.path.dirname(os.path.abspath(__file__)), "audit_status.json")
 
 # =====================
 # AGENTI TMUX
@@ -45,6 +46,9 @@ def read_json(path):
             return json.load(f)
     except Exception:
         return None
+
+def read_audit():
+    return read_json(AUDIT_JSON)
 BASE_HTML = """
 <!DOCTYPE html>
 <html lang="it">
@@ -320,6 +324,11 @@ def trading():
             {rows_open}
         </table>
     </div>
+
+    <div class="kpi-grid">
+        <div class="kpi-card"><div class="label">Salute Sistema (Supervisore)</div><div class="value {audit_color}">{audit_label}</div></div>
+    </div>
+    {alert_banner}
 
     <div class="table-wrap">
         <h3>📜 Operazioni Chiuse (ultime 20)</h3>
