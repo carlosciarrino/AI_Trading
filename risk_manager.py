@@ -65,11 +65,49 @@ def check_drawdown(account, config):
     return (True, "")
 
 
+def check_margin(account, config):
+    """Blocca se il margine libero scende sotto il 20% del balance."""
+    balance = account.get("balance", 0)
+    free_margin = account.get("free_margin", balance)  # fallback: se manca, assumi = balance
+    if balance <= 0:
+        return (True, "")
+    
+    margin_pct = (free_margin / balance) * 100.0
+    if margin_pct < 20.0:
+        return (False, f"margine libero {margin_pct:.1f}% < 20%")
+    return (True, "")
+
+
+def check_daily_loss(account, config):
+    """Blocca se il PNL giornaliero supera il limite (daily_loss_limit_pct)."""
+    balance = account.get("balance", 0)
+    equity = account.get("equity", 0)
+    if balance <= 0:
+        return (True, "")
+
+    daily_loss_pct = ((balance - equity) / balance) * 100.0
+    max_loss = config.get("daily_loss_limit_pct", 5.0)
+    if daily_loss_pct >= max_loss:
+        return (False, f"perdita giornaliera {daily_loss_pct:.2f}% >= {max_loss}%")
+    return (True, "")
+
+
 def get_risk_decision(atr_value):
     config = load_config()
     account = load_account()
 
+    # 1. Drawdown halt (P044)
     ok, reason = check_drawdown(account, config)
+    if not ok:
+        return {"lots": 0, "halt": True, "reason": f"halt: {reason}"}
+
+    # 2. Margin halt (nuovo)
+    ok, reason = check_margin(account, config)
+    if not ok:
+        return {"lots": 0, "halt": True, "reason": f"halt: {reason}"}
+
+    # 3. Daily loss halt (nuovo)
+    ok, reason = check_daily_loss(account, config)
     if not ok:
         return {"lots": 0, "halt": True, "reason": f"halt: {reason}"}
 
