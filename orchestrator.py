@@ -211,6 +211,18 @@ def get_signal():
             scores['experience'] = 0.2
         else:
             scores['experience'] = 0.0
+
+        # Pattern: 3 BUY loss consecutivi -> blocca BUY
+        import json as _json
+        try:
+            with open('/home/carlo/Scrivania/XM MT4/MQL4/Files/orders.json') as _f:
+                _orders = _json.load(_f)
+            _closed = [o for o in _orders if o.get('status') == 'closed']
+            _recent = _closed[-3:] if len(_closed) >= 3 else _closed
+            if len(_recent) == 3 and all(o.get('action') == 'buy' and float(o.get('pnl', 0)) < 0 for o in _recent):
+                scores['experience'] = -0.5
+        except Exception:
+            pass
     except:
         scores['experience'] = 0.0
     weights = {

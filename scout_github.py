@@ -16,7 +16,9 @@ OUTPUT = "/home/carlo/AI_Trading/docs/SCOUT_GITHUB.md"
 QUERIES = [
     'language:python pushed:>2026-09-01 stars:>50 trading',
     'language:python pushed:>2026-09-01 stars:>50 llm agent',
-    'language:python pushed:>2026-09-01 stars:>50 mcp'
+    'language:python pushed:>2026-09-01 stars:>50 mcp',
+    'language:python pushed:>2026-09-01 stars:>50 topic:algorithmic-trading',
+    'language:python pushed:>2026-09-01 stars:>50 topic:forex'
 ]
 
 def search_github(q):
