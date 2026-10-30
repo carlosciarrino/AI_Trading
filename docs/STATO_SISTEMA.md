@@ -22,12 +22,6 @@ Git: commit 5325f18: pendenze: P016-P020 (tools fossile, mt4_shared, engram, tes
 
 ## 2. Diario azioni
 
-- 23 October 2026 - c3f6e0e: auto-sync ven 23 ott 2026, 07:00:01, WEST
-- 23 October 2026 - 46b231f: auto-sync ven 23 ott 2026, 08:00:01, WEST
-- 23 October 2026 - e9572f8: auto-sync ven 23 ott 2026, 09:00:01, WEST
-- 23 October 2026 - 8094904: auto-sync ven 23 ott 2026, 10:00:02, WEST
-- 23 October 2026 - 6f0229d: auto-sync ven 23 ott 2026, 11:00:01, WEST
-- 23 October 2026 - 36bcd84: auto-sync ven 23 ott 2026, 12:00:01, WEST
 - 23 October 2026 - d38787f: auto-sync ven 23 ott 2026, 13:00:01, WEST
 - 23 October 2026 - db2a0e1: auto-sync ven 23 ott 2026, 14:00:01, WEST
 - 23 October 2026 - de2ac86: auto-sync ven 23 ott 2026, 15:00:01, WEST
@@ -222,6 +216,12 @@ Git: commit 5325f18: pendenze: P016-P020 (tools fossile, mt4_shared, engram, tes
 - 30 October 2026 - 8ed1c31: Risk Manager: aggiunti halt per margine libero (<20%) e perdita giornaliera (>=5%)
 - 30 October 2026 - b9e32e7: Feature: query GitHub (topic), experience pattern (3 BUY loss)
 - 30 October 2026 - d4500ef: Scout GitHub: 21 repo con token valido
+- 30 October 2026 - e3889c7: auto-sync ven 30 ott 2026, 15:00:02, -03
+- 30 October 2026 - 1a95dcb: Supervisor v4: Financial Guard (blocco su drawdown >8%, perdita giornaliera >3%). ALERT.md.
+- 30 October 2026 - 1158086: Dashboard: integrazione Financial Guard (stato supervisore e banner ALERT)
+- 30 October 2026 - 741556e: Supervisor: blocco automatico dopo 3 perdite consecutive
+- 30 October 2026 - d3ab26a: Fix Dashboard: aggiunte variabili Financial Guard mancanti
+- 30 October 2026 - a91a12e: Feature: Supervisore Diagnostico (analisi cause) e Filtro Scout (scarta repo scadenti)
 
 ## 3. Problemi noti
 
