@@ -22,14 +22,6 @@ Git: commit 5325f18: pendenze: P016-P020 (tools fossile, mt4_shared, engram, tes
 
 ## 2. Diario azioni
 
-- 22 October 2026 - 0fb680d: auto-sync gio 22 ott 2026, 23:00:01, WEST
-- 23 October 2026 - 50c200d: auto-sync ven 23 ott 2026, 00:00:01, WEST
-- 23 October 2026 - 0538d8f: auto-sync ven 23 ott 2026, 01:00:01, WEST
-- 23 October 2026 - b57f2d5: auto-sync ven 23 ott 2026, 02:00:01, WEST
-- 23 October 2026 - 5d16288: auto-sync ven 23 ott 2026, 03:00:02, WEST
-- 23 October 2026 - de9603c: auto-sync ven 23 ott 2026, 04:00:01, WEST
-- 23 October 2026 - bc81e64: auto-sync ven 23 ott 2026, 05:00:01, WEST
-- 23 October 2026 - cf72047: auto-sync ven 23 ott 2026, 06:00:01, WEST
 - 23 October 2026 - c3f6e0e: auto-sync ven 23 ott 2026, 07:00:01, WEST
 - 23 October 2026 - 46b231f: auto-sync ven 23 ott 2026, 08:00:01, WEST
 - 23 October 2026 - e9572f8: auto-sync ven 23 ott 2026, 09:00:01, WEST
@@ -222,6 +214,14 @@ Git: commit 5325f18: pendenze: P016-P020 (tools fossile, mt4_shared, engram, tes
 - 30 October 2026 - d0992e8: auto-sync ven 30 ott 2026, 12:00:01, -03
 - 30 October 2026 - 74cde87: auto-sync ven 30 ott 2026, 13:00:01, -03
 - 30 October 2026 - cadeb55: Fix: trend parser (bear=true) e ribilanciamento pesi (news 0.1, volume/exp 0.3)
+- 30 October 2026 - 268f9c0: auto-sync ven 30 ott 2026, 14:00:01, -03
+- 30 October 2026 - a5bf541: auto-sync ven 30 ott 2026, 14:00:01, -03
+- 30 October 2026 - 2b02dc6: Security: ignora token huggingface
+- 30 October 2026 - 421aa55: Feature: EMA veloci (9/21), agente report settimanale. Fix strategia.
+- 30 October 2026 - 2ce9bfb: Fix: EMA veloci (9/21), report settimanale, fallback token GitHub
+- 30 October 2026 - 8ed1c31: Risk Manager: aggiunti halt per margine libero (<20%) e perdita giornaliera (>=5%)
+- 30 October 2026 - b9e32e7: Feature: query GitHub (topic), experience pattern (3 BUY loss)
+- 30 October 2026 - d4500ef: Scout GitHub: 21 repo con token valido
 
 ## 3. Problemi noti
 
