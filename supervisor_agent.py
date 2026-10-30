@@ -101,7 +101,13 @@ def read_account():
 
 
 def check_financial_limits():
-    """Ritorna (ok, reason) basato su PNL giornaliero e drawdown."""
+    """Ritorna (ok, reason) basato su PNL giornaliero, drawdown e perdite consecutive."""
+    # Regola 1: 3 perdite consecutive
+    ok, reason = check_consecutive_losses()
+    if not ok:
+        return False, reason
+
+    # Regola 2: Drawdown e PNL giornaliero
     acc = read_account()
     balance = acc.get("balance", 0)
     equity = acc.get("equity", 0)
@@ -119,6 +125,23 @@ def check_financial_limits():
     if daily_loss_pct >= MAX_DAILY_LOSS_PCT:
         return False, f"perdita giornaliera {daily_loss_pct:.2f}% >= {MAX_DAILY_LOSS_PCT}%"
 
+    return True, ""
+
+
+def check_consecutive_losses():
+    """Ritorna (ok, reason) se ci sono 3 o piu' perdite consecutive."""
+    try:
+        with open(ORDERS_JSON) as f:
+            orders = json.load(f)
+        closed = [o for o in orders if o.get("status") == "closed"]
+        if len(closed) < 3:
+            return True, ""
+        
+        recent = closed[-3:]
+        if all(float(o.get("pnl", 0)) < 0 for o in recent):
+            return False, "3 operazioni consecutive chiuse in perdita"
+    except Exception as e:
+        log(f"Errore check_consecutive_losses: {e}")
     return True, ""
 
 
