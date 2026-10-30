@@ -60,3 +60,4 @@ requirements_backup_local.txt
 .pre_*
 token github*
 secrets.env
+token huggingface
