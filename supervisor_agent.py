@@ -1,27 +1,30 @@
 #!/usr/bin/env python3
 """
-Supervisor Agent - v3-bis (P001, 2026-10-24)
-Legge stato agenti con ps -eo comm,args: cerca python3 <script>.py.
-Esclude il wrapper bash. Riavvia i critici morti. Aggiorna audit_status.json.
-
-P001 fix: pane_current_command non e' affidabile (riporta il wrapper bash,
-non il python3 figlio). pgrep -f matcha anche il wrapper (il testo del
-comando bash -c contiene 'python3 ... script.py'). Usiamo ps e filtriamo
-per comm == python3/python, args contiene script.py.
-scouting_agent gira via cron, non in tmux: escluso dal check.
+Supervisor Agent - v4 (P001 + Financial Guard, 2026-10-30)
+Legge stato agenti con ps. Controlla PNL giornaliero e drawdown.
+Se i limiti finanziari vengono superati, KILLA l'orchestratore (blocco di sicurezza).
+Aggiorna audit_status.json e scrive ALERT.md in caso di blocco.
 """
 import os
 import json
 import subprocess
 import time
-from datetime import datetime
+from datetime import datetime, timezone
 
 BASE = os.path.expanduser("~/AI_Trading")
 AUDIT_JSON = os.path.join(BASE, "audit_status.json")
 RESTART_LOG = os.path.join(BASE, "restart_log.json")
+ALERT_MD = os.path.join(BASE, "docs", "ALERT.md")
+ACCOUNT_JSON = "/home/carlo/Scrivania/XM MT4/MQL4/Files/account.json"
+ORDERS_JSON = "/home/carlo/Scrivania/XM MT4/MQL4/Files/orders.json"
 INTERVAL = 300
 
 PY = "/home/carlo/AI_Trading_Agents/venv/bin/python3"
+
+# Limiti finanziari (stringenti per salvaguardare il capitale)
+MAX_DAILY_LOSS_PCT = 3.0    # Se perdita giornaliera > 3%, BLOCCA
+MAX_DRAWDOWN_PCT = 8.0      # Se drawdown totale > 8%, BLOCCA
+INITIAL_BALANCE = 100000.0  # Balance iniziale di riferimento (demo)
 
 SCRIPTS = {
     "ai_workforce": "orchestrator.py",
@@ -67,63 +70,95 @@ def log(msg):
 
 
 def agent_alive(name):
-    """True se esiste un processo python3/python con args contenente <script>.py.
-    Esclude il wrapper bash (comm=bash, args='bash -c ... python3 ...')."""
     script = SCRIPTS.get(name)
     if not script:
         return False
     try:
-        r = subprocess.run(
-            ["ps", "-eo", "comm,args"],
-            capture_output=True, text=True, timeout=5
-        )
+        r = subprocess.run(["ps", "-eo", "comm,args"], capture_output=True, text=True, timeout=5)
         if r.returncode != 0:
             return False
         for line in r.stdout.splitlines():
-            line = line.strip()
-            if not line:
-                continue
-            parts = line.split(None, 1)
+            parts = line.strip().split(None, 1)
             if len(parts) < 2:
                 continue
-            comm, args = parts[0], parts[1]
-            if comm in ("python3", "python") and script in args:
+            if parts[0] in ("python3", "python") and script in parts[1]:
                 return True
         return False
-    except Exception as e:
-        log(f"ERRORE ps {name}: {e}")
+    except Exception:
         return False
 
 
 def agent_status():
-    status = {}
-    for name in SCRIPTS:
-        status[name] = "active" if agent_alive(name) else "stopped"
-    return status
+    return {name: "active" if agent_alive(name) else "stopped" for name in SCRIPTS}
 
 
-def read_orders_summary():
-    orders_path = "/home/carlo/Scrivania/XM MT4/MQL4/Files/orders.json"
+def read_account():
     try:
-        with open(orders_path) as f:
-            orders = json.load(f)
-        if not isinstance(orders, list):
-            return {"open": 0, "closed": 0, "last": None}
-        open_n = sum(1 for o in orders if o.get("status") == "open")
-        closed_n = sum(1 for o in orders if o.get("status") == "closed")
-        last = orders[-1] if orders else None
-        return {"open": open_n, "closed": closed_n, "last": last}
+        with open(ACCOUNT_JSON) as f:
+            return json.load(f)
     except Exception:
-        return {"open": 0, "closed": 0, "last": None}
+        return {"balance": 0, "equity": 0}
 
 
-def write_audit(status):
+def check_financial_limits():
+    """Ritorna (ok, reason) basato su PNL giornaliero e drawdown."""
+    acc = read_account()
+    balance = acc.get("balance", 0)
+    equity = acc.get("equity", 0)
+
+    if balance <= 0 or equity <= 0:
+        return True, ""
+
+    # Drawdown totale rispetto al balance iniziale
+    drawdown_pct = ((INITIAL_BALANCE - equity) / INITIAL_BALANCE) * 100.0
+    if drawdown_pct >= MAX_DRAWDOWN_PCT:
+        return False, f"drawdown {drawdown_pct:.2f}% >= {MAX_DRAWDOWN_PCT}%"
+
+    # PNL giornaliero (semplificato: equity vs balance)
+    daily_loss_pct = ((balance - equity) / balance) * 100.0
+    if daily_loss_pct >= MAX_DAILY_LOSS_PCT:
+        return False, f"perdita giornaliera {daily_loss_pct:.2f}% >= {MAX_DAILY_LOSS_PCT}%"
+
+    return True, ""
+
+
+def kill_orchestrator():
+    try:
+        subprocess.run(["tmux", "kill-session", "-t", "ai_workforce"], capture_output=True, timeout=5)
+        log("[KILL] Orchestratore bloccato dal supervisore per limiti finanziari.")
+        return True
+    except Exception as e:
+        log(f"[ERRORE] kill_orchestrator: {e}")
+        return False
+
+
+def write_alert(reason):
+    ts = datetime.now().isoformat()
+    with open(ALERT_MD, "w") as f:
+        f.write(f"# ALLARME SUPERVISORE ({ts})\n\n")
+        f.write(f"Il supervisore ha bloccato l'orchestratore.\n")
+        f.write(f"Motivo: {reason}\n\n")
+        f.write("Azioni richieste:\n")
+        f.write("1. Verificare il conto e le operazioni aperte.\n")
+        f.write("2. Analizzare i log (ai_workforce.log, decision_log.jsonl).\n")
+        f.write("3. Correggere la strategia.\n")
+        f.write("4. Riavviare manualmente: tmux new-session -d -s ai_workforce '...'\n")
+        f.write("5. Rimuovere questo file dopo aver risolto.\n")
+
+
+def write_audit(status, fin_ok, fin_reason):
+    acc = read_account()
     audit = {
         "timestamp": datetime.now().isoformat(),
-        "orders": read_orders_summary(),
         "agents": status,
         "critical": {c: status.get(c, "stopped") for c in CRITICAL},
-        "has_issue": any(status.get(c) == "stopped" for c in CRITICAL),
+        "has_issue": any(status.get(c) == "stopped" for c in CRITICAL) or not fin_ok,
+        "financial": {
+            "balance": acc.get("balance", 0),
+            "equity": acc.get("equity", 0),
+            "ok": fin_ok,
+            "reason": fin_reason,
+        },
     }
     try:
         with open(AUDIT_JSON, "w") as f:
@@ -132,44 +167,17 @@ def write_audit(status):
         log(f"ERRORE write_audit: {e}")
 
 
-def log_restart(agent, reason="stopped"):
-    entry = {
-        "timestamp": datetime.now().isoformat(),
-        "agent": agent,
-        "reason": reason,
-        "action": "restart",
-    }
-    try:
-        with open(RESTART_LOG) as f:
-            log_data = json.load(f)
-        if not isinstance(log_data, list):
-            log_data = []
-    except Exception:
-        log_data = []
-    log_data.append(entry)
-    if len(log_data) > 1000:
-        log_data = log_data[-1000:]
-    try:
-        with open(RESTART_LOG, "w") as f:
-            json.dump(log_data, f, indent=2)
-    except Exception as e:
-        log(f"ERRORE log_restart: {e}")
-
-
 def restart_agent(agent, reason="stopped"):
     cmd = START_COMMANDS.get(agent)
     if not cmd:
-        log(f"Nessun comando di start per {agent}")
         return False
     try:
-        subprocess.run(["tmux", "kill-session", "-t", agent],
-                       capture_output=True, timeout=5)
+        subprocess.run(["tmux", "kill-session", "-t", agent], capture_output=True, timeout=5)
     except Exception:
         pass
     try:
         subprocess.run(cmd, shell=True, timeout=15)
         log(f"Riavvio {agent} (motivo: {reason})")
-        log_restart(agent, reason=reason)
         return True
     except Exception as e:
         log(f"ERRORE restart {agent}: {e}")
@@ -177,18 +185,32 @@ def restart_agent(agent, reason="stopped"):
 
 
 def main():
-    log("Supervisor agent v3-bis (P001 ps) avviato. Intervallo: " + str(INTERVAL) + "s")
+    log("Supervisor agent v4 (P001 + Financial Guard) avviato. Intervallo: " + str(INTERVAL) + "s")
     while True:
         try:
             status = agent_status()
-            write_audit(status)
-            to_restart = [c for c in CRITICAL if status.get(c) == "stopped"]
-            if to_restart:
-                log(f"Critici fermi: {', '.join(to_restart)}")
-                for agent in to_restart:
-                    restart_agent(agent, reason="stopped")
+            fin_ok, fin_reason = check_financial_limits()
+
+            if not fin_ok:
+                log(f"[ALERT] Limite finanziario superato: {fin_reason}")
+                kill_orchestrator()
+                write_alert(fin_reason)
+                # Non riavviare l'orchestratore. Il supervisore resta in attesa.
+                status["ai_workforce"] = "blocked_by_risk"
+
+            write_audit(status, fin_ok, fin_reason)
+
+            if fin_ok:
+                to_restart = [c for c in CRITICAL if status.get(c) == "stopped"]
+                if to_restart:
+                    log(f"Critici fermi: {', '.join(to_restart)}")
+                    for agent in to_restart:
+                        restart_agent(agent, reason="stopped")
+                else:
+                    log("Tutti i critici attivi. Nessuna azione.")
             else:
-                log("Tutti i critici attivi. Nessuna azione.")
+                log("Orchestratore BLOCCATO. In attesa di intervento manuale.")
+
         except Exception as e:
             log(f"ERRORE nel ciclo principale: {e}")
         try:
