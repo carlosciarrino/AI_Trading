@@ -1,4 +1,4 @@
-# SCOUT ARXIV (aggiornato 2026-10-30T04:20:01.840083)
+# SCOUT ARXIV (aggiornato 2026-10-31T04:20:02.524385)
 
 ### OCCAMS: A Multi-Task Learning-Based Investigation of the CMB Power Spectra
 - **Link**: http://arxiv.org/abs/2610.40415v1
