@@ -49,3 +49,10 @@ Applica queste regole a ogni risposta e a ogni comando.
 Se il drawdown supera l'8%, leggi docs/ALERT.md.
 Se ci sono 3 loss consecutive, leggi docs/ALERT.md.
 Se il supervisore ha bloccato l'orchestratore, non riavviarlo senza analisi.
+
+## 8. Milestone: Test Autonomo Riuscito (2026-10-31)
+- Kilo ha letto la skill `test-repo.md` ed eseguito il test su `TauricResearch/TradingAgents`.
+- Ambiente isolato in `/tmp`, venv temporaneo, 1396 test passati.
+- Diagnosi automatica dell'errore di versione Python (da 3.10 a 3.11).
+- Pulizia finale della cartella temporanea.
+- **Risultato**: il sistema è in grado di testare risorse esterne in autonomia e sicurezza.
