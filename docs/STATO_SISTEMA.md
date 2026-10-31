@@ -22,7 +22,6 @@ Git: commit 5325f18: pendenze: P016-P020 (tools fossile, mt4_shared, engram, tes
 
 ## 2. Diario azioni
 
-- 23 October 2026 - 4e62a0b: P055: filtro trend + P056: soglia break-even dinamica (max 20, ATR*2)
 - 23 October 2026 - de93f44: P057: C2 venerdi chiude solo se PNL > -5 EUR (non piu' tutto a caso)
 - 24 October 2026 - 009c40a: auto-sync sab 24 ott 2026, 00:00:02, WEST
 - 24 October 2026 - 93db2b5: auto-sync sab 24 ott 2026, 01:00:01, WEST
@@ -222,6 +221,7 @@ Git: commit 5325f18: pendenze: P016-P020 (tools fossile, mt4_shared, engram, tes
 - 31 October 2026 - ebd47fd: auto-sync sab 31 ott 2026, 00:00:01, -03
 - 31 October 2026 - 377840f: auto-sync sab 31 ott 2026, 01:00:01, -03
 - 31 October 2026 - e333f9b: auto-sync sab 31 ott 2026, 02:00:01, -03
+- 31 October 2026 - e3d61fe: auto-sync sab 31 ott 2026, 03:00:01, -03
 
 ## 3. Problemi noti
 
