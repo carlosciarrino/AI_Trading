@@ -87,12 +87,12 @@ def compute_signal(df):
         volume = df["Volume"]
 
     # Trend
-    ema_f = close.ewm(span=9, adjust=False).mean()
-    ema_s = close.ewm(span=21, adjust=False).mean()
+    ema_f = close.ewm(span=12, adjust=False).mean()
+    ema_s = close.ewm(span=26, adjust=False).mean()
     adx_df = compute_adx(high, low, close, 14)
     adx = adx_df["adx"].iloc[-1]
-    trend_bull = ema_f.iloc[-1] > ema_s.iloc[-1] and adx > 20
-    trend_bear = ema_f.iloc[-1] < ema_s.iloc[-1] and adx > 20
+    trend_bull = ema_f.iloc[-1] > ema_s.iloc[-1] and adx > 25
+    trend_bear = ema_f.iloc[-1] < ema_s.iloc[-1] and adx > 25
 
     # Mean reversion
     bb = compute_bollinger(close, 20, 2.0)
@@ -162,11 +162,9 @@ def process():
             f.write(f"Technical (aggiornato {datetime.now().isoformat()}):\n")
             f.write(f"Signal: {res['direction']}\n")
             f.write(f"Close: {res['close']}\n")
-            f.write(f"EMA9: {res['ema_fast']} | EMA21: {res['ema_slow']}\n")
+            f.write(f"EMA12: {res['ema_fast']} | EMA26: {res['ema_slow']}\n")
             f.write(f"ADX: {res['adx']}\n")
             f.write(f"RSI: {res['rsi']}\n")
-        f.write(f"Support: {res['support']} | Resistance: {res['resistance']}\n")
-        f.write(f"Dist to Support: {res['dist_to_support_pct']}% | Dist to Resistance: {res['dist_to_resistance_pct']}%\n")
             f.write(f"BB: {res['bb_lower']} - {res['bb_upper']}\n")
             f.write(f"OBV: {res['obv']} | OBV_MA: {res['obv_ma']}\n")
             f.write(f"Trend: bull={res['trend_bull']} bear={res['trend_bear']}\n")

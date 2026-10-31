@@ -22,13 +22,6 @@ Git: commit 5325f18: pendenze: P016-P020 (tools fossile, mt4_shared, engram, tes
 
 ## 2. Diario azioni
 
-- 24 October 2026 - b8ff287: auto-sync sab 24 ott 2026, 06:00:01, WEST
-- 24 October 2026 - 4dfb24f: auto-sync sab 24 ott 2026, 07:00:01, WEST
-- 24 October 2026 - b2ff47d: auto-sync sab 24 ott 2026, 08:00:01, WEST
-- 24 October 2026 - bf6abb9: auto-sync sab 24 ott 2026, 09:00:01, WEST
-- 24 October 2026 - f0c27a6: auto-sync sab 24 ott 2026, 10:00:01, WEST
-- 24 October 2026 - 214f2c7: auto-sync sab 24 ott 2026, 11:00:01, WEST
-- 24 October 2026 - a3ec714: auto-sync sab 24 ott 2026, 12:00:01, WEST
 - 24 October 2026 - 8a01474: auto-sync sab 24 ott 2026, 13:00:01, WEST
 - 24 October 2026 - e4ed6ae: auto-sync sab 24 ott 2026, 14:00:01, WEST
 - 24 October 2026 - 39b8b51: auto-sync sab 24 ott 2026, 15:00:01, WEST
@@ -222,6 +215,13 @@ Git: commit 5325f18: pendenze: P016-P020 (tools fossile, mt4_shared, engram, tes
 - 31 October 2026 - 4011983: auto-sync sab 31 ott 2026, 08:00:01, -03
 - 31 October 2026 - 2e2e35c: auto-sync sab 31 ott 2026, 09:00:01, -03
 - 31 October 2026 - 5cf8093: auto-sync sab 31 ott 2026, 10:00:01, -03
+- 31 October 2026 - 6835b45: auto-sync sab 31 ott 2026, 12:00:01, -03
+- 31 October 2026 - 85f9b0f: Milestone: test autonomo di TradingAgents riuscito. Aggiornato AGENTS.md.
+- 31 October 2026 - 55d9aa2: Docs: creato registro esiti test risorse esterne
+- 31 October 2026 - 7d7be2b: Docs: aggiunta sezione risorse future in AGENTS.md
+- 31 October 2026 - 0c5f3a9: Docs: DeltaForge testato con successo (424 test). Candidato.
+- 31 October 2026 - 07c787a: Feature: Trailing Stop Dinamico (basato su ATR) ispirato a DeltaForge
+- 31 October 2026 - cd07ac1: Feature: Limite ordini per lato e calcolo Supporti/Resistenze (da DeltaForge)
 
 ## 3. Problemi noti
 
