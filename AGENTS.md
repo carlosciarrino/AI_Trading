@@ -23,7 +23,8 @@ Applica queste regole a ogni risposta e a ogni comando.
 7. Non omettere articoli e "che". Il testo deve restare grammaticale.
 
 ## 4. Comandi Essenziali
-- Test sintassi: `python3 -m py_compile <file>`
+- Usa SEMPRE il path assoluto del venv: `/home/carlo/AI_Trading_Agents/venv/bin/python3`
+- Test sintassi: `/home/carlo/AI_Trading_Agents/venv/bin/python3 -m py_compile <file>`
 - Backup: `cp <file> <file>.pre_<modifica>`
 - Riavvio orchestratore: `tmux kill-session -t ai_workforce; tmux new-session ...`
 - Riavvio supervisore: `tmux kill-session -t supervisor; tmux new-session ...`
