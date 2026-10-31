@@ -18,5 +18,6 @@ Questo file documenta i test effettuati sui progetti trovati dagli scout (GitHub
 - **Verdetto**: **SCARTATO**. Il nostro EA (AI_BRIDGE_EA) è già funzionante e specifico per il nostro scopo.
 
 ## 2026-10-31: DeltaForge (QuantSingularity)
-- **Test**: In corso (installazione dipendenze).
-- **Esito**: Da definire.
+- **Test**: Installazione backend (Python 3.11) in sandbox.
+- **Esito**: 424 test passati. Licenza MIT. Supporta EA per MT4/MT5.
+- **Verdetto**: **CANDIDATO**. Da approfondire per la logica di risk management e le strategie ML. Hardware compatibile.
