@@ -617,7 +617,7 @@ def main():
                     tp = round(tp, 5)
 
                     # P044: size dinamico da risk_manager
-                    risk = risk_manager.get_risk_decision(float(atr))
+                    risk = risk_manager.get_risk_decision(float(atr), action)
                     if risk["halt"]:
                         print(f"[RISK] Halt: {risk['reason']}", flush=True)
                         write_decision(detail, action_taken="none", reason=f"risk_halt: {risk['reason']}")

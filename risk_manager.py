@@ -102,12 +102,12 @@ def check_side_limit(action):
         same_side = [o for o in open_orders if o.get("action") == action]
         if len(same_side) >= 2:
             return False, f"limite 2 ordini {action} raggiunto ({len(same_side)})"
-    except Exception as e:
+    except Exception:
         pass
     return True, ""
 
 
-def get_risk_decision(atr_value):
+def get_risk_decision(atr_value, action='buy'):
     config = load_config()
     account = load_account()
 
@@ -117,7 +117,7 @@ def get_risk_decision(atr_value):
         return {"lots": 0, "halt": True, "reason": f"halt: {reason}"}
 
     # 2. Limite per lato (max 2 per direzione)
-    ok, reason = check_side_limit(getattr(risk_manager, '_current_action', 'buy'))  # fallback
+    ok, reason = check_side_limit(action)
     if not ok:
         return {"lots": 0, "halt": True, "reason": f"halt: {reason}"}
 
