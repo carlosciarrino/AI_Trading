@@ -92,6 +92,21 @@ def check_daily_loss(account, config):
     return (True, "")
 
 
+def check_side_limit(action):
+    """Blocca se ci sono gia' 2 ordini aperti nella stessa direzione (buy o sell)."""
+    orders_path = "/home/carlo/Scrivania/XM MT4/MQL4/Files/orders.json"
+    try:
+        with open(orders_path) as f:
+            orders = json.load(f)
+        open_orders = [o for o in orders if o.get("status") == "open"]
+        same_side = [o for o in open_orders if o.get("action") == action]
+        if len(same_side) >= 2:
+            return False, f"limite 2 ordini {action} raggiunto ({len(same_side)})"
+    except Exception as e:
+        pass
+    return True, ""
+
+
 def get_risk_decision(atr_value):
     config = load_config()
     account = load_account()
@@ -101,7 +116,12 @@ def get_risk_decision(atr_value):
     if not ok:
         return {"lots": 0, "halt": True, "reason": f"halt: {reason}"}
 
-    # 2. Margin halt (nuovo)
+    # 2. Limite per lato (max 2 per direzione)
+    ok, reason = check_side_limit(getattr(risk_manager, '_current_action', 'buy'))  # fallback
+    if not ok:
+        return {"lots": 0, "halt": True, "reason": f"halt: {reason}"}
+
+    # 3. Margin halt (nuovo)
     ok, reason = check_margin(account, config)
     if not ok:
         return {"lots": 0, "halt": True, "reason": f"halt: {reason}"}

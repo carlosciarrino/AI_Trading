@@ -165,6 +165,8 @@ def process():
             f.write(f"EMA9: {res['ema_fast']} | EMA21: {res['ema_slow']}\n")
             f.write(f"ADX: {res['adx']}\n")
             f.write(f"RSI: {res['rsi']}\n")
+        f.write(f"Support: {res['support']} | Resistance: {res['resistance']}\n")
+        f.write(f"Dist to Support: {res['dist_to_support_pct']}% | Dist to Resistance: {res['dist_to_resistance_pct']}%\n")
             f.write(f"BB: {res['bb_lower']} - {res['bb_upper']}\n")
             f.write(f"OBV: {res['obv']} | OBV_MA: {res['obv_ma']}\n")
             f.write(f"Trend: bull={res['trend_bull']} bear={res['trend_bear']}\n")
