@@ -377,6 +377,52 @@ def write_sl_command(ticket, new_sl):
         print(f"[O8] Errore write_sl_command: {e}", flush=True)
 
 
+def check_trailing_stop():
+    """Trailing stop dinamico: sposta lo SL in direzione favorevole se il prezzo supera una soglia."""
+    order = get_open_order()
+    if not order:
+        return
+    ticket = order.get('ticket')
+    action = order.get('action')
+    entry = order.get('price')
+    current_sl = order.get('sl')
+    
+    if not all([ticket, action, entry, current_sl is not None]):
+        return
+        
+    entry = float(entry)
+    current_sl = float(current_sl)
+    current_price = get_current_price()
+    if current_price is None:
+        return
+        
+    pip = 0.0001
+    atr = get_atr()
+    if atr is None:
+        atr = 0.0010
+        
+    # Distanza di trailing (es. 1.5 * ATR)
+    trail_distance = atr * 1.5
+    
+    if action == "buy":
+        # Se il prezzo è salito oltre entry + trail_distance, sposta lo SL
+        if current_price - entry > trail_distance:
+            new_sl = round(current_price - trail_distance, 5)
+            # Sposta solo se il nuovo SL è migliore del vecchio (più alto)
+            if new_sl > current_sl:
+                write_sl_command(ticket, new_sl)
+                print(f"[TRAILING] BUY {ticket}: SL spostato a {new_sl} (prezzo {current_price:.5f})", flush=True)
+                
+    elif action == "sell":
+        # Se il prezzo è sceso oltre entry - trail_distance, sposta lo SL
+        if entry - current_price > trail_distance:
+            new_sl = round(current_price + trail_distance, 5)
+            # Sposta solo se il nuovo SL è migliore del vecchio (più basso)
+            if new_sl < current_sl:
+                write_sl_command(ticket, new_sl)
+                print(f"[TRAILING] SELL {ticket}: SL spostato a {new_sl} (prezzo {current_price:.5f})", flush=True)
+
+
 def check_friday_profit():
     now = datetime.now(timezone.utc)
     if now.weekday() != 4:
@@ -490,6 +536,7 @@ def main():
         while True:
             check_time_stop()
             check_break_even()
+            check_trailing_stop()
             check_friday_profit()
             check_friday_close()
 
