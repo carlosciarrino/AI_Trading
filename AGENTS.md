@@ -56,3 +56,9 @@ Se il supervisore ha bloccato l'orchestratore, non riavviarlo senza analisi.
 - Diagnosi automatica dell'errore di versione Python (da 3.10 a 3.11).
 - Pulizia finale della cartella temporanea.
 - **Risultato**: il sistema è in grado di testare risorse esterne in autonomia e sicurezza.
+
+## 9. Risorse in attesa di hardware migliore
+Se in futuro aggiorniamo il PC (più RAM, Python 3.12+), possiamo rivalutare:
+- **OpenBacktesting**: richiede Python 3.12+. Ottimo per backtest di strategie.
+- **Bonsai 2 (ternary LLM)**: richiede 6 GB di RAM. Potrebbe sostituire Ollama per compiti di classificazione news.
+- **Limite-1B-Violetto**: richiede 2 GB di RAM. Testato il tokenizer, ma non il modello completo per mancanza di RAM.
