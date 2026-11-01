@@ -140,6 +140,24 @@ def send_close_command(ticket, reason_log):
                        error="timeout_ea")
 
 
+def get_asymmetric_thresholds():
+    """Ritorna (soglia_buy, soglia_sell) basate sulle ultime perdite."""
+    import json
+    orders_path = "/home/carlo/Scrivania/XM MT4/MQL4/Files/orders.json"
+    try:
+        with open(orders_path) as f:
+            orders = json.load(f)
+        closed = [o for o in orders if o.get("status") == "closed"]
+        if len(closed) >= 3:
+            recent = closed[-3:]
+            if all(o.get("action") == "buy" and float(o.get("pnl", 0)) < 0 for o in recent):
+                return 0.20, 0.08  # Penalizza BUY
+            if all(o.get("action") == "sell" and float(o.get("pnl", 0)) < 0 for o in recent):
+                return 0.08, 0.20  # Penalizza SELL
+    except Exception:
+        pass
+    return 0.08, 0.08
+
 def get_signal():
     scores = {}
     try:
@@ -241,10 +259,13 @@ def get_signal():
     print(f"Punteggio combinato: {final_score:.3f}", flush=True)
     # P007: diagnostica scores su stdout
     print(f"[SCORES] {scores}", flush=True)
-    if final_score > 0.08:
+    soglia_buy, soglia_sell = get_asymmetric_thresholds()
+    if final_score > soglia_buy:
         signal = "BUY"
-    elif final_score < -0.08:
+        print(f"[ASYM] Soglia BUY: {soglia_buy:.2f}", flush=True)
+    elif final_score < -soglia_sell:
         signal = "SELL"
+        print(f"[ASYM] Soglia SELL: {soglia_sell:.2f}", flush=True)
     else:
         signal = "HOLD"
     detail = {

@@ -22,11 +22,6 @@ Git: commit 5325f18: pendenze: P016-P020 (tools fossile, mt4_shared, engram, tes
 
 ## 2. Diario azioni
 
-- 25 October 2026 - 83cf237: auto-sync dom 25 ott 2026, 05:00:01, WET
-- 25 October 2026 - e58ba47: auto-sync dom 25 ott 2026, 06:00:01, WET
-- 25 October 2026 - 730ef3f: auto-sync dom 25 ott 2026, 07:00:01, WET
-- 25 October 2026 - 2388865: auto-sync dom 25 ott 2026, 08:00:01, WET
-- 25 October 2026 - 6b2c651: auto-sync dom 25 ott 2026, 09:00:01, WET
 - 25 October 2026 - 64722e0: auto-sync dom 25 ott 2026, 10:00:01, WET
 - 25 October 2026 - 974d877: auto-sync dom 25 ott 2026, 11:00:01, WET
 - 25 October 2026 - 450976f: auto-sync dom 25 ott 2026, 12:00:01, WET
@@ -222,6 +217,11 @@ Git: commit 5325f18: pendenze: P016-P020 (tools fossile, mt4_shared, engram, tes
 - 01 November 2026 - f266cec: auto-sync dom 1 nov 2026, 07:00:01, -03
 - 01 November 2026 - a1321b9: auto-sync dom 1 nov 2026, 08:00:01, -03
 - 01 November 2026 - 2f85a46: auto-sync dom 1 nov 2026, 09:00:01, -03
+- 01 November 2026 - 3c6edaa: auto-sync dom 1 nov 2026, 10:00:02, -03
+- 01 November 2026 - 19ff763: Fix critico: drawdown iniziale, azione risk manager, allineamento supervisore
+- 01 November 2026 - 975f69c: Fix: forza il salvataggio di config/risk_budget.json (necessario per il drawdown)
+- 01 November 2026 - 2a5700f: Feature: calcolo Supporti/Resistenze in technical_agent (da DeltaForge)
+- 01 November 2026 - e44f306: Docs: esito test freqtrade (scartato)
 
 ## 3. Problemi noti
 
