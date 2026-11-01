@@ -14,7 +14,7 @@ def load_config():
     except:
         return {
             "max_lots": 0.1, "max_risk_pct": 2.0,
-            "max_drawdown_pct": 10.0, "daily_loss_limit_pct": 5.0,
+            "max_drawdown_pct": 8.0, "daily_loss_limit_pct": 3.0,
             "atr_multiplier": 2.0, "initial_balance": 100000
         }
 
@@ -53,9 +53,9 @@ def calculate_position_size(equity, balance, atr_value, config):
 def check_drawdown(account, config):
     balance = account.get("balance", 0)
     equity = account.get("equity", 0)
-    initial = config.get("initial_balance", balance)
+    initial = config.get("initial_balance", 100000)
     if initial <= 0:
-        return (True, "")
+        return (False, "initial_balance non configurato")
 
     current_drawdown_pct = ((initial - equity) / initial) * 100.0
     max_dd = config.get("max_drawdown_pct", 10.0)

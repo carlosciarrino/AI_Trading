@@ -16,6 +16,15 @@ AUDIT_JSON = os.path.join(BASE, "audit_status.json")
 RESTART_LOG = os.path.join(BASE, "restart_log.json")
 ALERT_MD = os.path.join(BASE, "docs", "ALERT.md")
 ACCOUNT_JSON = "/home/carlo/Scrivania/XM MT4/MQL4/Files/account.json"
+RISK_CONFIG = "/home/carlo/AI_Trading/config/risk_budget.json"
+
+def get_initial_balance():
+    try:
+        with open(RISK_CONFIG) as f:
+            return json.load(f).get("initial_balance", 100000)
+    except Exception:
+        return 100000
+
 ORDERS_JSON = "/home/carlo/Scrivania/XM MT4/MQL4/Files/orders.json"
 INTERVAL = 300
 
@@ -116,7 +125,8 @@ def check_financial_limits():
         return True, ""
 
     # Drawdown totale rispetto al balance iniziale
-    drawdown_pct = ((INITIAL_BALANCE - equity) / INITIAL_BALANCE) * 100.0
+    initial = get_initial_balance()
+    drawdown_pct = ((initial - equity) / initial) * 100.0
     if drawdown_pct >= MAX_DRAWDOWN_PCT:
         return False, f"drawdown {drawdown_pct:.2f}% >= {MAX_DRAWDOWN_PCT}%"
 
