@@ -7,36 +7,30 @@ import os, time, requests, re
 from bs4 import BeautifulSoup
 
 CONTEXT_PATH = os.path.expanduser("~/AI_Trading/news_context.txt")
-RSS_URL = "https://it.investing.com/rss/news.rss"
+RSS_URL = "https://www.investing.com/rss/news_1.rss"
 MAX_TITLES = 15
 
 # Keyword macro: se il titolo le contiene, e' macro-rilevante
 MACRO_KEYWORDS = [
-    # IT
-    "fed", "bce", "tassi", "inflazione", "pil", "disoccupazione",
-    "lavoro", "occupazione", "crescita", "recessione", "debito",
-    "euro", "dollaro", "usd", "eur", "guerra", "dazi", "sanzioni",
-    "petrolio", "oro", "wall street", "borsa", "mercati",
-    "trimestrale", "utili", "occupazione", "stime",
-    # EN (per RSS in inglese)
-    "fed", "ecb", "rates", "inflation", "gdp", "unemployment",
-    "jobs", "growth", "recession", "debt", "euro", "dollar",
+    # EN - Forex specific
+    "fed", "ecb", "boe", "boj", "rate", "inflation", "gdp", "unemployment",
+    "jobs", "growth", "recession", "debt", "euro", "dollar", "usd", "eur",
     "war", "tariffs", "sanctions", "oil", "gold", "stocks",
-    "earnings", "market", "economy",
+    "earnings", "market", "economy", "forex", "currency", "yield",
+    "hawkish", "dovish", "taper", "stimulus", "nato", "brexit",
 ]
 
 # Parole positive / negative (EN + IT)
 POSITIVE_WORDS = [
     "surge", "rally", "gain", "strong", "boost", "optimism", "deal",
-    "peace", "growth", "record", "rialzo", "crescita", "forte",
-    "accordo", "pace", "ottimismo", "positivo", "recupero", "balzo",
+    "peace", "growth", "record", "rise", "jump", "soar", "climb",
+    "beat", "upgrade", "bullish", "positive", "recovery", "rebound",
 ]
 NEGATIVE_WORDS = [
     "crash", "plunge", "fear", "crisis", "war", "inflation",
     "recession", "block", "standoff", "dilemma", "cut",
-    "crollo", "paura", "crisi", "guerra", "inflazione",
-    "recessione", "blocco", "taglio", "perdita", "negativo",
-    "calo", "ribasso", "tensione", "conflitto",
+    "fall", "drop", "decline", "slide", "miss", "downgrade",
+    "bearish", "negative", "loss", "sell-off", "tumble",
 ]
 
 
