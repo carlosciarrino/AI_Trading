@@ -22,14 +22,6 @@ Git: commit 5325f18: pendenze: P016-P020 (tools fossile, mt4_shared, engram, tes
 
 ## 2. Diario azioni
 
-- 25 October 2026 - 64722e0: auto-sync dom 25 ott 2026, 10:00:01, WET
-- 25 October 2026 - 974d877: auto-sync dom 25 ott 2026, 11:00:01, WET
-- 25 October 2026 - 450976f: auto-sync dom 25 ott 2026, 12:00:01, WET
-- 25 October 2026 - 741e077: auto-sync dom 25 ott 2026, 13:00:01, WET
-- 25 October 2026 - a0cfe29: auto-sync dom 25 ott 2026, 14:00:01, WET
-- 25 October 2026 - 92fd374: P066 chiusa (decision model non fattibile i3); P072/P073/P074 aggiunte
-- 25 October 2026 - 3d08215: auto-sync dom 25 ott 2026, 12:00:01, -03
-- 25 October 2026 - abd453c: auto-sync dom 25 ott 2026, 13:00:01, -03
 - 25 October 2026 - 5c7224d: auto-sync dom 25 ott 2026, 14:00:01, -03
 - 25 October 2026 - 4d674eb: auto-sync dom 25 ott 2026, 15:00:01, -03
 - 25 October 2026 - c8bfd5d: auto-sync dom 25 ott 2026, 16:00:02, -03
@@ -222,6 +214,14 @@ Git: commit 5325f18: pendenze: P016-P020 (tools fossile, mt4_shared, engram, tes
 - 01 November 2026 - 975f69c: Fix: forza il salvataggio di config/risk_budget.json (necessario per il drawdown)
 - 01 November 2026 - 2a5700f: Feature: calcolo Supporti/Resistenze in technical_agent (da DeltaForge)
 - 01 November 2026 - e44f306: Docs: esito test freqtrade (scartato)
+- 01 November 2026 - 89e4729: auto-sync dom 1 nov 2026, 11:00:01, -03
+- 01 November 2026 - f5cc036: Feature: Trigger Engine (Volume, Regime, News) + blocco se <2/3 attivi
+- 01 November 2026 - 090896f: Fix: check_triggers integrato in orchestrator (blocco se <2/3 trigger)
+- 01 November 2026 - 7a65898: Feature: FinBERT + keyword inglesi (ibrido). News in inglese.
+- 01 November 2026 - a168511: Feature: TimesFM forecast integrato nel trigger engine (4° trigger)
+- 01 November 2026 - a1ff194: Fix: trigger engine legge forecast.json (4° trigger)
+- 01 November 2026 - a9e4da7: Feature: Bull vs Bear (maggioranza chiara invece di somma pesata) da TradingAgents
+- 01 November 2026 - ac95abe: Fix: trigger engine controlla market_open (no ordini a mercato chiuso)
 
 ## 3. Problemi noti
 
