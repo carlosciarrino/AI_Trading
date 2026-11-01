@@ -22,7 +22,6 @@ Git: commit 5325f18: pendenze: P016-P020 (tools fossile, mt4_shared, engram, tes
 
 ## 2. Diario azioni
 
-- 25 October 2026 - 5c7224d: auto-sync dom 25 ott 2026, 14:00:01, -03
 - 25 October 2026 - 4d674eb: auto-sync dom 25 ott 2026, 15:00:01, -03
 - 25 October 2026 - c8bfd5d: auto-sync dom 25 ott 2026, 16:00:02, -03
 - 25 October 2026 - 1a77ae2: auto-sync dom 25 ott 2026, 17:00:01, -03
@@ -222,6 +221,7 @@ Git: commit 5325f18: pendenze: P016-P020 (tools fossile, mt4_shared, engram, tes
 - 01 November 2026 - a1ff194: Fix: trigger engine legge forecast.json (4° trigger)
 - 01 November 2026 - a9e4da7: Feature: Bull vs Bear (maggioranza chiara invece di somma pesata) da TradingAgents
 - 01 November 2026 - ac95abe: Fix: trigger engine controlla market_open (no ordini a mercato chiuso)
+- 01 November 2026 - e363e61: auto-sync dom 1 nov 2026, 12:00:01, -03
 
 ## 3. Problemi noti
 
