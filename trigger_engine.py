@@ -78,6 +78,18 @@ def check_forecast_trigger():
         pass
     return False, "neutro"
 
+def is_market_open():
+    """Controlla se il mercato forex e' aperto (Londra/NY)."""
+    from datetime import datetime, timezone
+    now = datetime.now(timezone.utc)
+    if now.weekday() == 4 and now.hour >= 22:
+        return False
+    if now.weekday() == 5:
+        return False
+    if now.weekday() == 6 and now.hour < 22:
+        return False
+    return True
+
 def main():
     t_vol, msg_vol = check_volume_trigger()
     t_reg, msg_reg = check_regime_trigger()
@@ -93,7 +105,8 @@ def main():
         "news": {"active": t_news, "reason": msg_news},
         "forecast": {"active": t_for, "reason": msg_for},
         "active_count": active_count,
-        "trade_allowed": active_count >= 2  # Almeno 2 trigger su 3
+        "market_open": is_market_open(),
+        "trade_allowed": (active_count >= 2) and is_market_open()  # Almeno 2 trigger su 3
     }
     
     with open(OUTPUT_JSON, "w") as f:
