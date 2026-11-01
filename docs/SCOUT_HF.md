@@ -1,77 +1,77 @@
-# SCOUT HUGGING FACE (aggiornato 2026-10-31T04:10:01.797498)
-
-### deepseek-ai/DeepSeek-V4.1-Flash-1017
-- **Downloads**: 145869 | **Likes**: 4033
-- **Task**: image-text-to-text
-- **URL**: https://huggingface.co/deepseek-ai/DeepSeek-V4.1-Flash-1017
+# SCOUT HUGGING FACE (aggiornato 2026-11-01T04:10:01.618887)
 
 ### Nanbeige/Nanbeige4.3-33B
-- **Downloads**: 12178 | **Likes**: 803
+- **Downloads**: 13832 | **Likes**: 924
 - **Task**: text-generation
 - **URL**: https://huggingface.co/Nanbeige/Nanbeige4.3-33B
 
+### deepseek-ai/DeepSeek-V4.1-Flash-1017
+- **Downloads**: 156373 | **Likes**: 4134
+- **Task**: image-text-to-text
+- **URL**: https://huggingface.co/deepseek-ai/DeepSeek-V4.1-Flash-1017
+
 ### LiquidAI/LFM3-1.7B
-- **Downloads**: 23694 | **Likes**: 582
+- **Downloads**: 32933 | **Likes**: 645
 - **Task**: text-generation
 - **URL**: https://huggingface.co/LiquidAI/LFM3-1.7B
 
 ### nvidia/NVIDIA-Nemotron-3.5-Transcribe-30B-A4B
-- **Downloads**: 15980 | **Likes**: 510
+- **Downloads**: 24357 | **Likes**: 556
 - **Task**: automatic-speech-recognition
 - **URL**: https://huggingface.co/nvidia/NVIDIA-Nemotron-3.5-Transcribe-30B-A4B
 
-### baidu/Unlimited-OCR-2
-- **Downloads**: 24276 | **Likes**: 460
-- **Task**: image-text-to-text
-- **URL**: https://huggingface.co/baidu/Unlimited-OCR-2
-
 ### mistralai/Mistral-Large-4-1T-A52B
-- **Downloads**: 1239 | **Likes**: 1360
+- **Downloads**: 2945 | **Likes**: 1410
 - **Task**: image-text-to-text
 - **URL**: https://huggingface.co/mistralai/Mistral-Large-4-1T-A52B
 
+### baidu/Unlimited-OCR-2
+- **Downloads**: 69231 | **Likes**: 484
+- **Task**: image-text-to-text
+- **URL**: https://huggingface.co/baidu/Unlimited-OCR-2
+
 ### Lightricks/LTX-2.5
-- **Downloads**: 2335172 | **Likes**: 9992
+- **Downloads**: 2441077 | **Likes**: 10115
 - **Task**: image-to-video
 - **URL**: https://huggingface.co/Lightricks/LTX-2.5
 
-### ISTA-DASLab/DeepSeek-V4.1-Flash-1017-GSQ-RCO-GGUF
-- **Downloads**: 1747945 | **Likes**: 509
-- **Task**: text-generation
-- **URL**: https://huggingface.co/ISTA-DASLab/DeepSeek-V4.1-Flash-1017-GSQ-RCO-GGUF
-
-### RecursiveSI/flint
-- **Downloads**: 19015 | **Likes**: 1264
-- **Task**: text-generation
-- **URL**: https://huggingface.co/RecursiveSI/flint
-
-### XHToken/Spark-X2.6-4B
-- **Downloads**: 12515 | **Likes**: 925
-- **Task**: text-generation
-- **URL**: https://huggingface.co/XHToken/Spark-X2.6-4B
-
-### black-forest-labs/flux-3-image-klein-comfy
-- **Downloads**: 886973 | **Likes**: 2135
-- **Task**: image-to-image
-- **URL**: https://huggingface.co/black-forest-labs/flux-3-image-klein-comfy
-
 ### ccore/Qwen3.5-4B-3D-Coder
-- **Downloads**: 20197 | **Likes**: 345
+- **Downloads**: 29615 | **Likes**: 413
 - **Task**: N/A
 - **URL**: https://huggingface.co/ccore/Qwen3.5-4B-3D-Coder
 
+### XHToken/Spark-X2.6-4B
+- **Downloads**: 14515 | **Likes**: 940
+- **Task**: text-generation
+- **URL**: https://huggingface.co/XHToken/Spark-X2.6-4B
+
+### RecursiveSI/flint
+- **Downloads**: 23079 | **Likes**: 1280
+- **Task**: text-generation
+- **URL**: https://huggingface.co/RecursiveSI/flint
+
+### black-forest-labs/flux-3-image-klein-comfy
+- **Downloads**: 925236 | **Likes**: 2208
+- **Task**: image-to-image
+- **URL**: https://huggingface.co/black-forest-labs/flux-3-image-klein-comfy
+
 ### abenzerps/Qwen-Image-2.1-Uncensored-Quantized
-- **Downloads**: 2516721 | **Likes**: 5383
+- **Downloads**: 2558497 | **Likes**: 5426
 - **Task**: text-to-image
 - **URL**: https://huggingface.co/abenzerps/Qwen-Image-2.1-Uncensored-Quantized
 
-### orcarouter/DeepSeek-V4.1-Flash-1017-abliterated-GGUF
-- **Downloads**: 30433 | **Likes**: 379
-- **Task**: text-generation
-- **URL**: https://huggingface.co/orcarouter/DeepSeek-V4.1-Flash-1017-abliterated-GGUF
-
 ### Qwen/Qwen3.8-27B
-- **Downloads**: 7624809 | **Likes**: 18811
+- **Downloads**: 7581050 | **Likes**: 18875
 - **Task**: image-text-to-text
 - **URL**: https://huggingface.co/Qwen/Qwen3.8-27B
+
+### Pika-Labs/Pika-H3-Flex
+- **Downloads**: 294 | **Likes**: 275
+- **Task**: image-to-video
+- **URL**: https://huggingface.co/Pika-Labs/Pika-H3-Flex
+
+### ISTA-DASLab/DeepSeek-V4.1-Flash-1017-GSQ-RCO-GGUF
+- **Downloads**: 2076624 | **Likes**: 520
+- **Task**: text-generation
+- **URL**: https://huggingface.co/ISTA-DASLab/DeepSeek-V4.1-Flash-1017-GSQ-RCO-GGUF
 
