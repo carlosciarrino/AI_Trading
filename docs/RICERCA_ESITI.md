@@ -21,3 +21,7 @@ Questo file documenta i test effettuati sui progetti trovati dagli scout (GitHub
 - **Test**: Installazione backend (Python 3.11) in sandbox.
 - **Esito**: 424 test passati. Licenza MIT. Supporta EA per MT4/MT5.
 - **Verdetto**: **CANDIDATO**. Da approfondire per la logica di risk management e le strategie ML. Hardware compatibile.
+
+## 2026-11-01: Freqtrade (freqtrade/freqtrade)
+- **Test**: Non eseguito (richiede Python 3.12+). Licenza GPL-3.0.
+- **Verdetto**: **SCARTATO**. Progetto per crypto exchange, non per MT4/Forex. Inutile per il nostro scopo.
