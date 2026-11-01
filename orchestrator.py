@@ -140,6 +140,20 @@ def send_close_command(ticket, reason_log):
                        error="timeout_ea")
 
 
+def check_triggers():
+    """Legge triggers.json. Ritorna True se almeno 2 trigger sono attivi."""
+    triggers_path = "/home/carlo/AI_Trading/triggers.json"
+    try:
+        with open(triggers_path) as f:
+            data = json.load(f)
+        allowed = data.get("trade_allowed", False)
+        count = data.get("active_count", 0)
+        if not allowed:
+            print(f"[TRIGGER] Solo {count}/3 attivi. Attendo.", flush=True)
+        return allowed
+    except Exception:
+        return True
+
 def get_asymmetric_thresholds():
     """Ritorna (soglia_buy, soglia_sell) basate sulle ultime perdite."""
     import json
