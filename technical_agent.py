@@ -122,6 +122,12 @@ def compute_signal(df):
         signal = 0
         direction = "STAND_ASIDE"
 
+    # Supporti e Resistenze (rolling 20 periodi)
+    resistance = high.rolling(20).max().iloc[-1]
+    support = low.rolling(20).min().iloc[-1]
+    dist_to_res = (resistance - close_now) / close_now * 100
+    dist_to_sup = (close_now - support) / close_now * 100
+
     return {
         "signal": signal,
         "direction": direction,
@@ -140,6 +146,10 @@ def compute_signal(df):
         "mr_overbought": mr_overbought,
         "vol_bull": vol_bull,
         "vol_bear": vol_bear,
+        "support": round(float(support), 5),
+        "resistance": round(float(resistance), 5),
+        "dist_to_support_pct": round(float(dist_to_sup), 2),
+        "dist_to_resistance_pct": round(float(dist_to_res), 2),
     }
 
 
@@ -165,6 +175,8 @@ def process():
             f.write(f"EMA12: {res['ema_fast']} | EMA26: {res['ema_slow']}\n")
             f.write(f"ADX: {res['adx']}\n")
             f.write(f"RSI: {res['rsi']}\n")
+            f.write(f"Support: {res['support']} | Resistance: {res['resistance']}\n")
+            f.write(f"Dist to Support: {res['dist_to_support_pct']}% | Dist to Resistance: {res['dist_to_resistance_pct']}%\n")
             f.write(f"BB: {res['bb_lower']} - {res['bb_upper']}\n")
             f.write(f"OBV: {res['obv']} | OBV_MA: {res['obv_ma']}\n")
             f.write(f"Trend: bull={res['trend_bull']} bear={res['trend_bear']}\n")
