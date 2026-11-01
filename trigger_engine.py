@@ -10,6 +10,7 @@ VOLUME_JSON = "/home/carlo/Scrivania/XM MT4/MQL4/Files/volume_data.json"
 TECH_CONTEXT = os.path.join(BASE, "technical_context.txt")
 NEWS_CONTEXT = os.path.join(BASE, "news_context.txt")
 OUTPUT_JSON = os.path.join(BASE, "triggers.json")
+FORECAST_JSON = os.path.join(BASE, "forecast.json")
 
 # Soglie
 VOLUME_SPIKE_FACTOR = 2.0  # Volume > 2x media
@@ -65,18 +66,32 @@ def check_news_trigger():
         pass
     return False, "neutro"
 
+def check_forecast_trigger():
+    """Ritorna True se TimesFM prevede un movimento direzionale."""
+    try:
+        with open(FORECAST_JSON) as f:
+            data = json.load(f)
+        direction = data.get("direction", "NEUTRAL")
+        if direction in ("BULLISH", "BEARISH"):
+            return True, direction
+    except Exception:
+        pass
+    return False, "neutro"
+
 def main():
     t_vol, msg_vol = check_volume_trigger()
     t_reg, msg_reg = check_regime_trigger()
     t_news, msg_news = check_news_trigger()
+    t_for, msg_for = check_forecast_trigger()
     
-    active_count = sum([t_vol, t_reg, t_news])
+    active_count = sum([t_vol, t_reg, t_news, t_for])
     
     result = {
         "timestamp": datetime.now().isoformat(),
         "volume": {"active": t_vol, "reason": msg_vol},
         "regime": {"active": t_reg, "reason": msg_reg},
         "news": {"active": t_news, "reason": msg_news},
+        "forecast": {"active": t_for, "reason": msg_for},
         "active_count": active_count,
         "trade_allowed": active_count >= 2  # Almeno 2 trigger su 3
     }
