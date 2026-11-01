@@ -172,6 +172,22 @@ def get_asymmetric_thresholds():
         pass
     return 0.08, 0.08
 
+def get_bull_score(scores):
+    """Somma solo i segnali positivi (forza del lato BUY)."""
+    total = 0.0
+    for k, v in scores.items():
+        if v > 0:
+            total += v
+    return total
+
+def get_bear_score(scores):
+    """Somma solo i segnali negativi (forza del lato SELL)."""
+    total = 0.0
+    for k, v in scores.items():
+        if v < 0:
+            total += abs(v)
+    return total
+
 def get_signal():
     scores = {}
     try:
@@ -273,15 +289,22 @@ def get_signal():
     print(f"Punteggio combinato: {final_score:.3f}", flush=True)
     # P007: diagnostica scores su stdout
     print(f"[SCORES] {scores}", flush=True)
-    soglia_buy, soglia_sell = get_asymmetric_thresholds()
-    if final_score > soglia_buy:
+    # Bull vs Bear: chi ha la maggioranza piu' chiara?
+    bull_score = get_bull_score(scores)
+    bear_score = get_bear_score(scores)
+    
+    # Margine minimo per agire (evita pareggi)
+    margin = 0.05
+    
+    if bull_score > bear_score + margin:
         signal = "BUY"
-        print(f"[ASYM] Soglia BUY: {soglia_buy:.2f}", flush=True)
-    elif final_score < -soglia_sell:
+        print(f"[BULL] Bull {bull_score:.2f} vs Bear {bear_score:.2f}", flush=True)
+    elif bear_score > bull_score + margin:
         signal = "SELL"
-        print(f"[ASYM] Soglia SELL: {soglia_sell:.2f}", flush=True)
+        print(f"[BEAR] Bear {bear_score:.2f} vs Bull {bull_score:.2f}", flush=True)
     else:
         signal = "HOLD"
+        print(f"[HOLD] Pareggio: Bull {bull_score:.2f} vs Bear {bear_score:.2f}", flush=True)
     detail = {
         "scores": dict(scores),
         "weights": dict(weights),
