@@ -22,7 +22,6 @@ Git: commit 5325f18: pendenze: P016-P020 (tools fossile, mt4_shared, engram, tes
 
 ## 2. Diario azioni
 
-- 27 October 2026 - c0d29b7: P022-bis: 3 scout attivi in cron (GitHub, HF, arXiv). Supervisor pulito.
 - 27 October 2026 - 97b349e: Security: rimossi file token dalla root e aggiunti a gitignore
 - 27 October 2026 - cbebc18: Strategia: news_agent piu' conservativo (+2 soglia); orchestrator filtro RSI (70/30)
 - 27 October 2026 - a78a5e3: auto-sync mar 27 ott 2026, 16:00:01, -03
@@ -222,6 +221,7 @@ Git: commit 5325f18: pendenze: P016-P020 (tools fossile, mt4_shared, engram, tes
 - 03 November 2026 - 5f3419a: auto-sync mar 3 nov 2026, 12:00:01, -03
 - 03 November 2026 - 7eb2955: auto-sync mar 3 nov 2026, 13:00:01, -03
 - 03 November 2026 - 71bb78d: auto-sync mar 3 nov 2026, 14:00:01, -03
+- 03 November 2026 - 346da06: auto-sync mar 3 nov 2026, 15:00:01, -03
 
 ## 3. Problemi noti
 
