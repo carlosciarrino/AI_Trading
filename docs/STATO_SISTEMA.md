@@ -22,7 +22,6 @@ Git: commit 5325f18: pendenze: P016-P020 (tools fossile, mt4_shared, engram, tes
 
 ## 2. Diario azioni
 
-- 27 October 2026 - a3ff620: auto-sync mar 27 ott 2026, 13:00:01, -03
 - 27 October 2026 - 12aa114: auto-sync mar 27 ott 2026, 14:00:01, -03
 - 27 October 2026 - bc093ed: auto-sync mar 27 ott 2026, 15:00:01, -03
 - 27 October 2026 - ec68541: P022-bis: 3 scout attivi in cron (GitHub, HF, arXiv). Supervisor pulito.
@@ -222,6 +221,7 @@ Git: commit 5325f18: pendenze: P016-P020 (tools fossile, mt4_shared, engram, tes
 - 03 November 2026 - 6a75b05: auto-sync mar 3 nov 2026, 08:00:01, -03
 - 03 November 2026 - 6cd56c9: auto-sync mar 3 nov 2026, 09:00:01, -03
 - 03 November 2026 - ab0bca3: auto-sync mar 3 nov 2026, 10:00:01, -03
+- 03 November 2026 - bcc8dbf: auto-sync mar 3 nov 2026, 11:00:01, -03
 
 ## 3. Problemi noti
 
