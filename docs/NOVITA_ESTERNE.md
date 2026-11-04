@@ -1,4 +1,4 @@
-# NOVITA' ESTERNE (aggiornato 2026-11-03T16:34:21.059711)
+# NOVITA' ESTERNE (aggiornato 2026-11-04T09:46:10.078699)
 
 ## GitHub (Python, ultimi 60gg, >30 stelle)
 
