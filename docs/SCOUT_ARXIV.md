@@ -1,42 +1,42 @@
-# SCOUT ARXIV (aggiornato 2026-11-04T21:57:10.068175)
+# SCOUT ARXIV (aggiornato 2026-11-05T07:20:02.193505)
 
-### Beyond Anonymous Order Flow: Wallet Identity as a Feature for Short-Horizon Return Prediction
-- **Link**: http://arxiv.org/abs/2611.05218v1
-- **Abstract**: Conventional public order-book data summarize trading without identifying the accounts behind it. Hyperliquid's Level-4 record also exposes persistent pseudonymous wallet addresses. We reconstruct ful...
+### Continual Classification Beyond the Kernel Regime: Harnessing the Sparsity Bias of L2 Regularization in Diagonal Linear Networks
+- **Link**: http://arxiv.org/abs/2611.06759v1
+- **Abstract**: We study logistic regression for continual learning with linear predictors in a high-dimensional statistical setting. Existing theoretical work has largely focused on continual linear regression with ...
 
-### Multi-Objective Generative Optimization via Expected Hypervolume Fine-Tuning
-- **Link**: http://arxiv.org/abs/2611.05207v1
-- **Abstract**: Scientific discovery requires plausible designs spanning useful trade-offs among competing properties: a molecule with strong binding affinity, for example, may be difficult to synthesize. Pretrained ...
+### Energy-Guided Transport for Projection-Free Physics-Informed Flow Matching
+- **Link**: http://arxiv.org/abs/2611.06711v1
+- **Abstract**: Deep generative models, particularly Flow Matching frameworks, have emerged as powerful tools for synthesizing complex physical systems. However, standard architectures remain purely statistically dri...
 
-### Towards an Optimal Control Foundation of Early Exits - Turnpikes and ResNets
-- **Link**: http://arxiv.org/abs/2611.05120v1
-- **Abstract**: The feed-forward propagation through neural networks is crucial for training and inference. To trade off efficiency and accuracy, it has been proposed to consider intermediate outputs of hidden states...
+### Hard to Fool: A Bounded LLM Research Loop for Quantitative Finance, and What Two Dozen Campaigns Found
+- **Link**: http://arxiv.org/abs/2611.06607v1
+- **Abstract**: Agentic research loops that let a language model propose a change, run a fixed experiment and keep whatever improves the metric work well in machine learning. In trading research the same loop is a ma...
 
-### Koopman Generative Operators for Efficient Probabilistic Time-Series Forecasting
-- **Link**: http://arxiv.org/abs/2611.04760v1
-- **Abstract**: Probabilistic time-series forecasting requires models that simultaneously capture structured temporal dynamics, expressive uncertainty, and efficient inference, yet existing approaches fall short of t...
+### RAGAM-AI: A Hybrid Reinforcement Learning based Agentic approach powered by Generative AI for Edge Resource Management
+- **Link**: http://arxiv.org/abs/2611.06554v1
+- **Abstract**: Resource management for distributed edge networks hosting different services has been handled efficiently using Reinforcement learning (RL). Reward generalization in complex workflows is still an open...
 
-### CosmosAlpha: Multi-Relational Graph Search with Pareto-Guided Exploration for LLM-Driven Alpha Mining
-- **Link**: http://arxiv.org/abs/2611.04555v1
-- **Abstract**: Discovering predictive alpha factors from noisy financial data is a fundamental yet challenging problem in quantitative finance. LLM-driven formulaic alpha mining offers an attractive paradigm by comb...
+### Within-Family EfficientNet Scaling under Fixed-Resolution Transfer Learning for Spectral-Domain Optical Coherence Tomography Retinal Disease Classification
+- **Link**: http://arxiv.org/abs/2611.06452v1
+- **Abstract**: Background/Objectives: CNNs perform well in retinal disease classification from spectral-domain optical coherence tomography (SD-OCT), but whether EfficientNet's natural-image scaling hierarchy transf...
 
-### Hierarchical Intelligent Evolutionary Optimization for UAV-Assisted NOMA-MEC Systems
-- **Link**: http://arxiv.org/abs/2611.04474v1
-- **Abstract**: The integration of unmanned aerial vehicles (UAVs), mobile edge computing (MEC) and non-orthogonal multiple access (NOMA) provides an effective solution for computation-intensive and latency-sensitive...
+### Short-Term Forecasting of Heterogeneous Wind Power Fleets: Global Temporal Fusion Transformer Leveraging Static Covariates
+- **Link**: http://arxiv.org/abs/2611.06130v1
+- **Abstract**: Accurate short-term wind power forecasting is critical for grid stability and electricity trading. While transformer-based deep learning is state of the art, industry practice relies mostly on local m...
 
-### Impact of Input Resolution in Mammographic Mass Detection: A Controlled Multi-Architecture Study
-- **Link**: http://arxiv.org/abs/2611.04200v1
-- **Abstract**: Deep-learning-based mass detectors usually downsample mammograms, trading fine image detail for lower computational cost. However, published studies cannot reveal how much accuracy this trade-off sacr...
+### BAM: Bivariate Additive Models for Interpretable Tabular Prediction
+- **Link**: http://arxiv.org/abs/2611.05940v1
+- **Abstract**: Generalized Additive Models with pairwise interactions (GA$^2$Ms) are regarded as glass-box models, since each pairwise shape function can be visualized as a contour plot. In practice, the shape funct...
 
-### Rapid Mean-Field Formation Transport with a Shared-Representation Neural Fokker-Planck Controller
-- **Link**: http://arxiv.org/abs/2611.03981v1
-- **Abstract**: This paper develops a mean-field formation transport method with low online computational cost for large-scale multi-agent systems. Classical mean-field planners often require repeated solutions of co...
+### Retrieval Supersedes Scale: Efficient Log Level Prediction via Multiplex Socio-Technical Context
+- **Link**: http://arxiv.org/abs/2611.05901v1
+- **Abstract**: Developers insert logging statements in source code to record its execution, and the resulting logs are essential for detecting and troubleshooting system anomalies. A key part of these statements is ...
 
-### Forget What Comes Next: LLM Unlearning via Statistical Independence
-- **Link**: http://arxiv.org/abs/2611.03955v1
-- **Abstract**: Large language models (LLMs) can memorize and reproduce fragments of their training data, raising privacy and legal concerns that motivate machine unlearning. Yet poisoned training examples can remain...
+### Timing is Everything: Inferring Temporal Membership in Continually Updated Models
+- **Link**: http://arxiv.org/abs/2611.05781v1
+- **Abstract**: Continual model updating has become a common practice in the deployment of machine learning systems. However, the dynamic training behaviors give rise to new risks not sufficiently addressed by existi...
 
-### Camera Radar LiDAR Fusion via Point-Cloud Projection for Multi-Task Learning
-- **Link**: http://arxiv.org/abs/2611.03942v1
-- **Abstract**: Autonomous vehicles require robust perception systems to operate safely under diverse environmental conditions. While cameras provide high-resolution visual data, their performance significantly degra...
+### Near-Minimax Sample Complexity for Multi-Objective Reinforcement Learning under Generative Models
+- **Link**: http://arxiv.org/abs/2611.05562v1
+- **Abstract**: In multi-objective reinforcement learning, preferences may be specified only after data collection, requiring one dataset to support a continuum of reward trade-offs. We study finite discounted Markov...
 
