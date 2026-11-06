@@ -1,77 +1,77 @@
-# SCOUT HUGGING FACE (aggiornato 2026-11-05T07:10:02.441687)
+# SCOUT HUGGING FACE (aggiornato 2026-11-06T12:46:04.731093)
 
 ### moonshotai/Kimi-K3.1-Pro
-- **Downloads**: 797 | **Likes**: 686
+- **Downloads**: 18432 | **Likes**: 1398
 - **Task**: image-text-to-text
 - **URL**: https://huggingface.co/moonshotai/Kimi-K3.1-Pro
 
 ### speridlabs/idol
-- **Downloads**: 14613 | **Likes**: 660
+- **Downloads**: 19139 | **Likes**: 885
 - **Task**: image-to-3d
 - **URL**: https://huggingface.co/speridlabs/idol
 
-### mistralai/Mistral-Large-4-1T-A52B
-- **Downloads**: 9592 | **Likes**: 1597
-- **Task**: image-text-to-text
-- **URL**: https://huggingface.co/mistralai/Mistral-Large-4-1T-A52B
-
-### Pika-Labs/Pika-H3-Flex
-- **Downloads**: 749 | **Likes**: 439
-- **Task**: image-to-video
-- **URL**: https://huggingface.co/Pika-Labs/Pika-H3-Flex
-
-### nvidia/NVIDIA-Nemotron-3.5-Transcribe-30B-A4B
-- **Downloads**: 57297 | **Likes**: 3034
-- **Task**: automatic-speech-recognition
-- **URL**: https://huggingface.co/nvidia/NVIDIA-Nemotron-3.5-Transcribe-30B-A4B
-
-### Lightricks/LTX-2.5
-- **Downloads**: 2561845 | **Likes**: 10652
-- **Task**: image-to-video
-- **URL**: https://huggingface.co/Lightricks/LTX-2.5
-
 ### ccore/Qwen3.5-4B-3D-Coder
-- **Downloads**: 123321 | **Likes**: 667
+- **Downloads**: 190243 | **Likes**: 761
 - **Task**: N/A
 - **URL**: https://huggingface.co/ccore/Qwen3.5-4B-3D-Coder
 
+### Lightricks/LTX-2.5
+- **Downloads**: 2607491 | **Likes**: 10816
+- **Task**: image-to-video
+- **URL**: https://huggingface.co/Lightricks/LTX-2.5
+
 ### burner22/numbat
-- **Downloads**: 8118 | **Likes**: 347
+- **Downloads**: 9066 | **Likes**: 364
 - **Task**: N/A
 - **URL**: https://huggingface.co/burner22/numbat
 
 ### FusionCow/Sulphur-3
-- **Downloads**: 528 | **Likes**: 367
+- **Downloads**: 950 | **Likes**: 390
 - **Task**: N/A
 - **URL**: https://huggingface.co/FusionCow/Sulphur-3
 
-### deepseek-ai/DeepSeek-V4.1-Flash-1017
-- **Downloads**: 243508 | **Likes**: 5314
-- **Task**: image-text-to-text
-- **URL**: https://huggingface.co/deepseek-ai/DeepSeek-V4.1-Flash-1017
+### nvidia/NVIDIA-Nemotron-3.5-Transcribe-30B-A4B
+- **Downloads**: 61049 | **Likes**: 3069
+- **Task**: automatic-speech-recognition
+- **URL**: https://huggingface.co/nvidia/NVIDIA-Nemotron-3.5-Transcribe-30B-A4B
+
+### ricursiveAI/Ripple-65B-Preview
+- **Downloads**: 2013 | **Likes**: 311
+- **Task**: N/A
+- **URL**: https://huggingface.co/ricursiveAI/Ripple-65B-Preview
 
 ### Qwen/Qwen3.8-27B
-- **Downloads**: 8037597 | **Likes**: 19176
+- **Downloads**: 7845288 | **Likes**: 19246
 - **Task**: image-text-to-text
 - **URL**: https://huggingface.co/Qwen/Qwen3.8-27B
 
-### LiquidAI/LFM3-1.7B
-- **Downloads**: 54959 | **Likes**: 1497
-- **Task**: text-generation
-- **URL**: https://huggingface.co/LiquidAI/LFM3-1.7B
-
 ### AtomicChat/DeepSeek-V4.1-Flash-1017-Uncensored-GSQ-RCO-GGUF
-- **Downloads**: 73659 | **Likes**: 304
+- **Downloads**: 108162 | **Likes**: 337
 - **Task**: text-generation
 - **URL**: https://huggingface.co/AtomicChat/DeepSeek-V4.1-Flash-1017-Uncensored-GSQ-RCO-GGUF
 
-### Edge0/Audio8-TTS-Realistic-Air
-- **Downloads**: 11349 | **Likes**: 305
-- **Task**: text-to-speech
-- **URL**: https://huggingface.co/Edge0/Audio8-TTS-Realistic-Air
+### Pika-Labs/Pika-H3-Flex
+- **Downloads**: 986 | **Likes**: 486
+- **Task**: image-to-video
+- **URL**: https://huggingface.co/Pika-Labs/Pika-H3-Flex
 
-### abenzerps/Qwen-Image-2.1-Turbo-Quantized
-- **Downloads**: 233059 | **Likes**: 5653
-- **Task**: text-to-image
-- **URL**: https://huggingface.co/abenzerps/Qwen-Image-2.1-Turbo-Quantized
+### mistralai/Mistral-Large-4-1T-A52B
+- **Downloads**: 10530 | **Likes**: 1622
+- **Task**: image-text-to-text
+- **URL**: https://huggingface.co/mistralai/Mistral-Large-4-1T-A52B
+
+### black-forest-labs/flux-3-image-klein-comfy
+- **Downloads**: 1109078 | **Likes**: 2608
+- **Task**: image-to-image
+- **URL**: https://huggingface.co/black-forest-labs/flux-3-image-klein-comfy
+
+### DavidAU/Qwen3.8-27B-TURBO-Fable-Cold-Fusion-735-882-Heretic-Uncensored-NEO-CODER-MAX-MTP-GGUF
+- **Downloads**: 1518569 | **Likes**: 2577
+- **Task**: image-text-to-text
+- **URL**: https://huggingface.co/DavidAU/Qwen3.8-27B-TURBO-Fable-Cold-Fusion-735-882-Heretic-Uncensored-NEO-CODER-MAX-MTP-GGUF
+
+### LiquidAI/LFM3-1.7B
+- **Downloads**: 66003 | **Likes**: 1522
+- **Task**: text-generation
+- **URL**: https://huggingface.co/LiquidAI/LFM3-1.7B
 

@@ -1,42 +1,42 @@
-# SCOUT ARXIV (aggiornato 2026-11-05T07:20:02.193505)
+# SCOUT ARXIV (aggiornato 2026-11-06T12:46:04.824292)
 
-### Continual Classification Beyond the Kernel Regime: Harnessing the Sparsity Bias of L2 Regularization in Diagonal Linear Networks
-- **Link**: http://arxiv.org/abs/2611.06759v1
-- **Abstract**: We study logistic regression for continual learning with linear predictors in a high-dimensional statistical setting. Existing theoretical work has largely focused on continual linear regression with ...
+### Understanding AI from the Inside: The State of Mechanistic Interpretability for AI Safety
+- **Link**: http://arxiv.org/abs/2611.08438v1
+- **Abstract**: Neural networks are likely to be among the most consequential artefacts in human history. As these systems become more capable and autonomous, their potential to cause societal harm also grows, making...
 
-### Energy-Guided Transport for Projection-Free Physics-Informed Flow Matching
-- **Link**: http://arxiv.org/abs/2611.06711v1
-- **Abstract**: Deep generative models, particularly Flow Matching frameworks, have emerged as powerful tools for synthesizing complex physical systems. However, standard architectures remain purely statistically dri...
+### SHORE: Stability-Hybrid On-Policy Reinforcement Learning for Online Bin Packing
+- **Link**: http://arxiv.org/abs/2611.08364v1
+- **Abstract**: Online 3D bin packing with a processing buffer requires choosing which box to pack, its orientation, and its placement while keeping the stack stable under unknown future arrivals. A collapse ends the...
 
-### Hard to Fool: A Bounded LLM Research Loop for Quantitative Finance, and What Two Dozen Campaigns Found
-- **Link**: http://arxiv.org/abs/2611.06607v1
-- **Abstract**: Agentic research loops that let a language model propose a change, run a fixed experiment and keep whatever improves the metric work well in machine learning. In trading research the same loop is a ma...
+### Series-wise Cross-validation for Global Time Series Forecasting
+- **Link**: http://arxiv.org/abs/2611.08252v1
+- **Abstract**: We consider the problem of cross-validation (CV) in time series forecasting, with a focus on global forecasting models based on deep learning. The prevailing CV strategy in forecasting is to partition...
 
-### RAGAM-AI: A Hybrid Reinforcement Learning based Agentic approach powered by Generative AI for Edge Resource Management
-- **Link**: http://arxiv.org/abs/2611.06554v1
-- **Abstract**: Resource management for distributed edge networks hosting different services has been handled efficiently using Reinforcement learning (RL). Reward generalization in complex workflows is still an open...
+### BUMP: Brief Unexpected Mid-Interpolation Peak
+- **Link**: http://arxiv.org/abs/2611.08182v1
+- **Abstract**: We identify an intriguing phenomenon when linearly interpolating between permutation-aligned neural networks: test accuracy briefly improves near the interpolation endpoints before dropping toward the...
 
-### Within-Family EfficientNet Scaling under Fixed-Resolution Transfer Learning for Spectral-Domain Optical Coherence Tomography Retinal Disease Classification
-- **Link**: http://arxiv.org/abs/2611.06452v1
-- **Abstract**: Background/Objectives: CNNs perform well in retinal disease classification from spectral-domain optical coherence tomography (SD-OCT), but whether EfficientNet's natural-image scaling hierarchy transf...
+### Regret Bounds for Profit Maximization in Bilateral Trade: Learning the Best Posted-Price Mechanism
+- **Link**: http://arxiv.org/abs/2611.08173v1
+- **Abstract**: Bilateral trade models the task of intermediating between two strategic agents, a seller and a buyer, willing to trade a good for which they hold private valuations. We study this problem from the per...
 
-### Short-Term Forecasting of Heterogeneous Wind Power Fleets: Global Temporal Fusion Transformer Leveraging Static Covariates
-- **Link**: http://arxiv.org/abs/2611.06130v1
-- **Abstract**: Accurate short-term wind power forecasting is critical for grid stability and electricity trading. While transformer-based deep learning is state of the art, industry practice relies mostly on local m...
+### AI-Native Task-Oriented Semantic Communications over a Relay: Benefits and Vulnerabilities
+- **Link**: http://arxiv.org/abs/2611.08155v1
+- **Abstract**: Semantic communication (SemCom) using a relay node is considered, where the relay assists in conveying task-relevant information from a source to a destination, with meaning defined by classification ...
 
-### BAM: Bivariate Additive Models for Interpretable Tabular Prediction
-- **Link**: http://arxiv.org/abs/2611.05940v1
-- **Abstract**: Generalized Additive Models with pairwise interactions (GA$^2$Ms) are regarded as glass-box models, since each pairwise shape function can be visualized as a contour plot. In practice, the shape funct...
+### DictLLM: Post-training Compression of Large Language Model with Dictionary Kernels
+- **Link**: http://arxiv.org/abs/2611.08082v1
+- **Abstract**: Efficient deployment of large language models (LLMs) on mobile devices requires balancing performance with compute and memory constraints. Post-training compression is an effective approach to managin...
 
-### Retrieval Supersedes Scale: Efficient Log Level Prediction via Multiplex Socio-Technical Context
-- **Link**: http://arxiv.org/abs/2611.05901v1
-- **Abstract**: Developers insert logging statements in source code to record its execution, and the resulting logs are essential for detecting and troubleshooting system anomalies. A key part of these statements is ...
+### Masked diffusion as random sequential adsorption: an exactly solvable model for parallel decoding
+- **Link**: http://arxiv.org/abs/2611.07845v1
+- **Abstract**: Masked diffusion models generate text by reversing a stochastic masking process. Unlike autoregressive LLMs, which generate text one token at a time, they can reveal many tokens in parallel, at the pr...
 
-### Timing is Everything: Inferring Temporal Membership in Continually Updated Models
-- **Link**: http://arxiv.org/abs/2611.05781v1
-- **Abstract**: Continual model updating has become a common practice in the deployment of machine learning systems. However, the dynamic training behaviors give rise to new risks not sufficiently addressed by existi...
+### Foresee to Trade: Forecast-Augmented Policy Optimization for Portfolio Management
+- **Link**: http://arxiv.org/abs/2611.07750v1
+- **Abstract**: Online investment services must translate asset opportunities into investment outcomes for users' accounts, yet the same market opportunity can warrant different account actions. We study how supervis...
 
-### Near-Minimax Sample Complexity for Multi-Objective Reinforcement Learning under Generative Models
-- **Link**: http://arxiv.org/abs/2611.05562v1
-- **Abstract**: In multi-objective reinforcement learning, preferences may be specified only after data collection, requiring one dataset to support a continuum of reward trade-offs. We study finite discounted Markov...
+### An Information Bottleneck for Post-hoc Memorization Mitigation in LLMs
+- **Link**: http://arxiv.org/abs/2611.07669v1
+- **Abstract**: Recent studies have shown that large language models (LLMs) can memorize and reproduce copyrighted training data, raising serious privacy and intellectual property concerns. In this work, we investiga...
 
