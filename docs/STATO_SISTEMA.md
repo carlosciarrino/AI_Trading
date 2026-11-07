@@ -22,7 +22,6 @@ Git: commit 5325f18: pendenze: P016-P020 (tools fossile, mt4_shared, engram, tes
 
 ## 2. Diario azioni
 
-- 30 October 2026 - cadeb55: Fix: trend parser (bear=true) e ribilanciamento pesi (news 0.1, volume/exp 0.3)
 - 30 October 2026 - 268f9c0: auto-sync ven 30 ott 2026, 14:00:01, -03
 - 30 October 2026 - a5bf541: auto-sync ven 30 ott 2026, 14:00:01, -03
 - 30 October 2026 - 2b02dc6: Security: ignora token huggingface
@@ -222,6 +221,7 @@ Git: commit 5325f18: pendenze: P016-P020 (tools fossile, mt4_shared, engram, tes
 - 07 November 2026 - 9efa8ff: auto-sync sab 7 nov 2026, 16:00:01, -03
 - 07 November 2026 - 1c6c38e: auto-sync sab 7 nov 2026, 17:00:01, -03
 - 07 November 2026 - 8321733: auto-sync sab 7 nov 2026, 18:00:02, -03
+- 07 November 2026 - 4955dc5: auto-sync sab 7 nov 2026, 19:00:01, -03
 
 ## 3. Problemi noti
 
