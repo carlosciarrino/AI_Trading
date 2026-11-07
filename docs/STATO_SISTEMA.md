@@ -22,7 +22,6 @@ Git: commit 5325f18: pendenze: P016-P020 (tools fossile, mt4_shared, engram, tes
 
 ## 2. Diario azioni
 
-- 30 October 2026 - 0e5c4cb: auto-sync ven 30 ott 2026, 11:00:01, -03
 - 30 October 2026 - d0992e8: auto-sync ven 30 ott 2026, 12:00:01, -03
 - 30 October 2026 - 74cde87: auto-sync ven 30 ott 2026, 13:00:01, -03
 - 30 October 2026 - cadeb55: Fix: trend parser (bear=true) e ribilanciamento pesi (news 0.1, volume/exp 0.3)
@@ -222,6 +221,7 @@ Git: commit 5325f18: pendenze: P016-P020 (tools fossile, mt4_shared, engram, tes
 - 07 November 2026 - 0428198: auto-sync sab 7 nov 2026, 14:00:01, -03
 - 07 November 2026 - b58df90: Config: max_lots 0.01 per test strategia senza amplificazione PNL
 - 07 November 2026 - 2cd7410: auto-sync sab 7 nov 2026, 15:00:01, -03
+- 07 November 2026 - 9efa8ff: auto-sync sab 7 nov 2026, 16:00:01, -03
 
 ## 3. Problemi noti
 
