@@ -1,77 +1,77 @@
-# SCOUT HUGGING FACE (aggiornato 2026-11-06T13:53:43.099896)
+# SCOUT HUGGING FACE (aggiornato 2026-11-07T07:10:02.140650)
 
 ### moonshotai/Kimi-K3.1-Pro
-- **Downloads**: 18432 | **Likes**: 1409
+- **Downloads**: 22571 | **Likes**: 1579
 - **Task**: image-text-to-text
 - **URL**: https://huggingface.co/moonshotai/Kimi-K3.1-Pro
 
 ### speridlabs/idol
-- **Downloads**: 19139 | **Likes**: 889
+- **Downloads**: 20689 | **Likes**: 994
 - **Task**: image-to-3d
 - **URL**: https://huggingface.co/speridlabs/idol
 
 ### ccore/Qwen3.5-4B-3D-Coder
-- **Downloads**: 190243 | **Likes**: 764
+- **Downloads**: 221506 | **Likes**: 816
 - **Task**: N/A
 - **URL**: https://huggingface.co/ccore/Qwen3.5-4B-3D-Coder
 
 ### Lightricks/LTX-2.5
-- **Downloads**: 2607491 | **Likes**: 10821
+- **Downloads**: 2643778 | **Likes**: 10902
 - **Task**: image-to-video
 - **URL**: https://huggingface.co/Lightricks/LTX-2.5
 
+### ricursiveAI/Ripple-65B-Preview
+- **Downloads**: 3803 | **Likes**: 348
+- **Task**: N/A
+- **URL**: https://huggingface.co/ricursiveAI/Ripple-65B-Preview
+
 ### burner22/numbat
-- **Downloads**: 9066 | **Likes**: 365
+- **Downloads**: 9212 | **Likes**: 372
 - **Task**: N/A
 - **URL**: https://huggingface.co/burner22/numbat
 
 ### FusionCow/Sulphur-3
-- **Downloads**: 950 | **Likes**: 390
+- **Downloads**: 997 | **Likes**: 400
 - **Task**: N/A
 - **URL**: https://huggingface.co/FusionCow/Sulphur-3
 
-### nvidia/NVIDIA-Nemotron-3.5-Transcribe-30B-A4B
-- **Downloads**: 61049 | **Likes**: 3070
-- **Task**: automatic-speech-recognition
-- **URL**: https://huggingface.co/nvidia/NVIDIA-Nemotron-3.5-Transcribe-30B-A4B
-
-### ricursiveAI/Ripple-65B-Preview
-- **Downloads**: 2013 | **Likes**: 312
-- **Task**: N/A
-- **URL**: https://huggingface.co/ricursiveAI/Ripple-65B-Preview
-
 ### Qwen/Qwen3.8-27B
-- **Downloads**: 7845288 | **Likes**: 19250
+- **Downloads**: 7813215 | **Likes**: 19303
 - **Task**: image-text-to-text
 - **URL**: https://huggingface.co/Qwen/Qwen3.8-27B
 
-### AtomicChat/DeepSeek-V4.1-Flash-1017-Uncensored-GSQ-RCO-GGUF
-- **Downloads**: 108162 | **Likes**: 338
-- **Task**: text-generation
-- **URL**: https://huggingface.co/AtomicChat/DeepSeek-V4.1-Flash-1017-Uncensored-GSQ-RCO-GGUF
-
-### Pika-Labs/Pika-H3-Flex
-- **Downloads**: 986 | **Likes**: 487
-- **Task**: image-to-video
-- **URL**: https://huggingface.co/Pika-Labs/Pika-H3-Flex
-
-### mistralai/Mistral-Large-4-1T-A52B
-- **Downloads**: 10530 | **Likes**: 1622
-- **Task**: image-text-to-text
-- **URL**: https://huggingface.co/mistralai/Mistral-Large-4-1T-A52B
-
-### black-forest-labs/flux-3-image-klein-comfy
-- **Downloads**: 1109078 | **Likes**: 2611
-- **Task**: image-to-image
-- **URL**: https://huggingface.co/black-forest-labs/flux-3-image-klein-comfy
+### nvidia/NVIDIA-Nemotron-3.5-Transcribe-30B-A4B
+- **Downloads**: 63798 | **Likes**: 3083
+- **Task**: automatic-speech-recognition
+- **URL**: https://huggingface.co/nvidia/NVIDIA-Nemotron-3.5-Transcribe-30B-A4B
 
 ### DavidAU/Qwen3.8-27B-TURBO-Fable-Cold-Fusion-735-882-Heretic-Uncensored-NEO-CODER-MAX-MTP-GGUF
-- **Downloads**: 1518569 | **Likes**: 2579
+- **Downloads**: 1545313 | **Likes**: 2620
 - **Task**: image-text-to-text
 - **URL**: https://huggingface.co/DavidAU/Qwen3.8-27B-TURBO-Fable-Cold-Fusion-735-882-Heretic-Uncensored-NEO-CODER-MAX-MTP-GGUF
 
+### AtomicChat/DeepSeek-V4.1-Flash-1017-Uncensored-GSQ-RCO-GGUF
+- **Downloads**: 117016 | **Likes**: 359
+- **Task**: text-generation
+- **URL**: https://huggingface.co/AtomicChat/DeepSeek-V4.1-Flash-1017-Uncensored-GSQ-RCO-GGUF
+
+### black-forest-labs/flux-3-image-klein-comfy
+- **Downloads**: 1143397 | **Likes**: 2642
+- **Task**: image-to-image
+- **URL**: https://huggingface.co/black-forest-labs/flux-3-image-klein-comfy
+
+### Pika-Labs/Pika-H3-Flex
+- **Downloads**: 1083 | **Likes**: 502
+- **Task**: image-to-video
+- **URL**: https://huggingface.co/Pika-Labs/Pika-H3-Flex
+
+### OBLITERATUS/DeepSeek-V4.1-Flash-1017-obliterated
+- **Downloads**: 3835 | **Likes**: 269
+- **Task**: text-generation
+- **URL**: https://huggingface.co/OBLITERATUS/DeepSeek-V4.1-Flash-1017-obliterated
+
 ### deepseek-ai/DeepSeek-V4.1-Flash-1017
-- **Downloads**: 259511 | **Likes**: 5350
+- **Downloads**: 277323 | **Likes**: 5373
 - **Task**: image-text-to-text
 - **URL**: https://huggingface.co/deepseek-ai/DeepSeek-V4.1-Flash-1017
 
