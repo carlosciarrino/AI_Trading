@@ -149,7 +149,7 @@ def check_triggers():
         allowed = data.get("trade_allowed", False)
         count = data.get("active_count", 0)
         if not allowed:
-            print(f"[TRIGGER] Solo {count}/3 attivi. Attendo.", flush=True)
+            print(f"[TRIGGER] Solo {count}/4 attivi. Attendo.", flush=True)
         return allowed
     except Exception:
         return True
