@@ -22,8 +22,6 @@ Git: commit 5325f18: pendenze: P016-P020 (tools fossile, mt4_shared, engram, tes
 
 ## 2. Diario azioni
 
-- 30 October 2026 - 039b2fc: auto-sync ven 30 ott 2026, 08:00:01, -03
-- 30 October 2026 - d289f82: auto-sync ven 30 ott 2026, 09:00:02, -03
 - 30 October 2026 - d3f67ec: auto-sync ven 30 ott 2026, 10:00:01, -03
 - 30 October 2026 - 0e5c4cb: auto-sync ven 30 ott 2026, 11:00:01, -03
 - 30 October 2026 - d0992e8: auto-sync ven 30 ott 2026, 12:00:01, -03
@@ -222,6 +220,8 @@ Git: commit 5325f18: pendenze: P016-P020 (tools fossile, mt4_shared, engram, tes
 - 07 November 2026 - 40169d4: Fix critico: Trend Filter severo (EMA21) e Cooldown Anti Ping-Pong (120min)
 - 07 November 2026 - 89f36b3: Fix: Trigger Engine ed Event Risk ora controllati prima di ogni apertura
 - 07 November 2026 - 7547b7f: Fix: log trigger engine mostra 4 trigger (non 3)
+- 07 November 2026 - 0428198: auto-sync sab 7 nov 2026, 14:00:01, -03
+- 07 November 2026 - b58df90: Config: max_lots 0.01 per test strategia senza amplificazione PNL
 
 ## 3. Problemi noti
 
