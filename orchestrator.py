@@ -604,6 +604,23 @@ def main():
                 continue
 
             open_count = count_open_orders()
+
+            # Trigger di mercato (Volume, Regime, News, Forecast)
+            if not check_triggers():
+                print("[TRIGGER] Condizioni di mercato insufficienti. Attendo.", flush=True)
+                time.sleep(MAIN_LOOP_SLEEP)
+                continue
+
+            # Event Risk: blocca se ci sono notizie macro imminenti
+            try:
+                with open('/home/carlo/AI_Trading/event_risk.json') as f:
+                    er = json.load(f)
+                if er.get("block", False):
+                    print(f"[EVENT-RISK] {er.get('reason')}", flush=True)
+                    time.sleep(MAIN_LOOP_SLEEP)
+                    continue
+            except Exception:
+                pass
             max_orders = get_max_orders()
             if open_count >= max_orders:
                 print(f"Limite operazioni raggiunto ({open_count}/{max_orders}).", flush=True)
