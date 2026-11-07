@@ -620,7 +620,39 @@ def main():
                 time.sleep(MAIN_LOOP_SLEEP)
                 continue
 
-            # P055: filtro trend (blocca controtendenza)
+            # Filtro Trend Severo (Prezzo vs EMA)
+            try:
+                import re
+                with open('/home/carlo/AI_Trading/technical_context.txt') as f:
+                    tech_text = f.read().lower()
+                
+                # Estrai close, EMA9, EMA21
+                close_m = re.search(r'close:\s*([0-9.]+)', tech_text)
+                ema9_m = re.search(r'ema9:\s*([0-9.]+)', tech_text)
+                ema21_m = re.search(r'ema21:\s*([0-9.]+)', tech_text)
+                
+                if close_m and ema9_m and ema21_m:
+                    close = float(close_m.group(1))
+                    ema9 = float(ema9_m.group(1))
+                    ema21 = float(ema21_m.group(1))
+                    
+                    # Se il prezzo e' sotto la EMA21, blocca i BUY (trend bear)
+                    if signal == "BUY" and close < ema21:
+                        print(f"[TREND-FILTER] Prezzo {close} < EMA21 {ema21}. BUY bloccato.", flush=True)
+                        write_decision(detail, action_taken="none", reason="price_below_ema21")
+                        time.sleep(MAIN_LOOP_SLEEP)
+                        continue
+                        
+                    # Se il prezzo e' sopra la EMA21, blocca i SELL (trend bull)
+                    if signal == "SELL" and close > ema21:
+                        print(f"[TREND-FILTER] Prezzo {close} > EMA21 {ema21}. SELL bloccato.", flush=True)
+                        write_decision(detail, action_taken="none", reason="price_above_ema21")
+                        time.sleep(MAIN_LOOP_SLEEP)
+                        continue
+            except Exception as e:
+                print(f"[TREND-FILTER] Errore lettura: {e}", flush=True)
+
+            # P055: filtro trend originale
             tech = get_technical_trend()
             if tech == "bear" and signal == "BUY":
                 print("[P055] Trend bear, BUY bloccato.", flush=True)
