@@ -22,8 +22,6 @@ Git: commit 5325f18: pendenze: P016-P020 (tools fossile, mt4_shared, engram, tes
 
 ## 2. Diario azioni
 
-- 30 October 2026 - 268f9c0: auto-sync ven 30 ott 2026, 14:00:01, -03
-- 30 October 2026 - a5bf541: auto-sync ven 30 ott 2026, 14:00:01, -03
 - 30 October 2026 - 2b02dc6: Security: ignora token huggingface
 - 30 October 2026 - 421aa55: Feature: EMA veloci (9/21), agente report settimanale. Fix strategia.
 - 30 October 2026 - 2ce9bfb: Fix: EMA veloci (9/21), report settimanale, fallback token GitHub
@@ -222,6 +220,8 @@ Git: commit 5325f18: pendenze: P016-P020 (tools fossile, mt4_shared, engram, tes
 - 07 November 2026 - 1c6c38e: auto-sync sab 7 nov 2026, 17:00:01, -03
 - 07 November 2026 - 8321733: auto-sync sab 7 nov 2026, 18:00:02, -03
 - 07 November 2026 - 4955dc5: auto-sync sab 7 nov 2026, 19:00:01, -03
+- 07 November 2026 - a08f00d: auto-sync sab 7 nov 2026, 20:00:01, -03
+- 08 November 2026 - 64a6aae: Feature: Volume soglia 1.5x + Filtro Candela (LONG/SHORT) da simulazione vincente
 
 ## 3. Problemi noti
 

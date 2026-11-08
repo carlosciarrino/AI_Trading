@@ -1,4 +1,4 @@
-# SCOUT ARXIV (aggiornato 2026-11-07T07:20:01.919711)
+# SCOUT ARXIV (aggiornato 2026-11-08T18:01:31.852395)
 
 ### Understanding AI from the Inside: The State of Mechanistic Interpretability for AI Safety
 - **Link**: http://arxiv.org/abs/2611.08438v1
