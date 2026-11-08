@@ -13,7 +13,7 @@ OUTPUT_JSON = os.path.join(BASE, "triggers.json")
 FORECAST_JSON = os.path.join(BASE, "forecast.json")
 
 # Soglie
-VOLUME_SPIKE_FACTOR = 2.0  # Volume > 2x media
+VOLUME_SPIKE_FACTOR = 1.5  # Volume > 2x media
 ADX_TREND_THRESHOLD = 25.0  # ADX > 25 = trend forte
 
 def check_volume_trigger():

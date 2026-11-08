@@ -637,6 +637,23 @@ def main():
                 time.sleep(MAIN_LOOP_SLEEP)
                 continue
 
+            # Filtro Candela (signal LONG/SHORT da technical_context)
+            try:
+                with open('/home/carlo/AI_Trading/technical_context.txt') as f:
+                    tech_txt = f.read().lower()
+                if signal == "BUY" and "signal: long" not in tech_txt:
+                    print("[CANDLE-FILTER] Segnale LONG assente. BUY bloccato.", flush=True)
+                    write_decision(detail, action_taken="none", reason="no_long_signal")
+                    time.sleep(MAIN_LOOP_SLEEP)
+                    continue
+                if signal == "SELL" and "signal: short" not in tech_txt:
+                    print("[CANDLE-FILTER] Segnale SHORT assente. SELL bloccato.", flush=True)
+                    write_decision(detail, action_taken="none", reason="no_short_signal")
+                    time.sleep(MAIN_LOOP_SLEEP)
+                    continue
+            except Exception as e:
+                print(f"[CANDLE-FILTER] Errore lettura: {e}", flush=True)
+
             # Filtro Trend Severo (Prezzo vs EMA)
             try:
                 import re
