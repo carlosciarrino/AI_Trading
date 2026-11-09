@@ -1,42 +1,42 @@
-# SCOUT ARXIV (aggiornato 2026-11-08T18:01:31.852395)
+# SCOUT ARXIV (aggiornato 2026-11-09T07:20:02.168399)
 
-### Understanding AI from the Inside: The State of Mechanistic Interpretability for AI Safety
-- **Link**: http://arxiv.org/abs/2611.08438v1
-- **Abstract**: Neural networks are likely to be among the most consequential artefacts in human history. As these systems become more capable and autonomous, their potential to cause societal harm also grows, making...
+### Online Causal Configuration for Networked Systems via Doubly Robust Steady-State Learning
+- **Link**: http://arxiv.org/abs/2611.09665v1
+- **Abstract**: Measurement exploration reveals how interacting local controllers behave but can alter the steady-state regime a network operator seeks to optimize. Exploratory rewards may therefore fail to identify ...
 
-### SHORE: Stability-Hybrid On-Policy Reinforcement Learning for Online Bin Packing
-- **Link**: http://arxiv.org/abs/2611.08364v1
-- **Abstract**: Online 3D bin packing with a processing buffer requires choosing which box to pack, its orientation, and its placement while keeping the stack stable under unknown future arrivals. A collapse ends the...
+### TensorMutation: Learning Weight-Space Mutations of Deep Learning Models on Neural Graphs
+- **Link**: http://arxiv.org/abs/2611.09650v1
+- **Abstract**: Mutation testing for deep learning (DL) faces a cost-realism trade-off. The pre-training approach produces realistic but computationally expensive mutants, whereas existing post-training operators mod...
 
-### Series-wise Cross-validation for Global Time Series Forecasting
-- **Link**: http://arxiv.org/abs/2611.08252v1
-- **Abstract**: We consider the problem of cross-validation (CV) in time series forecasting, with a focus on global forecasting models based on deep learning. The prevailing CV strategy in forecasting is to partition...
+### Steerable Multi-Objective Group-Relative Preference Optimization with Jointly Trained Low-Rank Adapters
+- **Link**: http://arxiv.org/abs/2611.09634v1
+- **Abstract**: Language model deployment often requires different trade-offs between competing objectives as user preferences change, yet standard post-training methods typically produce a single policy for a fixed ...
 
-### BUMP: Brief Unexpected Mid-Interpolation Peak
-- **Link**: http://arxiv.org/abs/2611.08182v1
-- **Abstract**: We identify an intriguing phenomenon when linearly interpolating between permutation-aligned neural networks: test accuracy briefly improves near the interpolation endpoints before dropping toward the...
+### Contextual Search and Bilateral Trade with a Trace-Square-Root Potential
+- **Link**: http://arxiv.org/abs/2611.09615v1
+- **Abstract**: We present a unified potential method for contextual search and bilateral trade with one-bit feedback and obtain order-tight algorithms for both problems. Our framework starts from a Bayesian perspect...
 
-### Regret Bounds for Profit Maximization in Bilateral Trade: Learning the Best Posted-Price Mechanism
-- **Link**: http://arxiv.org/abs/2611.08173v1
-- **Abstract**: Bilateral trade models the task of intermediating between two strategic agents, a seller and a buyer, willing to trade a good for which they hold private valuations. We study this problem from the per...
+### Know What You Need: Efficient Activation Checkpointing
+- **Link**: http://arxiv.org/abs/2611.09614v1
+- **Abstract**: Large Language Model training is increasingly constrained by memory capacity. Activation Checkpointing reduces activation memory by avoiding storing selected activations during the forward pass and re...
 
-### AI-Native Task-Oriented Semantic Communications over a Relay: Benefits and Vulnerabilities
-- **Link**: http://arxiv.org/abs/2611.08155v1
-- **Abstract**: Semantic communication (SemCom) using a relay node is considered, where the relay assists in conveying task-relevant information from a source to a destination, with meaning defined by classification ...
+### Solver-Free Decision-Focused Learning via Neural Optimization Layers for Edge Selection
+- **Link**: http://arxiv.org/abs/2611.09560v1
+- **Abstract**: Decision-focused learning trains prediction models to improve downstream decisions, but many methods require costly solver calls or optimal-solution labels. We propose a solver-free decision-focused l...
 
-### DictLLM: Post-training Compression of Large Language Model with Dictionary Kernels
-- **Link**: http://arxiv.org/abs/2611.08082v1
-- **Abstract**: Efficient deployment of large language models (LLMs) on mobile devices requires balancing performance with compute and memory constraints. Post-training compression is an effective approach to managin...
+### Optimal Regret for Profit Maximization in Bilateral Trade
+- **Link**: http://arxiv.org/abs/2611.09558v1
+- **Abstract**: Learning to profit from trade requires learning both sides of a market: what a seller is willing to accept and what a buyer is willing to pay. We study repeated bilateral trade, where an intermediary ...
 
-### Masked diffusion as random sequential adsorption: an exactly solvable model for parallel decoding
-- **Link**: http://arxiv.org/abs/2611.07845v1
-- **Abstract**: Masked diffusion models generate text by reversing a stochastic masking process. Unlike autoregressive LLMs, which generate text one token at a time, they can reveal many tokens in parallel, at the pr...
+### MINE: Entropy-coded Memory-efficient Inference for Large Language Models
+- **Link**: http://arxiv.org/abs/2611.09424v1
+- **Abstract**: We present MINE (Memory-efficient INference Engine), a lossless entropy coding approach that accelerates single-stream inference of Large Language Models (LLMs), where existing lossless compression me...
 
-### Foresee to Trade: Forecast-Augmented Policy Optimization for Portfolio Management
-- **Link**: http://arxiv.org/abs/2611.07750v1
-- **Abstract**: Online investment services must translate asset opportunities into investment outcomes for users' accounts, yet the same market opportunity can warrant different account actions. We study how supervis...
+### DiffusionRef-IMU: Guide-Anchored Residual Diffusion for Cross-Location Inertial Measurement Unit Translation
+- **Link**: http://arxiv.org/abs/2611.09323v1
+- **Abstract**: Cross-location variation in wearable inertial measurement unit (IMU) signals complicates learning when measurements from a desired target body location are unavailable. This study proposes DiffusionRe...
 
-### An Information Bottleneck for Post-hoc Memorization Mitigation in LLMs
-- **Link**: http://arxiv.org/abs/2611.07669v1
-- **Abstract**: Recent studies have shown that large language models (LLMs) can memorize and reproduce copyrighted training data, raising serious privacy and intellectual property concerns. In this work, we investiga...
+### The End-of-Day Reversal After 2019: A Pre-Registered Test on S&P 500 Stocks Excluding Heavily Traded Names
+- **Link**: http://arxiv.org/abs/2611.09286v1
+- **Abstract**: Baltussen, Da and Soebhag (2025) document an end-of-day reversal in U.S. stocks through December 2019: intraday losers outperform intraday winners over the last half hour of trading. We test it on lat...
 
