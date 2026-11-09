@@ -22,7 +22,6 @@ Git: commit 5325f18: pendenze: P016-P020 (tools fossile, mt4_shared, engram, tes
 
 ## 2. Diario azioni
 
-- 30 October 2026 - 2ce9bfb: Fix: EMA veloci (9/21), report settimanale, fallback token GitHub
 - 30 October 2026 - 8ed1c31: Risk Manager: aggiunti halt per margine libero (<20%) e perdita giornaliera (>=5%)
 - 30 October 2026 - b9e32e7: Feature: query GitHub (topic), experience pattern (3 BUY loss)
 - 30 October 2026 - d4500ef: Scout GitHub: 21 repo con token valido
@@ -222,6 +221,7 @@ Git: commit 5325f18: pendenze: P016-P020 (tools fossile, mt4_shared, engram, tes
 - 08 November 2026 - 64a6aae: Feature: Volume soglia 1.5x + Filtro Candela (LONG/SHORT) da simulazione vincente
 - 08 November 2026 - 1b597ad: auto-sync dom 8 nov 2026, 19:00:01, -03
 - 08 November 2026 - 5b6e6d5: auto-sync dom 8 nov 2026, 20:00:01, -03
+- 08 November 2026 - ee31b97: auto-sync dom 8 nov 2026, 21:00:01, -03
 
 ## 3. Problemi noti
 
