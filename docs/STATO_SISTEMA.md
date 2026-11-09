@@ -22,11 +22,6 @@ Git: commit 5325f18: pendenze: P016-P020 (tools fossile, mt4_shared, engram, tes
 
 ## 2. Diario azioni
 
-- 31 October 2026 - 3ff3308: auto-sync sab 31 ott 2026, 05:00:01, -03
-- 31 October 2026 - 4236682: auto-sync sab 31 ott 2026, 06:00:01, -03
-- 31 October 2026 - 5e2cafd: auto-sync sab 31 ott 2026, 07:00:01, -03
-- 31 October 2026 - 4011983: auto-sync sab 31 ott 2026, 08:00:01, -03
-- 31 October 2026 - 2e2e35c: auto-sync sab 31 ott 2026, 09:00:01, -03
 - 31 October 2026 - 5cf8093: auto-sync sab 31 ott 2026, 10:00:01, -03
 - 31 October 2026 - 6835b45: auto-sync sab 31 ott 2026, 12:00:01, -03
 - 31 October 2026 - 85f9b0f: Milestone: test autonomo di TradingAgents riuscito. Aggiornato AGENTS.md.
@@ -222,6 +217,11 @@ Git: commit 5325f18: pendenze: P016-P020 (tools fossile, mt4_shared, engram, tes
 - 09 November 2026 - 78d21f7: Fix: accumulo volume anche se identico (storia garantita)
 - 09 November 2026 - 61f2f67: auto-sync lun 9 nov 2026, 14:00:01, -03
 - 09 November 2026 - 8e44384: auto-sync lun 9 nov 2026, 15:00:01, -03
+- 09 November 2026 - 7425da2: Integrata get_ema_volume_signal nel loop principale
+- 09 November 2026 - fcc0c7a: Integrata get_ema_volume_signal nel loop principale (manuale)
+- 09 November 2026 - a269c39: Fix: get_ema_volume_signal usa yfinance per open/volume (dati mancanti in technical_context)
+- 09 November 2026 - 5f4b7a0: Allineamento trigger engine a strategia vincente (Volume 1.5x + Trend EMA21)
+- 09 November 2026 - e08321e: Allineamento trigger engine e orchestrator a strategia vincente
 
 ## 3. Problemi noti
 
