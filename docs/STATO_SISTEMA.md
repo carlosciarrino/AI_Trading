@@ -22,7 +22,6 @@ Git: commit 5325f18: pendenze: P016-P020 (tools fossile, mt4_shared, engram, tes
 
 ## 2. Diario azioni
 
-- 30 October 2026 - d3ab26a: Fix Dashboard: aggiunte variabili Financial Guard mancanti
 - 30 October 2026 - a91a12e: Feature: Supervisore Diagnostico (analisi cause) e Filtro Scout (scarta repo scadenti)
 - 30 October 2026 - c0803e2: auto-sync ven 30 ott 2026, 16:00:01, -03
 - 30 October 2026 - c9501ca: auto-sync ven 30 ott 2026, 17:00:01, -03
@@ -222,6 +221,7 @@ Git: commit 5325f18: pendenze: P016-P020 (tools fossile, mt4_shared, engram, tes
 - 09 November 2026 - fa12063: auto-sync lun 9 nov 2026, 02:00:01, -03
 - 09 November 2026 - 2af4ccd: auto-sync lun 9 nov 2026, 03:00:01, -03
 - 09 November 2026 - 96326eb: auto-sync lun 9 nov 2026, 04:00:01, -03
+- 09 November 2026 - 599af19: auto-sync lun 9 nov 2026, 05:00:01, -03
 
 ## 3. Problemi noti
 
