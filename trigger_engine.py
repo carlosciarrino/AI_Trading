@@ -51,21 +51,19 @@ def check_trend_aligned():
         with open(TECH_CONTEXT) as f:
             text = f.read().lower()
         
-        if 'trend: bull=true' in text:
+        # Formato reale: "Trend: bull=False bear=True" o "bull=True" / "bear=True"
+        if 'bull=true' in text:
             return True, "trend bull allineato"
-        if 'trend: bear=true' in text:
+        if 'bear=true' in text:
             return True, "trend bear allineato"
         
-        if 'bull=true' in text and 'adx:' in text:
+        # Fallback: ADX > 25 con trend definito
+        if 'adx:' in text:
             import re
             match = re.search(r'adx:\s*([0-9.]+)', text)
             if match and float(match.group(1)) > 25:
-                return True, "trend bull forte"
-        if 'bear=true' in text and 'adx:' in text:
-            import re
-            match = re.search(r'adx:\s*([0-9.]+)', text)
-            if match and float(match.group(1)) > 25:
-                return True, "trend bear forte"
+                if 'bull=true' in text or 'bear=true' in text:
+                    return True, "trend forte"
     except Exception:
         pass
     return False, "trend non allineato"

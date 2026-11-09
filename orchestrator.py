@@ -143,15 +143,14 @@ def send_close_command(ticket, reason_log):
 
 
 def check_triggers():
-    """Legge triggers.json. Ritorna True se almeno 2 trigger sono attivi."""
+    """Legge triggers.json. Ritorna True se trade_allowed e True."""
     triggers_path = "/home/carlo/AI_Trading/triggers.json"
     try:
         with open(triggers_path) as f:
             data = json.load(f)
         allowed = data.get("trade_allowed", False)
-        count = data.get("active_count", 0)
         if not allowed:
-            print(f"[TRIGGER] Solo {count}/4 attivi. Attendo.", flush=True)
+            print(f"[TRIGGER] Trade non permesso. Attendo.", flush=True)
         return allowed
     except Exception:
         return True
