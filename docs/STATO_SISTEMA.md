@@ -22,8 +22,6 @@ Git: commit 5325f18: pendenze: P016-P020 (tools fossile, mt4_shared, engram, tes
 
 ## 2. Diario azioni
 
-- 30 October 2026 - ecf1677: auto-sync ven 30 ott 2026, 19:00:01, -03
-- 30 October 2026 - 5c42c08: auto-sync ven 30 ott 2026, 20:00:01, -03
 - 30 October 2026 - b19f312: auto-sync ven 30 ott 2026, 21:00:02, -03
 - 30 October 2026 - 103dea3: auto-sync ven 30 ott 2026, 22:00:01, -03
 - 30 October 2026 - 2285286: auto-sync ven 30 ott 2026, 23:00:01, -03
@@ -222,6 +220,8 @@ Git: commit 5325f18: pendenze: P016-P020 (tools fossile, mt4_shared, engram, tes
 - 09 November 2026 - d2882a1: auto-sync lun 9 nov 2026, 07:00:01, -03
 - 09 November 2026 - 0aad635: auto-sync lun 9 nov 2026, 08:00:01, -03
 - 09 November 2026 - 773fce4: auto-sync lun 9 nov 2026, 09:00:01, -03
+- 09 November 2026 - 529367d: auto-sync lun 9 nov 2026, 10:00:01, -03
+- 09 November 2026 - 903e332: Fix: trigger volume usa yfinance (storico sufficiente)
 
 ## 3. Problemi noti
 
