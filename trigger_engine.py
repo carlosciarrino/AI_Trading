@@ -16,24 +16,42 @@ FORECAST_JSON = os.path.join(BASE, "forecast.json")
 VOLUME_SPIKE_FACTOR = 1.5  # Volume > 2x media
 ADX_TREND_THRESHOLD = 25.0  # ADX > 25 = trend forte
 
+VOLUME_HISTORY_FILE = os.path.join(BASE, "volume_history.json")
+
 def check_volume_trigger():
-    """Ritorna True se c'e' uno spike di volume (da yfinance M15)."""
+    """Ritorna True se c'e' uno spike di volume (da volume_data.json + history)."""
     try:
-        import yfinance as yf
-        df = yf.download("EURUSD=X", period="1d", interval="15m", progress=False)
-        if df.empty or len(df) < 10:
-            return False, "dati insufficienti"
+        # 1. Leggi volume attuale
+        with open(VOLUME_JSON) as f:
+            data = json.load(f)
+        current_vol = data.get("volume", 0)
+        if current_vol <= 0:
+            return False, "volume zero"
         
-        if hasattr(df.columns, "get_level_values"):
-            df.columns = df.columns.get_level_values(0)
+        # 2. Leggi history (o crea)
+        history = []
+        if os.path.exists(VOLUME_HISTORY_FILE):
+            try:
+                with open(VOLUME_HISTORY_FILE) as f:
+                    history = json.load(f)
+            except Exception:
+                history = []
         
-        vol = df["Volume"].values
-        current_vol = vol[-1]
-        avg_vol = vol[-11:-1].mean()
+        # 3. Aggiungi il volume attuale (evita duplicati)
+        if not history or history[-1] != current_vol:
+            history.append(current_vol)
+            history = history[-20:]  # max 20
+            with open(VOLUME_HISTORY_FILE, "w") as f:
+                json.dump(history, f)
         
+        # 4. Calcola media (almeno 5 valori)
+        if len(history) < 5:
+            return False, "storico insufficiente"
+        
+        avg_vol = sum(history[:-1]) / len(history[:-1])
         if avg_vol > 0 and current_vol > avg_vol * VOLUME_SPIKE_FACTOR:
             return True, f"spike {current_vol/avg_vol:.1f}x"
-    except Exception:
+    except Exception as e:
         pass
     return False, "neutro"
 
