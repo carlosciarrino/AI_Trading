@@ -17,17 +17,22 @@ VOLUME_SPIKE_FACTOR = 1.5  # Volume > 2x media
 ADX_TREND_THRESHOLD = 25.0  # ADX > 25 = trend forte
 
 def check_volume_trigger():
-    """Ritorna True se c'e' uno spike di volume."""
+    """Ritorna True se c'e' uno spike di volume (da yfinance M15)."""
     try:
-        with open(VOLUME_JSON) as f:
-            data = json.load(f)
-        vol = data.get("volume", 0)
-        history = data.get("history", [])
-        if len(history) < 10:
-            return False, "storico insufficiente"
-        avg = sum(history) / len(history)
-        if avg > 0 and vol > avg * VOLUME_SPIKE_FACTOR:
-            return True, f"spike {vol/avg:.1f}x"
+        import yfinance as yf
+        df = yf.download("EURUSD=X", period="1d", interval="15m", progress=False)
+        if df.empty or len(df) < 10:
+            return False, "dati insufficienti"
+        
+        if hasattr(df.columns, "get_level_values"):
+            df.columns = df.columns.get_level_values(0)
+        
+        vol = df["Volume"].values
+        current_vol = vol[-1]
+        avg_vol = vol[-11:-1].mean()
+        
+        if avg_vol > 0 and current_vol > avg_vol * VOLUME_SPIKE_FACTOR:
+            return True, f"spike {current_vol/avg_vol:.1f}x"
     except Exception:
         pass
     return False, "neutro"
