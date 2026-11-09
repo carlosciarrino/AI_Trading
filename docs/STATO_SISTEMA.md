@@ -22,7 +22,6 @@ Git: commit 5325f18: pendenze: P016-P020 (tools fossile, mt4_shared, engram, tes
 
 ## 2. Diario azioni
 
-- 30 October 2026 - b9e32e7: Feature: query GitHub (topic), experience pattern (3 BUY loss)
 - 30 October 2026 - d4500ef: Scout GitHub: 21 repo con token valido
 - 30 October 2026 - e3889c7: auto-sync ven 30 ott 2026, 15:00:02, -03
 - 30 October 2026 - 1a95dcb: Supervisor v4: Financial Guard (blocco su drawdown >8%, perdita giornaliera >3%). ALERT.md.
@@ -222,6 +221,7 @@ Git: commit 5325f18: pendenze: P016-P020 (tools fossile, mt4_shared, engram, tes
 - 08 November 2026 - 5b6e6d5: auto-sync dom 8 nov 2026, 20:00:01, -03
 - 08 November 2026 - ee31b97: auto-sync dom 8 nov 2026, 21:00:01, -03
 - 08 November 2026 - 94b4478: auto-sync dom 8 nov 2026, 22:00:01, -03
+- 08 November 2026 - c955ae0: auto-sync dom 8 nov 2026, 23:00:01, -03
 
 ## 3. Problemi noti
 
