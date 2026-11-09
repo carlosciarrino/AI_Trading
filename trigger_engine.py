@@ -101,7 +101,14 @@ def main():
     t_news, msg_news = check_news_trigger()
     t_for, msg_for = check_forecast_trigger()
     
-    active_count = sum([t_vol, t_reg, t_news, t_for])
+    # Punteggio ponderato
+    score = 0.0
+    if t_vol: score += 2.0
+    if t_reg: score += 1.5
+    if t_news: score += 1.0
+    if t_for: score += 1.5
+    
+    active_count = score
     
     result = {
         "timestamp": datetime.now().isoformat(),
@@ -111,13 +118,13 @@ def main():
         "forecast": {"active": t_for, "reason": msg_for},
         "active_count": active_count,
         "market_open": is_market_open(),
-        "trade_allowed": (active_count >= 2) and is_market_open()  # Almeno 2 trigger su 3
+        "trade_allowed": (active_count >= 2.0) and is_market_open()  # Almeno 2 trigger su 3
     }
     
     with open(OUTPUT_JSON, "w") as f:
         json.dump(result, f, indent=2)
     
-    print(f"[trigger] Vol={t_vol} Reg={t_reg} News={t_news} -> {'OK' if result['trade_allowed'] else 'BLOCCA'}", flush=True)
+    print(f"[trigger] Vol={t_vol}(2.0) Reg={t_reg}(1.5) News={t_news}(1.0) For={t_for}(1.5) -> Score={score:.1f} -> {'OK' if result['trade_allowed'] else 'BLOCCA'}", flush=True)
 
 if __name__ == "__main__":
     while True:
