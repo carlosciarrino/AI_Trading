@@ -22,7 +22,6 @@ Git: commit 5325f18: pendenze: P016-P020 (tools fossile, mt4_shared, engram, tes
 
 ## 2. Diario azioni
 
-- 30 October 2026 - 1158086: Dashboard: integrazione Financial Guard (stato supervisore e banner ALERT)
 - 30 October 2026 - 741556e: Supervisor: blocco automatico dopo 3 perdite consecutive
 - 30 October 2026 - d3ab26a: Fix Dashboard: aggiunte variabili Financial Guard mancanti
 - 30 October 2026 - a91a12e: Feature: Supervisore Diagnostico (analisi cause) e Filtro Scout (scarta repo scadenti)
@@ -222,6 +221,7 @@ Git: commit 5325f18: pendenze: P016-P020 (tools fossile, mt4_shared, engram, tes
 - 09 November 2026 - 7340445: auto-sync lun 9 nov 2026, 00:00:01, -03
 - 09 November 2026 - 1bdc84b: auto-sync lun 9 nov 2026, 01:00:02, -03
 - 09 November 2026 - fa12063: auto-sync lun 9 nov 2026, 02:00:01, -03
+- 09 November 2026 - 2af4ccd: auto-sync lun 9 nov 2026, 03:00:01, -03
 
 ## 3. Problemi noti
 
