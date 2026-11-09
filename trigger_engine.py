@@ -37,12 +37,11 @@ def check_volume_trigger():
             except Exception:
                 history = []
         
-        # 3. Aggiungi il volume attuale (evita duplicati)
-        if not history or history[-1] != current_vol:
-            history.append(current_vol)
-            history = history[-20:]  # max 20
-            with open(VOLUME_HISTORY_FILE, "w") as f:
-                json.dump(history, f)
+        # 3. Aggiungi il volume attuale (anche se identico, per accumulare storia)
+        history.append(current_vol)
+        history = history[-20:]  # max 20
+        with open(VOLUME_HISTORY_FILE, "w") as f:
+            json.dump(history, f)
         
         # 4. Calcola media (almeno 5 valori)
         if len(history) < 5:
