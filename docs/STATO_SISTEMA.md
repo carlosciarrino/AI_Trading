@@ -22,7 +22,6 @@ Git: commit 5325f18: pendenze: P016-P020 (tools fossile, mt4_shared, engram, tes
 
 ## 2. Diario azioni
 
-- 31 October 2026 - 5cf8093: auto-sync sab 31 ott 2026, 10:00:01, -03
 - 31 October 2026 - 6835b45: auto-sync sab 31 ott 2026, 12:00:01, -03
 - 31 October 2026 - 85f9b0f: Milestone: test autonomo di TradingAgents riuscito. Aggiornato AGENTS.md.
 - 31 October 2026 - 55d9aa2: Docs: creato registro esiti test risorse esterne
@@ -222,6 +221,7 @@ Git: commit 5325f18: pendenze: P016-P020 (tools fossile, mt4_shared, engram, tes
 - 09 November 2026 - a269c39: Fix: get_ema_volume_signal usa yfinance per open/volume (dati mancanti in technical_context)
 - 09 November 2026 - 5f4b7a0: Allineamento trigger engine a strategia vincente (Volume 1.5x + Trend EMA21)
 - 09 November 2026 - e08321e: Allineamento trigger engine e orchestrator a strategia vincente
+- 09 November 2026 - 18f51d0: auto-sync lun 9 nov 2026, 17:00:01, -03
 
 ## 3. Problemi noti
 
