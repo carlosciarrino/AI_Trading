@@ -22,7 +22,6 @@ Git: commit 5325f18: pendenze: P016-P020 (tools fossile, mt4_shared, engram, tes
 
 ## 2. Diario azioni
 
-- 31 October 2026 - e3d61fe: auto-sync sab 31 ott 2026, 03:00:01, -03
 - 31 October 2026 - 1ede934: auto-sync sab 31 ott 2026, 04:00:01, -03
 - 31 October 2026 - 3ff3308: auto-sync sab 31 ott 2026, 05:00:01, -03
 - 31 October 2026 - 4236682: auto-sync sab 31 ott 2026, 06:00:01, -03
@@ -222,6 +221,7 @@ Git: commit 5325f18: pendenze: P016-P020 (tools fossile, mt4_shared, engram, tes
 - 09 November 2026 - cf89677: Feature: Trigger ponderati (Volume 2.0, Regime 1.5, Forecast 1.5, News 1.0). Soglia 2.0
 - 09 November 2026 - 8e7e521: Fix: trigger volume usa volume_data.json + history accumulata
 - 09 November 2026 - 78d21f7: Fix: accumulo volume anche se identico (storia garantita)
+- 09 November 2026 - 61f2f67: auto-sync lun 9 nov 2026, 14:00:01, -03
 
 ## 3. Problemi noti
 
