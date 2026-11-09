@@ -194,40 +194,50 @@ def get_ema_volume_signal():
     """Strategia EMA21 + Volume 1.5x + Candela close vs open + cooldown 240."""
     global _EMA_VOL_LAST_TIME
     try:
+        # 1. Leggi EMA21 da technical_context.txt
         with open('/home/carlo/AI_Trading/technical_context.txt') as f:
             text = f.read().lower()
-        close_m = re.search(r'close:\s*([0-9.]+)', text)
-        open_m = re.search(r'open:\s*([0-9.]+)', text)
         ema21_m = re.search(r'ema21:\s*([0-9.]+)', text)
-        vol_m = re.search(r'volume:\s*([0-9.]+)', text)
-        vol_ma_m = re.search(r'vol_ma:\s*([0-9.]+)', text)
-        if not all([close_m, open_m, ema21_m, vol_m, vol_ma_m]):
-            return None, {}
-        close = float(close_m.group(1))
-        opn = float(open_m.group(1))
+        if not ema21_m:
+            return "HOLD", {"reason": "ema21 non trovata"}
         ema21 = float(ema21_m.group(1))
-        vol = float(vol_m.group(1))
-        vol_ma = float(vol_ma_m.group(1))
-    except Exception:
-        return None, {}
-
-    now = datetime.now(timezone.utc)
-    if _EMA_VOL_LAST_TIME is not None:
-        elapsed = (now - _EMA_VOL_LAST_TIME).total_seconds() / 60
-        if elapsed < COOLDOWN_MINUTES:
-            return None, {}
-
-    trend_bull = close > ema21
-    trend_bear = close < ema21
-    vol_spike = vol > vol_ma * 1.5
-
-    if trend_bull and vol_spike and close > opn:
-        _EMA_VOL_LAST_TIME = now
-        return 'BUY', {'ema21': ema21, 'close': close, 'vol': vol}
-    if trend_bear and vol_spike and close < opn:
-        _EMA_VOL_LAST_TIME = now
-        return 'SELL', {'ema21': ema21, 'close': close, 'vol': vol}
-    return None, {}
+        
+        # 2. Scarica ultima candela M15 da yfinance
+        import yfinance as yf
+        df = yf.download("EURUSD=X", period="1d", interval="15m", progress=False)
+        if df.empty or len(df) < 2:
+            return "HOLD", {"reason": "dati insufficienti"}
+        if hasattr(df.columns, "get_level_values"):
+            df.columns = df.columns.get_level_values(0)
+        
+        last = df.iloc[-1]
+        close = float(last["Close"])
+        opn = float(last["Open"])
+        vol = float(last["Volume"])
+        vol_ma = float(df["Volume"].iloc[-21:-1].mean())
+        
+        # 3. Cooldown
+        now = datetime.now(timezone.utc)
+        if _EMA_VOL_LAST_TIME is not None:
+            elapsed = (now - _EMA_VOL_LAST_TIME).total_seconds() / 60
+            if elapsed < COOLDOWN_MINUTES:
+                return "HOLD", {"reason": f"cooldown {elapsed:.0f}min"}
+        
+        # 4. Segnale
+        trend_bull = close > ema21
+        trend_bear = close < ema21
+        vol_spike = vol > vol_ma * 1.5 if vol_ma > 0 else False
+        
+        if trend_bull and vol_spike and close > opn:
+            _EMA_VOL_LAST_TIME = now
+            return "BUY", {"ema21": ema21, "close": close, "vol": vol, "vol_ma": vol_ma}
+        if trend_bear and vol_spike and close < opn:
+            _EMA_VOL_LAST_TIME = now
+            return "SELL", {"ema21": ema21, "close": close, "vol": vol, "vol_ma": vol_ma}
+        
+        return "HOLD", {"reason": "no signal", "close": close, "ema21": ema21, "vol": vol, "vol_ma": vol_ma}
+    except Exception as e:
+        return "HOLD", {"reason": f"errore: {e}"}
 
 
 def get_signal():
