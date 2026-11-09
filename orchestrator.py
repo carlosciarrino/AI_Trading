@@ -669,7 +669,7 @@ def main():
                 time.sleep(MAIN_LOOP_SLEEP)
                 continue
 
-            signal, detail = get_signal()
+            signal, detail = get_ema_volume_signal()
             print(f"Segnale AI: {signal}", flush=True)
 
             now_utc = datetime.now(timezone.utc)
