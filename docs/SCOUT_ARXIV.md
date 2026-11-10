@@ -1,42 +1,42 @@
-# SCOUT ARXIV (aggiornato 2026-11-09T07:20:02.168399)
+# SCOUT ARXIV (aggiornato 2026-11-10T07:20:02.453545)
 
-### Online Causal Configuration for Networked Systems via Doubly Robust Steady-State Learning
-- **Link**: http://arxiv.org/abs/2611.09665v1
-- **Abstract**: Measurement exploration reveals how interacting local controllers behave but can alter the steady-state regime a network operator seeks to optimize. Exploratory rewards may therefore fail to identify ...
+### Clique Constraints for Exact Causal Structure Learning
+- **Link**: http://arxiv.org/abs/2611.12747v1
+- **Abstract**: Exact score-based causal structure learning supports explicit structural constraints and optimisation certificates, but its branch-and-cut search can be computationally demanding. We augment exact cau...
 
-### TensorMutation: Learning Weight-Space Mutations of Deep Learning Models on Neural Graphs
-- **Link**: http://arxiv.org/abs/2611.09650v1
-- **Abstract**: Mutation testing for deep learning (DL) faces a cost-realism trade-off. The pre-training approach produces realistic but computationally expensive mutants, whereas existing post-training operators mod...
+### Trade Promotion Optimisation for Consumer Goods
+- **Link**: http://arxiv.org/abs/2611.12665v1
+- **Abstract**: Trade promotions consume a large share of consumer-goods revenue, yet most planners still set discounts with a single, often unreliable, price elasticity per item. We present an end-to-end Trade Promo...
 
-### Steerable Multi-Objective Group-Relative Preference Optimization with Jointly Trained Low-Rank Adapters
-- **Link**: http://arxiv.org/abs/2611.09634v1
-- **Abstract**: Language model deployment often requires different trade-offs between competing objectives as user preferences change, yet standard post-training methods typically produce a single policy for a fixed ...
+### AudioCodex: Streaming Autoencoders for Live Audio
+- **Link**: http://arxiv.org/abs/2611.12375v1
+- **Abstract**: We introduce AudioCodex, a fully causal autoencoder for live generative audio applications that compresses stereo audio into compact continuous latent sequences at ~10 Hz. It combines a Mean Flow magn...
 
-### Contextual Search and Bilateral Trade with a Trace-Square-Root Potential
-- **Link**: http://arxiv.org/abs/2611.09615v1
-- **Abstract**: We present a unified potential method for contextual search and bilateral trade with one-bit feedback and obtain order-tight algorithms for both problems. Our framework starts from a Bayesian perspect...
+### NearFormer: Linear-Size Sparse Attention via Randomized Near Neighbors
+- **Link**: http://arxiv.org/abs/2611.12186v1
+- **Abstract**: Graph transformers can capture long-range interactions, but their quadratic attention cost limits their use on large graphs. We introduce \emph{NearFormer}, a graph transformer whose global attention ...
 
-### Know What You Need: Efficient Activation Checkpointing
-- **Link**: http://arxiv.org/abs/2611.09614v1
-- **Abstract**: Large Language Model training is increasingly constrained by memory capacity. Activation Checkpointing reduces activation memory by avoiding storing selected activations during the forward pass and re...
+### Same Physics, Different Gradients: A State-of-the-Art Report on Differentiable Physics Simulation
+- **Link**: http://arxiv.org/abs/2611.12162v1
+- **Abstract**: Differentiable simulation propagates derivatives through a physics simulator, turning animation, system identification, control, and computational design into gradient-based optimization. Engines diff...
 
-### Solver-Free Decision-Focused Learning via Neural Optimization Layers for Edge Selection
-- **Link**: http://arxiv.org/abs/2611.09560v1
-- **Abstract**: Decision-focused learning trains prediction models to improve downstream decisions, but many methods require costly solver calls or optimal-solution labels. We propose a solver-free decision-focused l...
+### Beyond Flat Walks: Compositional Abstraction for Autoregressive Graph Generation
+- **Link**: http://arxiv.org/abs/2611.12160v1
+- **Abstract**: Autoregressive graph generators typically linearize graphs through flat node-edge walks, which can obscure higher-order structure in large and complex graphs. We introduce a hierarchical graph abstrac...
 
-### Optimal Regret for Profit Maximization in Bilateral Trade
-- **Link**: http://arxiv.org/abs/2611.09558v1
-- **Abstract**: Learning to profit from trade requires learning both sides of a market: what a seller is willing to accept and what a buyer is willing to pay. We study repeated bilateral trade, where an intermediary ...
+### The balance between feature learning and collapse in dynamical systems-based generative models
+- **Link**: http://arxiv.org/abs/2611.12156v1
+- **Abstract**: Over the past decade, a growing body of work has established that implicit biases in learning dynamics fundamentally shape the solutions found by neural networks, governing their learned features and ...
 
-### MINE: Entropy-coded Memory-efficient Inference for Large Language Models
-- **Link**: http://arxiv.org/abs/2611.09424v1
-- **Abstract**: We present MINE (Memory-efficient INference Engine), a lossless entropy coding approach that accelerates single-stream inference of Large Language Models (LLMs), where existing lossless compression me...
+### CARE-PO: Controllable Tool-Call Efficiency for LLM Agents
+- **Link**: http://arxiv.org/abs/2611.12125v1
+- **Abstract**: External tool calls are a major running cost of an LLM agent, while its training objectives align almost exclusively with task completion. In a step-level diagnosis of Qwen3.5 trajectories at two mode...
 
-### DiffusionRef-IMU: Guide-Anchored Residual Diffusion for Cross-Location Inertial Measurement Unit Translation
-- **Link**: http://arxiv.org/abs/2611.09323v1
-- **Abstract**: Cross-location variation in wearable inertial measurement unit (IMU) signals complicates learning when measurements from a desired target body location are unavailable. This study proposes DiffusionRe...
+### Operation-aware Multimodal Clinical Decision Support System for ICU Discharge Risk Assessment
+- **Link**: http://arxiv.org/abs/2611.11960v1
+- **Abstract**: Unplanned 30-day intensive care unit (ICU) readmission is a critical benchmark for evaluating healthcare quality. Most predictive models assume readmission risk depends solely on a patient's individua...
 
-### The End-of-Day Reversal After 2019: A Pre-Registered Test on S&P 500 Stocks Excluding Heavily Traded Names
-- **Link**: http://arxiv.org/abs/2611.09286v1
-- **Abstract**: Baltussen, Da and Soebhag (2025) document an end-of-day reversal in U.S. stocks through December 2019: intraday losers outperform intraday winners over the last half hour of trading. We test it on lat...
+### Constrained Variational Policy Optimization for Hybrid Action Spaces
+- **Link**: http://arxiv.org/abs/2611.11936v1
+- **Abstract**: Constrained reinforcement learning in hybrid action spaces must coordinate discrete modes and mode-conditioned continuous controls under long-horizon cost constraints. Existing constrained hybrid-acti...
 
