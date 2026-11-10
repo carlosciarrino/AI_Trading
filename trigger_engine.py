@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
-"""trigger_engine.py - Gate di mercato con volume MT4 reale.
-Controlla: Volume MT4 1.5x media + Trend EMA21 + Candela close vs open.
+"""trigger_engine.py - Gate di mercato con volume MT4 + candela forte.
+Controlla: (Volume spike OR Candela forte) AND Trend EMA21 allineato.
 Scrive triggers.json per l'orchestratore.
 """
 import json, os, time
@@ -14,6 +14,7 @@ OUTPUT_JSON = os.path.join(BASE, "triggers.json")
 
 VOLUME_SPIKE_FACTOR = 1.5
 HISTORY_LENGTH = 5
+CANDLE_BODY_ATR_RATIO = 0.5  # 50% dell'ATR
 
 def is_market_open():
     """Controlla se il mercato forex e' aperto (Londra/NY)."""
@@ -50,10 +51,24 @@ def update_volume_history(current_vol):
         json.dump(history, f)
     return history
 
+def read_atr(text):
+    """Legge ATR da technical_context.txt, altrimenti calcola approssimazione."""
+    import re
+    atr_m = re.search(r'atr:\s*([0-9.]+)', text)
+    if atr_m:
+        return float(atr_m.group(1))
+    # Fallback: approssima ATR da BB width / 4 (BB = 2 std * 2 = 4 std ~= 4*ATR/2)
+    bb_upper_m = re.search(r'bb_upper:\s*([0-9.]+)', text)
+    bb_lower_m = re.search(r'bb_lower:\s*([0-9.]+)', text)
+    if bb_upper_m and bb_lower_m:
+        bb_width = float(bb_upper_m.group(1)) - float(bb_lower_m.group(1))
+        return bb_width / 4.0
+    return 0.0010  # fallback 10 pip
+
 def check_conditions():
-    """Ritorna (trade_allowed, reason) con volume MT4 + EMA21 + candela."""
+    """Ritorna (trade_allowed, reason) con volume spike + candela forte + trend."""
     try:
-        # 1. Leggi EMA21 e Close da technical_context.txt
+        # 1. Leggi dati da technical_context.txt
         with open(TECH_CONTEXT) as f:
             text = f.read().lower()
         import re
@@ -73,16 +88,15 @@ def check_conditions():
         if len(history) < HISTORY_LENGTH:
             return False, f"storico volume insufficiente ({len(history)}/{HISTORY_LENGTH})"
         
-        # Media degli ultimi 4 (escluso il corrente)
         avg_vol = sum(history[:-1]) / len(history[:-1])
         vol_spike = current_vol > avg_vol * VOLUME_SPIKE_FACTOR if avg_vol > 0 else False
         
         # 3. Trend EMA21
         trend_bull = close > ema21
         trend_bear = close < ema21
+        trend_allineato = trend_bull or trend_bear
         
-        # 4. Candela: approssima open ~= close (tick data) oppure leggi open da yfinance
-        # Usiamo yfinance solo per open della candela M15
+        # 4. Candela: leggi open da yfinance M15
         opn = close
         try:
             import yfinance as yf
@@ -92,27 +106,34 @@ def check_conditions():
                     df.columns = df.columns.get_level_values(0)
                 opn = float(df.iloc[-1]["Open"])
         except Exception:
-            pass  # fallback open = close
+            pass
         
-        candle_bull = close > opn
-        candle_bear = close < opn
+        # 5. Candela forte: corpo > 50% ATR
+        atr = read_atr(text)
+        candle_body = abs(close - opn)
+        candela_forte = candle_body > atr * CANDLE_BODY_ATR_RATIO if atr > 0 else False
         
-        buy_cond = trend_bull and vol_spike and candle_bull
-        sell_cond = trend_bear and vol_spike and candle_bear
+        # 6. Logica combinata: (volume_spike OR candela_forte) AND trend_allineato
+        trigger_attivo = (vol_spike or candela_forte) and trend_allineato
         
-        if buy_cond:
-            return True, f"BUY: close{close:.5f}>ema21{ema21:.5f} vol{current_vol}>{avg_vol:.0f}*1.5 candle_bull"
-        if sell_cond:
-            return True, f"SELL: close{close:.5f}<ema21{ema21:.5f} vol{current_vol}>{avg_vol:.0f}*1.5 candle_bear"
+        direction = "BUY" if trend_bull else "SELL" if trend_bear else "NONE"
+        
+        if trigger_attivo and direction != "NONE":
+            triggers = []
+            if vol_spike:
+                triggers.append(f"vol_spike({current_vol}>{avg_vol:.0f}*1.5)")
+            if candela_forte:
+                triggers.append(f"candela_forte({candle_body:.5f}>{atr:.5f}*0.5)")
+            return True, f"{direction}: {' + '.join(triggers)} trend_allineato"
         
         # Dettaglio motivo HOLD
         reasons = []
-        if not trend_bull and not trend_bear:
-            reasons.append("close==ema21")
+        if not trend_allineato:
+            reasons.append("trend_non_allineato")
         if not vol_spike:
-            reasons.append(f"vol{current_vol}<={avg_vol:.0f}*1.5")
-        if not candle_bull and not candle_bear:
-            reasons.append("doji")
+            reasons.append(f"no_vol_spike({current_vol}<={avg_vol:.0f}*1.5)")
+        if not candela_forte:
+            reasons.append(f"no_candela_forte(body{candle_body:.5f}<={atr:.5f}*0.5)")
         return False, "HOLD: " + ", ".join(reasons)
         
     except Exception as e:
