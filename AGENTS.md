@@ -62,3 +62,15 @@ Se in futuro aggiorniamo il PC (più RAM, Python 3.12+), possiamo rivalutare:
 - **OpenBacktesting**: richiede Python 3.12+. Ottimo per backtest di strategie.
 - **Bonsai 2 (ternary LLM)**: richiede 6 GB di RAM. Potrebbe sostituire Ollama per compiti di classificazione news.
 - **Limite-1B-Violetto**: richiede 2 GB di RAM. Testato il tokenizer, ma non il modello completo per mancanza di RAM.
+
+## 10. La Regola del Surfista (Lezione 2026-11-10)
+Il sistema ha perso un'onda di 100 pip il 10 Novembre 2026 perché guardava troppo indietro nel tempo (history a 20 minuti) e campionava troppo lentamente (1 volta al minuto).
+
+**Regola operativa:**
+1. **La memoria del volume deve essere breve**: max 5 minuti (5 campioni). I valori vecchi non contano. Il mercato è un'onda, non una media storica.
+2. **Il campionamento deve essere frequente**: ogni 15 secondi. Se aspetti 1 minuto, l'onda è già passata.
+3. **Il surfista guarda l'onda che arriva**, non quella di ieri. Questo principio vale per tutti gli indicatori (Volume, EMA, RSI): devono essere calcolati sul presente, non sul passato remoto.
+
+**Conseguenza tecnica**: `trigger_engine.py` usa `history[-5:]` e `time.sleep(15)`. Non modificare questi valori senza una simulazione che dimostri il miglioramento.
+
+**Nota**: la simulazione storica (M1, M15) non cattura il ritardo del tempo reale. Un parametro ottimo nel backtest può essere disastroso nel live. Testare sempre con dati live prima di adottare.
