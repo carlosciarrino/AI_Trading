@@ -22,7 +22,6 @@ Git: commit 5325f18: pendenze: P016-P020 (tools fossile, mt4_shared, engram, tes
 
 ## 2. Diario azioni
 
-- 31 October 2026 - 55d9aa2: Docs: creato registro esiti test risorse esterne
 - 31 October 2026 - 7d7be2b: Docs: aggiunta sezione risorse future in AGENTS.md
 - 31 October 2026 - 0c5f3a9: Docs: DeltaForge testato con successo (424 test). Candidato.
 - 31 October 2026 - 07c787a: Feature: Trailing Stop Dinamico (basato su ATR) ispirato a DeltaForge
@@ -222,6 +221,7 @@ Git: commit 5325f18: pendenze: P016-P020 (tools fossile, mt4_shared, engram, tes
 - 09 November 2026 - 18f51d0: auto-sync lun 9 nov 2026, 17:00:01, -03
 - 09 November 2026 - 31789d9: auto-sync lun 9 nov 2026, 18:00:01, -03
 - 09 November 2026 - 7e7da23: auto-sync lun 9 nov 2026, 19:00:01, -03
+- 09 November 2026 - 9e251ab: auto-sync lun 9 nov 2026, 20:00:01, -03
 
 ## 3. Problemi noti
 
