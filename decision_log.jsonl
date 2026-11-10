@@ -2504,3 +2504,5 @@
 {"timestamp": "2026-11-10T04:11:25.001795", "scores": {}, "weights": {}, "final_score": 0.0, "signal": "HOLD", "action_taken": "none", "ticket": null, "reason": "score_neutro"}
 {"timestamp": "2026-11-10T05:06:26.131909", "scores": {}, "weights": {}, "final_score": 0.0, "signal": "HOLD", "action_taken": "none", "ticket": null, "reason": "score_neutro"}
 {"timestamp": "2026-11-10T05:11:26.234191", "scores": {}, "weights": {}, "final_score": 0.0, "signal": "HOLD", "action_taken": "none", "ticket": null, "reason": "score_neutro"}
+{"timestamp": "2026-11-10T06:06:27.354483", "scores": {}, "weights": {}, "final_score": 0.0, "signal": "HOLD", "action_taken": "none", "ticket": null, "reason": "score_neutro"}
+{"timestamp": "2026-11-10T06:11:27.459789", "scores": {}, "weights": {}, "final_score": 0.0, "signal": "HOLD", "action_taken": "none", "ticket": null, "reason": "score_neutro"}
