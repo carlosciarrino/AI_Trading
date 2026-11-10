@@ -22,7 +22,6 @@ Git: commit 5325f18: pendenze: P016-P020 (tools fossile, mt4_shared, engram, tes
 
 ## 2. Diario azioni
 
-- 31 October 2026 - 07c787a: Feature: Trailing Stop Dinamico (basato su ATR) ispirato a DeltaForge
 - 31 October 2026 - cd07ac1: Feature: Limite ordini per lato e calcolo Supporti/Resistenze (da DeltaForge)
 - 31 October 2026 - f680ded: auto-sync sab 31 ott 2026, 13:00:01, -03
 - 31 October 2026 - b5def04: Feature: Limite ordini per lato (max 2 buy / max 2 sell) da DeltaForge
@@ -222,6 +221,7 @@ Git: commit 5325f18: pendenze: P016-P020 (tools fossile, mt4_shared, engram, tes
 - 09 November 2026 - 9e251ab: auto-sync lun 9 nov 2026, 20:00:01, -03
 - 09 November 2026 - 5625997: auto-sync lun 9 nov 2026, 21:00:01, -03
 - 09 November 2026 - c59f3d6: auto-sync lun 9 nov 2026, 22:00:01, -03
+- 09 November 2026 - 03315c6: auto-sync lun 9 nov 2026, 23:00:01, -03
 
 ## 3. Problemi noti
 
