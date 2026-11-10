@@ -22,13 +22,6 @@ Git: commit 5325f18: pendenze: P016-P020 (tools fossile, mt4_shared, engram, tes
 
 ## 2. Diario azioni
 
-- 01 November 2026 - 07441d5: auto-sync dom 1 nov 2026, 00:00:01, -03
-- 01 November 2026 - b7fde7c: auto-sync dom 1 nov 2026, 01:00:01, -03
-- 01 November 2026 - d6a8e22: auto-sync dom 1 nov 2026, 02:00:01, -03
-- 01 November 2026 - 15fe497: auto-sync dom 1 nov 2026, 03:00:01, -03
-- 01 November 2026 - 705364c: auto-sync dom 1 nov 2026, 04:00:01, -03
-- 01 November 2026 - 170b925: auto-sync dom 1 nov 2026, 05:00:01, -03
-- 01 November 2026 - f3b59b4: auto-sync dom 1 nov 2026, 06:00:01, -03
 - 01 November 2026 - f266cec: auto-sync dom 1 nov 2026, 07:00:01, -03
 - 01 November 2026 - a1321b9: auto-sync dom 1 nov 2026, 08:00:01, -03
 - 01 November 2026 - 2f85a46: auto-sync dom 1 nov 2026, 09:00:01, -03
@@ -222,6 +215,13 @@ Git: commit 5325f18: pendenze: P016-P020 (tools fossile, mt4_shared, engram, tes
 - 10 November 2026 - ab1e255: auto-sync mar 10 nov 2026, 10:00:01, -03
 - 10 November 2026 - 5b2d83b: auto-sync mar 10 nov 2026, 11:00:01, -03
 - 10 November 2026 - 31650eb: auto-sync mar 10 nov 2026, 12:00:01, -03
+- 10 November 2026 - 6c1de89: auto-sync mar 10 nov 2026, 13:00:01, -03
+- 10 November 2026 - aa86064: Fix: history volume a 5 minuti (ignora valori vecchi, piu' reattivo)
+- 10 November 2026 - 8a70678: Fix: trigger ogni 15 secondi (reattivo come un surfista)
+- 10 November 2026 - 7f0f584: Docs: Regola del Surfista (lezioni 2026-11-10) + file LESSONS.md
+- 10 November 2026 - f2416a0: Fix: unificata logica trigger_engine e get_ema_volume_signal
+- 10 November 2026 - bf133c6: Ripristino: trigger_engine.py dal commit f2416a0 (allineamento strategia vincente)
+- 10 November 2026 - d995a65: Fix: technical_agent scrive EMA9/EMA21 (allineamento trigger_engine)
 
 ## 3. Problemi noti
 
