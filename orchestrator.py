@@ -142,8 +142,10 @@ def send_close_command(ticket, reason_log):
                        error="timeout_ea")
 
 
-def check_triggers():
-    """Legge triggers.json. Ritorna True se trade_allowed e True."""
+def check_triggers(check_fresh=False):
+    """Legge triggers.json. Ritorna True se trade_allowed e True.
+    Se check_fresh=True, verifica anche che il timestamp sia < 60 secondi.
+    """
     triggers_path = "/home/carlo/AI_Trading/triggers.json"
     try:
         with open(triggers_path) as f:
@@ -151,7 +153,20 @@ def check_triggers():
         allowed = data.get("trade_allowed", False)
         if not allowed:
             print(f"[TRIGGER] Trade non permesso. Attendo.", flush=True)
-        return allowed
+            return False
+        
+        if check_fresh:
+            ts_str = data.get("timestamp", "")
+            if ts_str:
+                try:
+                    ts = datetime.fromisoformat(ts_str.replace('Z', '+00:00'))
+                    age = (datetime.now(timezone.utc) - ts).total_seconds()
+                    if age > 60:
+                        print(f"[TRIGGER] triggers.json vecchio ({age:.0f}s). Rifiuto.", flush=True)
+                        return False
+                except Exception:
+                    pass
+        return True
     except Exception:
         return True
 
@@ -764,6 +779,13 @@ def main():
                     continue
 
             if signal in ("BUY", "SELL"):
+                # Rileggi triggers.json fresco prima di aprire
+                if not check_triggers(check_fresh=True):
+                    print("[TRIGGER] Trigger non fresco o trade non permesso. Annullo apertura.", flush=True)
+                    write_decision(detail, action_taken="none", reason="trigger_stale")
+                    time.sleep(MAIN_LOOP_SLEEP)
+                    continue
+                
                 action = "buy" if signal == "BUY" else "sell"
                 try:
                     df = yf.download("EURUSD=X", period="1d", interval="15m", progress=False)
