@@ -35,7 +35,7 @@ def check_volume_trigger():
         with open(VOLUME_HISTORY_FILE, "w") as f:
             json.dump(history, f)
         
-        if len(history) < 5:
+        if len(history) < 3:
             return False, "storico insufficiente"
         
         avg_vol = sum(history[:-1]) / len(history[:-1])
