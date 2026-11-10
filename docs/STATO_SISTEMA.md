@@ -22,8 +22,6 @@ Git: commit 5325f18: pendenze: P016-P020 (tools fossile, mt4_shared, engram, tes
 
 ## 2. Diario azioni
 
-- 01 November 2026 - f266cec: auto-sync dom 1 nov 2026, 07:00:01, -03
-- 01 November 2026 - a1321b9: auto-sync dom 1 nov 2026, 08:00:01, -03
 - 01 November 2026 - 2f85a46: auto-sync dom 1 nov 2026, 09:00:01, -03
 - 01 November 2026 - 3c6edaa: auto-sync dom 1 nov 2026, 10:00:02, -03
 - 01 November 2026 - 19ff763: Fix critico: drawdown iniziale, azione risk manager, allineamento supervisore
@@ -222,6 +220,8 @@ Git: commit 5325f18: pendenze: P016-P020 (tools fossile, mt4_shared, engram, tes
 - 10 November 2026 - f2416a0: Fix: unificata logica trigger_engine e get_ema_volume_signal
 - 10 November 2026 - bf133c6: Ripristino: trigger_engine.py dal commit f2416a0 (allineamento strategia vincente)
 - 10 November 2026 - d995a65: Fix: technical_agent scrive EMA9/EMA21 (allineamento trigger_engine)
+- 10 November 2026 - ca46a81: auto-sync mar 10 nov 2026, 14:00:01, -03
+- 10 November 2026 - f72e992: Fix: volume da volume_data.json (yfinance dava zero)
 
 ## 3. Problemi noti
 
