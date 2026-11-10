@@ -22,7 +22,6 @@ Git: commit 5325f18: pendenze: P016-P020 (tools fossile, mt4_shared, engram, tes
 
 ## 2. Diario azioni
 
-- 01 November 2026 - 2a5700f: Feature: calcolo Supporti/Resistenze in technical_agent (da DeltaForge)
 - 01 November 2026 - e44f306: Docs: esito test freqtrade (scartato)
 - 01 November 2026 - 89e4729: auto-sync dom 1 nov 2026, 11:00:01, -03
 - 01 November 2026 - f5cc036: Feature: Trigger Engine (Volume, Regime, News) + blocco se <2/3 attivi
@@ -222,6 +221,7 @@ Git: commit 5325f18: pendenze: P016-P020 (tools fossile, mt4_shared, engram, tes
 - 10 November 2026 - ef1d935: auto-sync mar 10 nov 2026, 16:00:01, -03
 - 10 November 2026 - b5c387c: auto-sync mar 10 nov 2026, 17:00:01, -03
 - 10 November 2026 - 4eb53cf: auto-sync mar 10 nov 2026, 18:00:02, -03
+- 10 November 2026 - 57f25bf: auto-sync mar 10 nov 2026, 19:00:01, -03
 
 ## 3. Problemi noti
 
