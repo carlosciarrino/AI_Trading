@@ -2516,3 +2516,6 @@
 {"timestamp": "2026-11-10T12:56:35.702440", "scores": {}, "weights": {}, "final_score": 0.0, "signal": "HOLD", "action_taken": "none", "ticket": null, "reason": "score_neutro"}
 {"timestamp": "2026-11-10T13:50:09.787920", "scores": {}, "weights": {}, "final_score": 0.0, "signal": "HOLD", "action_taken": "none", "ticket": null, "reason": "score_neutro"}
 {"timestamp": "2026-11-10T14:37:28.314658", "scores": {}, "weights": {}, "final_score": 0.0, "signal": "HOLD", "action_taken": "none", "ticket": null, "reason": "score_neutro"}
+{"timestamp": "2026-11-10T15:22:29.240194", "scores": {}, "weights": {}, "final_score": 0.0, "signal": "HOLD", "action_taken": "none", "ticket": null, "reason": "score_neutro"}
+{"timestamp": "2026-11-10T15:37:29.545599", "scores": {}, "weights": {}, "final_score": 0.0, "signal": "HOLD", "action_taken": "none", "ticket": null, "reason": "score_neutro"}
+{"timestamp": "2026-11-10T15:52:29.851776", "scores": {}, "weights": {}, "final_score": 0.0, "signal": "HOLD", "action_taken": "none", "ticket": null, "reason": "score_neutro"}
