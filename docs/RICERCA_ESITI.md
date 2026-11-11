@@ -40,3 +40,8 @@ Questo file documenta i test effettuati sui progetti trovati dagli scout (GitHub
 - **Test**: Analisi README (no installazione). Test in sandbox in corso.
 - **Esito**: Python 3.10+ (ok), no GPU (ok), gratis (ok). Estrae da X, Reddit, YouTube, GitHub. Canali social "sperimentali" (anti-scraping aggressivo).
 - **Verdetto**: **TESTARE**. Utile per sentiment da social (X/Reddit) su EUR/USD. Se instabile, passare a Scrapling.
+
+## 2026-11-10: Agent-Reach (test superato)
+- **Test**: `agent-reach reddit search EURUSD --limit 5` -> 5 risultati, 734ms, no anti-scraping.
+- **Esito**: Funziona. Sentiment estratto: neutral-to-slightly-bearish.
+- **Verdetto**: **ADOTTATO** per `social_scout.py`. Integrato nel sistema come segnale aggiuntivo.
