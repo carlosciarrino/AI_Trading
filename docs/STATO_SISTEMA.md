@@ -22,15 +22,6 @@ Git: commit 5325f18: pendenze: P016-P020 (tools fossile, mt4_shared, engram, tes
 
 ## 2. Diario azioni
 
-- 01 November 2026 - 090896f: Fix: check_triggers integrato in orchestrator (blocco se <2/3 trigger)
-- 01 November 2026 - 7a65898: Feature: FinBERT + keyword inglesi (ibrido). News in inglese.
-- 01 November 2026 - a168511: Feature: TimesFM forecast integrato nel trigger engine (4° trigger)
-- 01 November 2026 - a1ff194: Fix: trigger engine legge forecast.json (4° trigger)
-- 01 November 2026 - a9e4da7: Feature: Bull vs Bear (maggioranza chiara invece di somma pesata) da TradingAgents
-- 01 November 2026 - ac95abe: Fix: trigger engine controlla market_open (no ordini a mercato chiuso)
-- 01 November 2026 - e363e61: auto-sync dom 1 nov 2026, 12:00:01, -03
-- 01 November 2026 - 091422a: auto-sync dom 1 nov 2026, 13:00:02, -03
-- 01 November 2026 - a6bac9b: auto-sync dom 1 nov 2026, 14:00:01, -03
 - 01 November 2026 - b671e7e: auto-sync dom 1 nov 2026, 15:00:01, -03
 - 01 November 2026 - fd293a1: auto-sync dom 1 nov 2026, 16:00:01, -03
 - 01 November 2026 - 4d4814a: auto-sync dom 1 nov 2026, 17:00:01, -03
@@ -222,6 +213,15 @@ Git: commit 5325f18: pendenze: P016-P020 (tools fossile, mt4_shared, engram, tes
 - 10 November 2026 - 13ba4b9: auto-sync mar 10 nov 2026, 20:00:01, -03
 - 10 November 2026 - a8e9435: Feature: trigger candela forte (corpo > 50% ATR)
 - 10 November 2026 - fcc835d: Fix: orchestratore rilegge triggers.json fresco prima di aprire
+- 10 November 2026 - d2ff7f7: auto-sync mar 10 nov 2026, 21:00:01, -03
+- 10 November 2026 - b9cd750: Docs: esito test LumiBot (scartato, non compatibile MT4)
+- 10 November 2026 - 8a51320: Docs: esito test Qlib (scartato, non Forex/MT4)
+- 10 November 2026 - 3f2e3e4: Docs: Agent-Reach da testare (sentiment social gratis)
+- 10 November 2026 - 4788b54: Docs: Agent-Reach adottato (test superato, sentiment social)
+- 10 November 2026 - 5094ee5: Feature: social_scout con Agent-Reach (Reddit sentiment)
+- 10 November 2026 - 6ca0f26: Docs: social_scout adottato (Reddit sentiment integrato)
+- 10 November 2026 - e07961d: Feature: social_context come conferma in get_ema_volume_signal
+- 10 November 2026 - d6034a0: Docs: social_context conferma integrata (size dimezzata se contrario)
 
 ## 3. Problemi noti
 
