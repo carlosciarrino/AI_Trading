@@ -22,7 +22,6 @@ Git: commit 5325f18: pendenze: P016-P020 (tools fossile, mt4_shared, engram, tes
 
 ## 2. Diario azioni
 
-- 01 November 2026 - b671e7e: auto-sync dom 1 nov 2026, 15:00:01, -03
 - 01 November 2026 - fd293a1: auto-sync dom 1 nov 2026, 16:00:01, -03
 - 01 November 2026 - 4d4814a: auto-sync dom 1 nov 2026, 17:00:01, -03
 - 01 November 2026 - b64001b: auto-sync dom 1 nov 2026, 18:00:01, -03
@@ -222,6 +221,7 @@ Git: commit 5325f18: pendenze: P016-P020 (tools fossile, mt4_shared, engram, tes
 - 10 November 2026 - 6ca0f26: Docs: social_scout adottato (Reddit sentiment integrato)
 - 10 November 2026 - e07961d: Feature: social_context come conferma in get_ema_volume_signal
 - 10 November 2026 - d6034a0: Docs: social_context conferma integrata (size dimezzata se contrario)
+- 10 November 2026 - 5025f7d: auto-sync mar 10 nov 2026, 22:00:01, -03
 
 ## 3. Problemi noti
 
