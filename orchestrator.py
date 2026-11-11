@@ -3,7 +3,7 @@ import json, time, os, requests
 from datetime import datetime, timezone, timedelta
 import risk_manager
 
-CONFIG_PATH = os.path.expanduser("~/AI_Trading/config.json")
+CONFIG_PATH = os.path.expanduser("~/Progetti/AI_Trading/config.json")
 OLLAMA_URL = "http://localhost:11434/api/generate"
 MODEL = "qwen2.5:0.5b"
 MAX_OPEN_ORDERS = 1
