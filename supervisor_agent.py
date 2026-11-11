@@ -11,7 +11,7 @@ import subprocess
 import time
 from datetime import datetime, timezone
 
-BASE = os.path.expanduser("~/AI_Trading")
+BASE = os.path.expanduser("~/Progetti/AI_Trading")
 AUDIT_JSON = os.path.join(BASE, "audit_status.json")
 RESTART_LOG = os.path.join(BASE, "restart_log.json")
 ALERT_MD = os.path.join(BASE, "docs", "ALERT.md")
