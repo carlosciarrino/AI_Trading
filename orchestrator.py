@@ -205,10 +205,25 @@ def get_bear_score(scores):
     return total
 
 def get_ema_volume_signal():
-    """Strategia EMA21 + Volume 1.5x + Candela close vs open + cooldown 240 + Social confirmation."""
+    """Allineato a trigger_engine.py: legge triggers.json prima di tutto.
+    Se trade_allowed=true, restituisce BUY/SELL dal reason; altrimenti HOLD."""
     global _EMA_VOL_LAST_TIME
     try:
-        # 1. Leggi EMA21 da technical_context.txt
+        # 1. Allineamento con trigger_engine: leggi triggers.json
+        triggers_path = "/home/carlo/Progetti/AI_Trading/triggers.json"
+        if os.path.exists(triggers_path):
+            with open(triggers_path) as f:
+                t = json.load(f)
+            if t.get("trade_allowed"):
+                reason = str(t.get("reason", "")).lower()
+                if "sell" in reason:
+                    return "SELL", {"reason": "trigger_engine", "detail": t.get("reason")}
+                if "buy" in reason:
+                    return "BUY", {"reason": "trigger_engine", "detail": t.get("reason")}
+            return "HOLD", {"reason": "trigger_hold", "detail": t.get("reason")}
+
+        # 2. Fallback: EMA21 + Volume 1.5x + Candela close vs open + cooldown 240 + Social confirmation.
+        # 2. Leggi EMA21 da technical_context.txt
         with open('/home/carlo/Progetti/AI_Trading/technical_context.txt') as f:
             text = f.read().lower()
         ema21_m = re.search(r'ema21:\s*([0-9.]+)', text)
