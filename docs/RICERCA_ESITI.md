@@ -50,3 +50,8 @@ Questo file documenta i test effettuati sui progetti trovati dagli scout (GitHub
 - **Test**: Eseguito manualmente. Output: sentiment "positivo" da Reddit.
 - **Esito**: Funziona. Cron ogni 30 minuti.
 - **Verdetto**: **ADOTTATO**. Integrato come conferma in `get_ema_volume_signal()`.
+
+## 2026-11-10: social_context come conferma (integrazione completata)
+- **Test**: Riavvio orchestratore, log con `[SOCIAL]`.
+- **Esito**: Funziona. Se il social contraddice il segnale, la size viene dimezzata.
+- **Verdetto**: **ADOTTATO**. Filtro di rischio sociale attivo.
