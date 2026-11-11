@@ -2,8 +2,8 @@
 import json, os, time, subprocess
 from datetime import datetime
 
-REPORT_FILE = "/home/carlo/AI_Trading/strategie_valide.json"
-STRATEGY_LIST = "/home/carlo/AI_Trading/strategie_trovate.txt"
+REPORT_FILE = "/home/carlo/Progetti/AI_Trading/strategie_valide.json"
+STRATEGY_LIST = "/home/carlo/Progetti/AI_Trading/strategie_trovate.txt"
 
 def load_strategies():
     """Legge le strategie trovate da skill_researcher/strategy_tester"""
@@ -18,7 +18,7 @@ def test_strategy(strategy):
     # Simula un test (in realtà chiama strategy_tester_agent)
     try:
         result = subprocess.run(
-            ["python3", "/home/carlo/AI_Trading/strategy_tester_agent.py", "--test", strategy],
+            ["python3", "/home/carlo/Progetti/AI_Trading/strategy_tester_agent.py", "--test", strategy],
             capture_output=True, text=True, timeout=30
         )
         if result.returncode == 0:

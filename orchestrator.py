@@ -15,7 +15,7 @@ OPEN_TIME_FILE = "/home/carlo/Scrivania/XM MT4/MQL4/Files/open_time.json"
 ACCOUNT_JSON = "/home/carlo/Scrivania/XM MT4/MQL4/Files/account.json"
 SL_COMMANDS_FILE = "/home/carlo/Scrivania/XM MT4/MQL4/Files/sl_commands.json"
 LOCK_FILE = "/tmp/orchestrator.lock"
-DECISION_LOG = "/home/carlo/AI_Trading/decision_log.jsonl"
+DECISION_LOG = "/home/carlo/Progetti/AI_Trading/decision_log.jsonl"
 
 # O8 - parametri logica post-apertura
 BREAK_EVEN_PIP = 20
@@ -89,7 +89,7 @@ def get_open_order():
 def get_technical_trend():
     """Legge technical_context.txt e ritorna 'bull', 'bear', 'neutral' o None."""
     try:
-        with open('/home/carlo/AI_Trading/technical_context.txt') as f:
+        with open('/home/carlo/Progetti/AI_Trading/technical_context.txt') as f:
             text = f.read().lower()
         # Match piu' robusto: cerca 'bear=true' o 'bull=true' ovunque nella riga Trend
         if 'bear=true' in text:
@@ -103,7 +103,7 @@ def get_technical_trend():
 
 def get_rsi():
     try:
-        with open('/home/carlo/AI_Trading/technical_context.txt') as f:
+        with open('/home/carlo/Progetti/AI_Trading/technical_context.txt') as f:
             text = f.read().lower()
         import re
         match = re.search(r'rsi[\s:]+([0-9.]+)', text)
@@ -146,7 +146,7 @@ def check_triggers(check_fresh=False):
     """Legge triggers.json. Ritorna True se trade_allowed e True.
     Se check_fresh=True, verifica anche che il timestamp sia < 60 secondi.
     """
-    triggers_path = "/home/carlo/AI_Trading/triggers.json"
+    triggers_path = "/home/carlo/Progetti/AI_Trading/triggers.json"
     try:
         with open(triggers_path) as f:
             data = json.load(f)
@@ -209,7 +209,7 @@ def get_ema_volume_signal():
     global _EMA_VOL_LAST_TIME
     try:
         # 1. Leggi EMA21 da technical_context.txt
-        with open('/home/carlo/AI_Trading/technical_context.txt') as f:
+        with open('/home/carlo/Progetti/AI_Trading/technical_context.txt') as f:
             text = f.read().lower()
         ema21_m = re.search(r'ema21:\s*([0-9.]+)', text)
         if not ema21_m:
@@ -255,7 +255,7 @@ def get_ema_volume_signal():
         # 5. Leggi social_context.txt per conferma
         social_sentiment = "neutro"
         try:
-            with open('/home/carlo/AI_Trading/social_context.txt') as f:
+            with open('/home/carlo/Progetti/AI_Trading/social_context.txt') as f:
                 social_text = f.read().lower()
             if 'sentiment: positivo' in social_text:
                 social_sentiment = "positivo"
@@ -292,7 +292,7 @@ def get_ema_volume_signal():
 def get_signal():
     scores = {}
     try:
-        with open('/home/carlo/AI_Trading/news_context.txt', 'r') as f:
+        with open('/home/carlo/Progetti/AI_Trading/news_context.txt', 'r') as f:
             text = f.read().lower()
             if 'sentiment: positivo' in text:
                 scores['news'] = 0.3
@@ -303,7 +303,7 @@ def get_signal():
     except:
         scores['news'] = 0.0
     try:
-        with open('/home/carlo/AI_Trading/social_context.txt', 'r') as f:
+        with open('/home/carlo/Progetti/AI_Trading/social_context.txt', 'r') as f:
             text = f.read().lower()
             if 'sentiment: positivo' in text:
                 scores['social'] = 0.2
@@ -314,7 +314,7 @@ def get_signal():
     except:
         scores['social'] = 0.0
     try:
-        with open('/home/carlo/AI_Trading/cycles_context.txt', 'r') as f:
+        with open('/home/carlo/Progetti/AI_Trading/cycles_context.txt', 'r') as f:
             text = f.read().lower()
             import re
             month = datetime.now().month
@@ -336,7 +336,7 @@ def get_signal():
     except:
         scores['cycle'] = 0.0
     try:
-        with open('/home/carlo/AI_Trading/volume_context.txt', 'r') as f:
+        with open('/home/carlo/Progetti/AI_Trading/volume_context.txt', 'r') as f:
             text = f.read().lower()
             import re
             match = re.search(r'(?:punteggio|score)[:\s]+(-?\d+\.\d+)', text)
@@ -347,7 +347,7 @@ def get_signal():
     except:
         scores['volume'] = 0.0
     try:
-        with open('/home/carlo/AI_Trading/trading_memory.md', 'r') as f:
+        with open('/home/carlo/Progetti/AI_Trading/trading_memory.md', 'r') as f:
             content = f.read()
         reflections = content.split('REFLECTION:')
         recent = reflections[-3:] if len(reflections) >= 3 else reflections
@@ -714,7 +714,7 @@ def main():
 
             # Event Risk: blocca se ci sono notizie macro imminenti
             try:
-                with open('/home/carlo/AI_Trading/event_risk.json') as f:
+                with open('/home/carlo/Progetti/AI_Trading/event_risk.json') as f:
                     er = json.load(f)
                 if er.get("block", False):
                     print(f"[EVENT-RISK] {er.get('reason')}", flush=True)
@@ -740,7 +740,7 @@ def main():
 
             # Filtro Candela (signal LONG/SHORT da technical_context)
             try:
-                with open('/home/carlo/AI_Trading/technical_context.txt') as f:
+                with open('/home/carlo/Progetti/AI_Trading/technical_context.txt') as f:
                     tech_txt = f.read().lower()
                 if signal == "BUY" and "signal: long" not in tech_txt:
                     print("[CANDLE-FILTER] Segnale LONG assente. BUY bloccato.", flush=True)
@@ -758,7 +758,7 @@ def main():
             # Filtro Trend Severo (Prezzo vs EMA)
             try:
                 import re
-                with open('/home/carlo/AI_Trading/technical_context.txt') as f:
+                with open('/home/carlo/Progetti/AI_Trading/technical_context.txt') as f:
                     tech_text = f.read().lower()
                 
                 # Estrai close, EMA9, EMA21

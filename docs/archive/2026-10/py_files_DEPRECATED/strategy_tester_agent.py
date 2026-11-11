@@ -52,7 +52,7 @@ def esegui_backtest():
     print("Backtest avviato...")
     time.sleep(10)  # Simula il lavoro (in realtà userebbe yfinance)
     # Salva il risultato come strategia testata
-    with open("/home/carlo/AI_Trading/strategie_testate.txt", "a") as f:
+    with open("/home/carlo/Progetti/AI_Trading/strategie_testate.txt", "a") as f:
         f.write(f"{time.ctime()} - Backtest completato\n")
     print("Backtest completato.")
 

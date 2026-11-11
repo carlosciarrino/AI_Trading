@@ -3,9 +3,9 @@ import json, os, time, requests
 from datetime import datetime, timedelta
 import pytz
 
-SIGNALS_FILE = "/home/carlo/AI_Trading/signals/signals.json"
-REPORT_FILE = "/home/carlo/AI_Trading/signals/report.json"
-VERIFIED_FILE = "/home/carlo/AI_Trading/signals/verified_signals.json"
+SIGNALS_FILE = "/home/carlo/Progetti/AI_Trading/signals/signals.json"
+REPORT_FILE = "/home/carlo/Progetti/AI_Trading/signals/report.json"
+VERIFIED_FILE = "/home/carlo/Progetti/AI_Trading/signals/verified_signals.json"
 
 def load_signals():
     try:

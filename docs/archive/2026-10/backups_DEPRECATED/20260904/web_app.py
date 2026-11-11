@@ -25,23 +25,23 @@ AGENTS = {
 }
 
 AGENT_COMMANDS = {
-    "ai_workforce": "cd /home/carlo/AI_Trading && source ~/AI_Trading_Agents/venv/bin/activate && python3 orchestrator.py > /home/carlo/orchestrator.log 2>&1",
-    "dashboard": "cd /home/carlo/AI_Trading && source ~/AI_Trading_Agents/venv/bin/activate && python3 web_app.py",
-    "sentinel": "cd /home/carlo/AI_Trading && source ~/AI_Trading_Agents/venv/bin/activate && python3 sentinel.py",
-    "news_agent": "cd /home/carlo/AI_Trading && source ~/AI_Trading_Agents/venv/bin/activate && python3 news_agent.py",
-    "social_agent": "cd /home/carlo/AI_Trading && source ~/AI_Trading_Agents/venv/bin/activate && python3 social_agent.py",
-    "cycle_agent": "cd /home/carlo/AI_Trading && source ~/AI_Trading_Agents/venv/bin/activate && python3 cycle_agent.py",
-    "experience_agent": "cd /home/carlo/AI_Trading && source ~/AI_Trading_Agents/venv/bin/activate && python3 experience_agent.py",
-    "strategy_tester_agent": "cd /home/carlo/AI_Trading && source ~/AI_Trading_Agents/venv/bin/activate && python3 strategy_tester_agent.py",
-    "github_researcher": "cd /home/carlo/AI_Trading && source ~/AI_Trading_Agents/venv/bin/activate && python3 github_researcher.py",
-    "skill_researcher": "cd /home/carlo/AI_Trading && source ~/AI_Trading_Agents/venv/bin/activate && python3 skill_researcher.py",
-    "news_critical": "cd /home/carlo/AI_Trading && source ~/AI_Trading_Agents/venv/bin/activate && python3 news_critical.py",
-    "ai_researcher_agent": "cd /home/carlo/AI_Trading && source ~/AI_Trading_Agents/venv/bin/activate && python3 ai_researcher_agent.py",
-    "ai_tester_agent": "cd /home/carlo/AI_Trading && source ~/AI_Trading_Agents/venv/bin/activate && python3 ai_tester_agent.py",
-    "sync_agent": "cd /home/carlo/AI_Trading && source ~/AI_Trading_Agents/venv/bin/activate && python3 sync_agent.py",
-    "supervisor": "cd /home/carlo/AI_Trading && source ~/AI_Trading_Agents/venv/bin/activate && python3 supervisor_agent.py",
-    "tool_updater": "cd /home/carlo/AI_Trading && source ~/AI_Trading_Agents/venv/bin/activate && python3 tool_updater_agent.py",
-    "yt_digest": "cd /home/carlo/AI_Trading && source ~/AI_Trading_Agents/venv/bin/activate && python3 yt_digest.py"
+    "ai_workforce": "cd /home/carlo/Progetti/AI_Trading && source ~/AI_Trading_Agents/venv/bin/activate && python3 orchestrator.py > /home/carlo/orchestrator.log 2>&1",
+    "dashboard": "cd /home/carlo/Progetti/AI_Trading && source ~/AI_Trading_Agents/venv/bin/activate && python3 web_app.py",
+    "sentinel": "cd /home/carlo/Progetti/AI_Trading && source ~/AI_Trading_Agents/venv/bin/activate && python3 sentinel.py",
+    "news_agent": "cd /home/carlo/Progetti/AI_Trading && source ~/AI_Trading_Agents/venv/bin/activate && python3 news_agent.py",
+    "social_agent": "cd /home/carlo/Progetti/AI_Trading && source ~/AI_Trading_Agents/venv/bin/activate && python3 social_agent.py",
+    "cycle_agent": "cd /home/carlo/Progetti/AI_Trading && source ~/AI_Trading_Agents/venv/bin/activate && python3 cycle_agent.py",
+    "experience_agent": "cd /home/carlo/Progetti/AI_Trading && source ~/AI_Trading_Agents/venv/bin/activate && python3 experience_agent.py",
+    "strategy_tester_agent": "cd /home/carlo/Progetti/AI_Trading && source ~/AI_Trading_Agents/venv/bin/activate && python3 strategy_tester_agent.py",
+    "github_researcher": "cd /home/carlo/Progetti/AI_Trading && source ~/AI_Trading_Agents/venv/bin/activate && python3 github_researcher.py",
+    "skill_researcher": "cd /home/carlo/Progetti/AI_Trading && source ~/AI_Trading_Agents/venv/bin/activate && python3 skill_researcher.py",
+    "news_critical": "cd /home/carlo/Progetti/AI_Trading && source ~/AI_Trading_Agents/venv/bin/activate && python3 news_critical.py",
+    "ai_researcher_agent": "cd /home/carlo/Progetti/AI_Trading && source ~/AI_Trading_Agents/venv/bin/activate && python3 ai_researcher_agent.py",
+    "ai_tester_agent": "cd /home/carlo/Progetti/AI_Trading && source ~/AI_Trading_Agents/venv/bin/activate && python3 ai_tester_agent.py",
+    "sync_agent": "cd /home/carlo/Progetti/AI_Trading && source ~/AI_Trading_Agents/venv/bin/activate && python3 sync_agent.py",
+    "supervisor": "cd /home/carlo/Progetti/AI_Trading && source ~/AI_Trading_Agents/venv/bin/activate && python3 supervisor_agent.py",
+    "tool_updater": "cd /home/carlo/Progetti/AI_Trading && source ~/AI_Trading_Agents/venv/bin/activate && python3 tool_updater_agent.py",
+    "yt_digest": "cd /home/carlo/Progetti/AI_Trading && source ~/AI_Trading_Agents/venv/bin/activate && python3 yt_digest.py"
 }
 
 def get_status():
@@ -60,8 +60,8 @@ def run_audit_loop():
     global audit_data
     while True:
         try:
-            subprocess.run(["python3", "/home/carlo/AI_Trading/audit_agent.py"],
-                           capture_output=True, cwd="/home/carlo/AI_Trading")
+            subprocess.run(["python3", "/home/carlo/Progetti/AI_Trading/audit_agent.py"],
+                           capture_output=True, cwd="/home/carlo/Progetti/AI_Trading")
             if os.path.exists(AUDIT_JSON):
                 with open(AUDIT_JSON, "r") as f:
                     audit_data = json.load(f)
@@ -500,8 +500,8 @@ def index():
         with open(AUDIT_JSON, 'r') as f:
             fresh_audit = json.load(f)
         if fresh_audit.get('has_issue', False):
-            subprocess.run(["python3", "/home/carlo/AI_Trading/audit_agent.py"],
-                           capture_output=True, cwd="/home/carlo/AI_Trading")
+            subprocess.run(["python3", "/home/carlo/Progetti/AI_Trading/audit_agent.py"],
+                           capture_output=True, cwd="/home/carlo/Progetti/AI_Trading")
             with open(AUDIT_JSON, 'r') as f:
                 fresh_audit = json.load(f)
     except:
@@ -555,7 +555,7 @@ def place_order():
     return jsonify({'message': f'Ordine {action} inviato (lotto {lots}, SL {sl}, TP {tp})'})
 @app.route('/config', methods=['GET', 'POST'])
 def config():
-    config_path = '/home/carlo/AI_Trading/config.json'
+    config_path = '/home/carlo/Progetti/AI_Trading/config.json'
     if request.method == 'GET':
         try:
             with open(config_path) as f:
@@ -577,21 +577,21 @@ def config():
 def test_strategy():
     data = request.json
     link = data.get('link')
-    with open('/home/carlo/AI_Trading/strategia_da_testare.txt', 'w') as f:
+    with open('/home/carlo/Progetti/AI_Trading/strategia_da_testare.txt', 'w') as f:
         f.write(link)
     return jsonify({'message': f'Strategia inviata al tester: {link}'})
 
 @app.route('/leggi_report')
 def leggi_report():
     try:
-        with open('/home/carlo/AI_Trading/report_strategia.txt', 'r') as f:
+        with open('/home/carlo/Progetti/AI_Trading/report_strategia.txt', 'r') as f:
             return f.read()
     except:
         return ""
 
 @app.route('/applica_strategia', methods=['POST'])
 def applica_strategia():
-    with open('/home/carlo/AI_Trading/segnali/backtest_richiesto.txt', 'w') as f:
+    with open('/home/carlo/Progetti/AI_Trading/segnali/backtest_richiesto.txt', 'w') as f:
         f.write("1")
     return jsonify({'message': 'Backtest avviato. L\'agente tester lavorerà di notte.'})
 
@@ -609,12 +609,12 @@ def analyze_video():
     link = data.get('link')
     if not link:
         return jsonify({'message': 'Link mancante'}), 400
-    with open('/home/carlo/AI_Trading/video_link.txt', 'w') as f:
+    with open('/home/carlo/Progetti/AI_Trading/video_link.txt', 'w') as f:
         f.write(link)
     with open('/home/carlo/video_analysis.log', 'w') as log:
-        subprocess.Popen(["python3", "/home/carlo/AI_Trading/multidigest.py"],
+        subprocess.Popen(["python3", "/home/carlo/Progetti/AI_Trading/multidigest.py"],
                          stdout=log, stderr=log,
-                         cwd="/home/carlo/AI_Trading")
+                         cwd="/home/carlo/Progetti/AI_Trading")
     return jsonify({'message': f'Analisi avviata per: {link}. Controlla report_multivideo.txt tra qualche minuto.'})
 
 @app.route('/test_video_force', methods=['POST'])
@@ -622,19 +622,19 @@ def test_video_force():
     link = request.json.get('link')
     if not link:
         return jsonify({'message': 'Link mancante'}), 400
-    with open('/home/carlo/AI_Trading/video_link.txt', 'w') as f:
+    with open('/home/carlo/Progetti/AI_Trading/video_link.txt', 'w') as f:
         f.write(link)
     subprocess.Popen(
-        ["python3", "/home/carlo/AI_Trading/multidigest.py", "--force"],
+        ["python3", "/home/carlo/Progetti/AI_Trading/multidigest.py", "--force"],
         stdout=subprocess.DEVNULL,
         stderr=subprocess.DEVNULL,
-        cwd="/home/carlo/AI_Trading"
+        cwd="/home/carlo/Progetti/AI_Trading"
     )
     return jsonify({'message': f'Test forzato avviato per {link}'})
 
 @app.route('/video_status')
 def video_status():
-    report_path = '/home/carlo/AI_Trading/report_multivideo.txt'
+    report_path = '/home/carlo/Progetti/AI_Trading/report_multivideo.txt'
     try:
         with open(report_path, 'r') as f:
             content = f.read()
@@ -647,18 +647,18 @@ def video_status():
 @app.route('/leggi_report_video')
 def leggi_report_video():
     try:
-        with open('/home/carlo/AI_Trading/report_multivideo.txt', 'r') as f:
+        with open('/home/carlo/Progetti/AI_Trading/report_multivideo.txt', 'r') as f:
             return f.read()
     except:
         return ""
 
 @app.route('/run_audit', methods=['POST'])
 def run_audit():
-    result = subprocess.run(["python3", "/home/carlo/AI_Trading/audit_agent.py"],
-                            capture_output=True, text=True, cwd="/home/carlo/AI_Trading")
+    result = subprocess.run(["python3", "/home/carlo/Progetti/AI_Trading/audit_agent.py"],
+                            capture_output=True, text=True, cwd="/home/carlo/Progetti/AI_Trading")
     if result.returncode == 0:
         try:
-            with open('/home/carlo/AI_Trading/audit_report.txt', 'r') as f:
+            with open('/home/carlo/Progetti/AI_Trading/audit_report.txt', 'r') as f:
                 return f.read()
         except:
             return "Report generato ma non leggibile."
@@ -668,7 +668,7 @@ def run_audit():
 @app.route('/leggi_audit')
 def leggi_audit():
     try:
-        with open('/home/carlo/AI_Trading/audit_report.txt', 'r') as f:
+        with open('/home/carlo/Progetti/AI_Trading/audit_report.txt', 'r') as f:
             return f.read()
     except:
         return "Nessun report audit disponibile."

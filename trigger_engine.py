@@ -6,7 +6,7 @@ Scrive triggers.json per l'orchestratore.
 import json, os, time
 from datetime import datetime, timezone
 
-BASE = "/home/carlo/AI_Trading"
+BASE = "/home/carlo/Progetti/AI_Trading"
 TECH_CONTEXT = os.path.join(BASE, "technical_context.txt")
 VOLUME_JSON = "/home/carlo/Scrivania/XM MT4/MQL4/Files/volume_data.json"
 VOLUME_HISTORY_FILE = os.path.join(BASE, "volume_history.json")

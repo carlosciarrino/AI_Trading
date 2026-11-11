@@ -3,7 +3,7 @@
 import json, os
 from datetime import datetime, timezone
 
-CONFIG_PATH = "/home/carlo/AI_Trading/config/risk_budget.json"
+CONFIG_PATH = "/home/carlo/Progetti/AI_Trading/config/risk_budget.json"
 ACCOUNT_PATH = "/home/carlo/Scrivania/XM MT4/MQL4/Files/account.json"
 
 

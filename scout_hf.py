@@ -12,7 +12,7 @@ TOKEN = os.environ.get("HF_TOKEN")
 HEADERS = {}
 if TOKEN and TOKEN != "placeholder": HEADERS["Authorization"] = f"Bearer {TOKEN}"
 
-OUTPUT = "/home/carlo/AI_Trading/docs/SCOUT_HF.md"
+OUTPUT = "/home/carlo/Progetti/AI_Trading/docs/SCOUT_HF.md"
 
 def main():
     print("Inizio scouting Hugging Face...")

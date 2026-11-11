@@ -54,7 +54,7 @@ def get_tailscale_ip():
     return ip
 
 def get_git_info():
-    repo = '/home/carlo/AI_Trading'
+    repo = '/home/carlo/Progetti/AI_Trading'
     if not os.path.isdir(os.path.join(repo, '.git')):
         return 'Non è un repository Git'
     short = run_cmd('git rev-parse --short HEAD', 'N/A', cwd=repo)
@@ -65,7 +65,7 @@ def get_current_time():
     return datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 
 def main():
-    md_path = '/home/carlo/AI_Trading/docs/STATO_SISTEMA.md'
+    md_path = '/home/carlo/Progetti/AI_Trading/docs/STATO_SISTEMA.md'
     os.makedirs(os.path.dirname(md_path), exist_ok=True)
     
     # Read the file if it exists

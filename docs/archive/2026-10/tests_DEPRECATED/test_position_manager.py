@@ -1,5 +1,5 @@
 import json, os, sys, tempfile
-sys.path.insert(0, "/home/carlo/AI_Trading")
+sys.path.insert(0, "/home/carlo/Progetti/AI_Trading")
 
 def test_write_sl_command():
     """Test: write_sl_command crea il file corretto."""

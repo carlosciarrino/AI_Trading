@@ -30,8 +30,8 @@ def generate_equity_curve():
     fig = go.Figure()
     fig.add_trace(go.Scatter(x=df['time'], y=df['equity'], mode='lines', name='Equity', line=dict(color='#2962ff')))
     fig.update_layout(title='Equity Curve', xaxis_title='Data', yaxis_title='Capitale', template='plotly_dark', height=400)
-    os.makedirs('/home/carlo/AI_Trading/static', exist_ok=True)
-    fig.write_html('/home/carlo/AI_Trading/static/equity.html')
+    os.makedirs('/home/carlo/Progetti/AI_Trading/static', exist_ok=True)
+    fig.write_html('/home/carlo/Progetti/AI_Trading/static/equity.html')
     print("✅ Equity curve generata")
 
 if __name__ == '__main__':

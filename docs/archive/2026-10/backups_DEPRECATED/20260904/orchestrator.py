@@ -42,7 +42,7 @@ def count_open_orders():
 def get_signal():
     scores = {}
     try:
-        with open('/home/carlo/AI_Trading/news_context.txt', 'r') as f:
+        with open('/home/carlo/Progetti/AI_Trading/news_context.txt', 'r') as f:
             text = f.read().lower()
             if any(w in text for w in ['guerra', 'crisi', 'inflazione', 'rialzo tassi']):
                 scores['news'] = -0.3
@@ -53,7 +53,7 @@ def get_signal():
     except:
         scores['news'] = 0.0
     try:
-        with open('/home/carlo/AI_Trading/social_context.txt', 'r') as f:
+        with open('/home/carlo/Progetti/AI_Trading/social_context.txt', 'r') as f:
             text = f.read().lower()
             if 'positivo' in text:
                 scores['social'] = 0.2
@@ -64,7 +64,7 @@ def get_signal():
     except:
         scores['social'] = 0.0
     try:
-        with open('/home/carlo/AI_Trading/cycles_context.txt', 'r') as f:
+        with open('/home/carlo/Progetti/AI_Trading/cycles_context.txt', 'r') as f:
             text = f.read().lower()
             import re
             month = datetime.now().month
@@ -86,7 +86,7 @@ def get_signal():
     except:
         scores['cycle'] = 0.0
     try:
-        with open('/home/carlo/AI_Trading/volume_context.txt', 'r') as f:
+        with open('/home/carlo/Progetti/AI_Trading/volume_context.txt', 'r') as f:
             text = f.read()
             import re
             match = re.search(r'Punteggio:\s*([-+]?\d+\.?\d*)', text)
@@ -97,7 +97,7 @@ def get_signal():
     except:
         scores['volume'] = 0.0
     try:
-        with open('/home/carlo/AI_Trading/experiences.json', 'r') as f:
+        with open('/home/carlo/Progetti/AI_Trading/experiences.json', 'r') as f:
             exp = json.load(f)
             recent = [e for e in exp if e.get('esito') == 'PERDITA'][-3:]
             if len(recent) >= 3:

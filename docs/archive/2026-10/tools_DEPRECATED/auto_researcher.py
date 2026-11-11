@@ -5,7 +5,7 @@ from pathlib import Path
 logging.basicConfig(level=logging.INFO, format='%(asctime)s %(levelname)s: %(message)s')
 logger = logging.getLogger(__name__)
 
-REPORT_DIR = "/home/carlo/AI_Trading/docs/research"
+REPORT_DIR = "/home/carlo/Progetti/AI_Trading/docs/research"
 TELEGRAM_TOKEN = "8928323847:AAGpoYGzlnAN39q-VM0O4ZlgrbLFXLiEzwk"
 
 SOURCES = {

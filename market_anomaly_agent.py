@@ -4,8 +4,8 @@ from datetime import datetime, timedelta
 import pytz
 import requests
 
-REPORT_FILE = "/home/carlo/AI_Trading/report_anomalie.txt"
-DATA_FILE = "/home/carlo/AI_Trading/dati_storici_eurusd.csv"
+REPORT_FILE = "/home/carlo/Progetti/AI_Trading/report_anomalie.txt"
+DATA_FILE = "/home/carlo/Progetti/AI_Trading/dati_storici_eurusd.csv"
 
 def get_historical_data():
     """

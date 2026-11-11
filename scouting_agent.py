@@ -4,7 +4,7 @@ Scrive docs/NOVITA_ESTERNE.md. No LLM, deterministico, CPU-only."""
 import requests, time
 from datetime import datetime
 
-OUTPUT = "/home/carlo/AI_Trading/docs/NOVITA_ESTERNE.md"
+OUTPUT = "/home/carlo/Progetti/AI_Trading/docs/NOVITA_ESTERNE.md"
 HEADERS = {"User-Agent": "AI_Trading-Scouting/2.0"}
 
 

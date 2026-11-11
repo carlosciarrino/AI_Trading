@@ -2,7 +2,7 @@ import subprocess, os, time, shutil
 
 # Percorso USB (da cambiare quando inserisci la chiavetta)
 USB_PATH = "/media/carlo/USB/AI_BRIDGE"
-REPO_PATH = "/home/carlo/AI_Trading"
+REPO_PATH = "/home/carlo/Progetti/AI_Trading"
 
 def sync_to_usb():
     if os.path.exists(USB_PATH):

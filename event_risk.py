@@ -5,7 +5,7 @@ from datetime import datetime, timezone, timedelta
 import requests
 from bs4 import BeautifulSoup
 
-OUTPUT_JSON = "/home/carlo/AI_Trading/event_risk.json"
+OUTPUT_JSON = "/home/carlo/Progetti/AI_Trading/event_risk.json"
 
 # Fonte: ForexFactory (feed XML pubblico)
 FF_URL = "https://nfs.faireconomy.media/ff_calendar_thisweek.xml"

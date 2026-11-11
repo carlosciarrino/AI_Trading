@@ -15,7 +15,7 @@ INDICATORS = ["none", "rsi", "volume", "trend"]
 
 def run_backtest(asset, timeframe, params, indicator):
     # Modifica il file della strategia con i parametri e indicatori
-    strategy_file = "/home/carlo/AI_Trading/strategies/three_candles_simple.py"
+    strategy_file = "/home/carlo/Progetti/AI_Trading/strategies/three_candles_simple.py"
     with open(strategy_file, 'r') as f:
         content = f.read()
     # Sostituisci parametri
@@ -27,7 +27,7 @@ def run_backtest(asset, timeframe, params, indicator):
     # Salva e esegui backtest
     with open(strategy_file, 'w') as f:
         f.write(content)
-    cmd = f"cd /home/carlo/AI_Trading && source ~/AI_Trading_Agents/venv/bin/activate && python3 -c \"import sys; sys.path.insert(0, '.'); from backtest_multi import run_backtest; print(run_backtest('{asset}', '{timeframe}'))\""
+    cmd = f"cd /home/carlo/Progetti/AI_Trading && source ~/AI_Trading_Agents/venv/bin/activate && python3 -c \"import sys; sys.path.insert(0, '.'); from backtest_multi import run_backtest; print(run_backtest('{asset}', '{timeframe}'))\""
     result = subprocess.run(cmd, shell=True, capture_output=True, text=True)
     return result.stdout.strip()
 

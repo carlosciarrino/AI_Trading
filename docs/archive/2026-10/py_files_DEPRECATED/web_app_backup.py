@@ -22,20 +22,20 @@ AGENTS = {
 }
 
 AGENT_COMMANDS = {
-    "ai_workforce": "cd /home/carlo/AI_Trading && source ~/AI_Trading_Agents/venv/bin/activate && python3 orchestrator.py > /home/carlo/orchestrator.log 2>&1",
-    "dashboard": "cd /home/carlo/AI_Trading && source ~/AI_Trading_Agents/venv/bin/activate && python3 web_app.py",
-    "sentinel": "cd /home/carlo/AI_Trading && source ~/AI_Trading_Agents/venv/bin/activate && python3 sentinel.py",
-    "news_agent": "cd /home/carlo/AI_Trading && source ~/AI_Trading_Agents/venv/bin/activate && python3 news_agent.py",
-    "social_agent": "cd /home/carlo/AI_Trading && source ~/AI_Trading_Agents/venv/bin/activate && python3 social_agent.py",
-    "cycle_agent": "cd /home/carlo/AI_Trading && source ~/AI_Trading_Agents/venv/bin/activate && python3 cycle_agent.py",
-    "experience_agent": "cd /home/carlo/AI_Trading && source ~/AI_Trading_Agents/venv/bin/activate && python3 experience_agent.py",
-    "strategy_tester_agent": "cd /home/carlo/AI_Trading && source ~/AI_Trading_Agents/venv/bin/activate && python3 strategy_tester_agent.py",
-    "github_researcher": "cd /home/carlo/AI_Trading && source ~/AI_Trading_Agents/venv/bin/activate && python3 github_researcher.py",
-    "skill_researcher": "cd /home/carlo/AI_Trading && source ~/AI_Trading_Agents/venv/bin/activate && python3 skill_researcher.py",
-    "news_critical": "cd /home/carlo/AI_Trading && source ~/AI_Trading_Agents/venv/bin/activate && python3 news_critical.py",
-    "ai_researcher_agent": "cd /home/carlo/AI_Trading && source ~/AI_Trading_Agents/venv/bin/activate && python3 ai_researcher_agent.py",
-    "ai_tester_agent": "cd /home/carlo/AI_Trading && source ~/AI_Trading_Agents/venv/bin/activate && python3 ai_tester_agent.py",
-    "sync_agent": "cd /home/carlo/AI_Trading && source ~/AI_Trading_Agents/venv/bin/activate && python3 sync_agent.py"
+    "ai_workforce": "cd /home/carlo/Progetti/AI_Trading && source ~/AI_Trading_Agents/venv/bin/activate && python3 orchestrator.py > /home/carlo/orchestrator.log 2>&1",
+    "dashboard": "cd /home/carlo/Progetti/AI_Trading && source ~/AI_Trading_Agents/venv/bin/activate && python3 web_app.py",
+    "sentinel": "cd /home/carlo/Progetti/AI_Trading && source ~/AI_Trading_Agents/venv/bin/activate && python3 sentinel.py",
+    "news_agent": "cd /home/carlo/Progetti/AI_Trading && source ~/AI_Trading_Agents/venv/bin/activate && python3 news_agent.py",
+    "social_agent": "cd /home/carlo/Progetti/AI_Trading && source ~/AI_Trading_Agents/venv/bin/activate && python3 social_agent.py",
+    "cycle_agent": "cd /home/carlo/Progetti/AI_Trading && source ~/AI_Trading_Agents/venv/bin/activate && python3 cycle_agent.py",
+    "experience_agent": "cd /home/carlo/Progetti/AI_Trading && source ~/AI_Trading_Agents/venv/bin/activate && python3 experience_agent.py",
+    "strategy_tester_agent": "cd /home/carlo/Progetti/AI_Trading && source ~/AI_Trading_Agents/venv/bin/activate && python3 strategy_tester_agent.py",
+    "github_researcher": "cd /home/carlo/Progetti/AI_Trading && source ~/AI_Trading_Agents/venv/bin/activate && python3 github_researcher.py",
+    "skill_researcher": "cd /home/carlo/Progetti/AI_Trading && source ~/AI_Trading_Agents/venv/bin/activate && python3 skill_researcher.py",
+    "news_critical": "cd /home/carlo/Progetti/AI_Trading && source ~/AI_Trading_Agents/venv/bin/activate && python3 news_critical.py",
+    "ai_researcher_agent": "cd /home/carlo/Progetti/AI_Trading && source ~/AI_Trading_Agents/venv/bin/activate && python3 ai_researcher_agent.py",
+    "ai_tester_agent": "cd /home/carlo/Progetti/AI_Trading && source ~/AI_Trading_Agents/venv/bin/activate && python3 ai_tester_agent.py",
+    "sync_agent": "cd /home/carlo/Progetti/AI_Trading && source ~/AI_Trading_Agents/venv/bin/activate && python3 sync_agent.py"
 }
 
 def get_status():
@@ -444,7 +444,7 @@ def place_order():
 
 @app.route('/config', methods=['GET', 'POST'])
 def config():
-    config_path = '/home/carlo/AI_Trading/config.json'
+    config_path = '/home/carlo/Progetti/AI_Trading/config.json'
     if request.method == 'GET':
         try:
             with open(config_path) as f:
@@ -466,21 +466,21 @@ def config():
 def test_strategy():
     data = request.json
     link = data.get('link')
-    with open('/home/carlo/AI_Trading/strategia_da_testare.txt', 'w') as f:
+    with open('/home/carlo/Progetti/AI_Trading/strategia_da_testare.txt', 'w') as f:
         f.write(link)
     return jsonify({'message': f'Strategia inviata al tester: {link}'})
 
 @app.route('/leggi_report')
 def leggi_report():
     try:
-        with open('/home/carlo/AI_Trading/report_strategia.txt', 'r') as f:
+        with open('/home/carlo/Progetti/AI_Trading/report_strategia.txt', 'r') as f:
             return f.read()
     except:
         return ""
 
 @app.route('/applica_strategia', methods=['POST'])
 def applica_strategia():
-    with open('/home/carlo/AI_Trading/segnali/backtest_richiesto.txt', 'w') as f:
+    with open('/home/carlo/Progetti/AI_Trading/segnali/backtest_richiesto.txt', 'w') as f:
         f.write("1")
     return jsonify({'message': 'Backtest avviato. L\'agente tester lavorerà di notte.'})
 
@@ -498,16 +498,16 @@ def analyze_video():
     link = data.get('link')
     if not link:
         return jsonify({'message': 'Link mancante'}), 400
-    with open('/home/carlo/AI_Trading/video_link.txt', 'w') as f:
+    with open('/home/carlo/Progetti/AI_Trading/video_link.txt', 'w') as f:
         f.write(link)
-    subprocess.Popen(["python3", "/home/carlo/AI_Trading/multidigest.py"],
+    subprocess.Popen(["python3", "/home/carlo/Progetti/AI_Trading/multidigest.py"],
                      stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL,
-                     cwd="/home/carlo/AI_Trading")
+                     cwd="/home/carlo/Progetti/AI_Trading")
     return jsonify({'message': f'Analisi avviata per: {link}'})
 
 @app.route('/video_status')
 def video_status():
-    report_path = '/home/carlo/AI_Trading/report_multivideo.txt'
+    report_path = '/home/carlo/Progetti/AI_Trading/report_multivideo.txt'
     try:
         with open(report_path, 'r') as f:
             content = f.read()
@@ -520,7 +520,7 @@ def video_status():
 @app.route('/leggi_report_video')
 def leggi_report_video():
     try:
-        with open('/home/carlo/AI_Trading/report_multivideo.txt', 'r') as f:
+        with open('/home/carlo/Progetti/AI_Trading/report_multivideo.txt', 'r') as f:
             return f.read()
     except:
         return ""

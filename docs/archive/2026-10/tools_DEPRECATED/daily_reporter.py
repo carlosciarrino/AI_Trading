@@ -6,7 +6,7 @@ logging.basicConfig(level=logging.INFO, format='%(asctime)s %(levelname)s: %(mes
 logger = logging.getLogger(__name__)
 
 def get_creds():
-    bot_file = "/home/carlo/AI_Trading/tools/telegram_bot.py"
+    bot_file = "/home/carlo/Progetti/AI_Trading/tools/telegram_bot.py"
     token = None
     if os.path.exists(bot_file):
         with open(bot_file) as f:

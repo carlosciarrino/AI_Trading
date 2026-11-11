@@ -16,7 +16,7 @@ AUDIT_JSON = os.path.join(BASE, "audit_status.json")
 RESTART_LOG = os.path.join(BASE, "restart_log.json")
 ALERT_MD = os.path.join(BASE, "docs", "ALERT.md")
 ACCOUNT_JSON = "/home/carlo/Scrivania/XM MT4/MQL4/Files/account.json"
-RISK_CONFIG = "/home/carlo/AI_Trading/config/risk_budget.json"
+RISK_CONFIG = "/home/carlo/Progetti/AI_Trading/config/risk_budget.json"
 
 def get_initial_balance():
     try:
@@ -56,20 +56,20 @@ AGENTS = {name: name for name in SCRIPTS}
 CRITICAL = ["ai_workforce", "news_agent", "social_agent", "cycle_agent"]
 
 START_COMMANDS = {
-    "ai_workforce":     f"tmux new-session -d -s ai_workforce 'cd /home/carlo/AI_Trading && {PY} orchestrator.py > /home/carlo/ai_workforce.log 2>&1'",
-    "supervisor":       f"tmux new-session -d -s supervisor 'cd /home/carlo/AI_Trading && {PY} supervisor_agent.py > /home/carlo/supervisor.log 2>&1'",
-    "news_agent":       f"tmux new-session -d -s news_agent 'cd /home/carlo/AI_Trading && {PY} news_agent.py > /home/carlo/news_agent.log 2>&1'",
-    "social_agent":     f"tmux new-session -d -s social_agent 'cd /home/carlo/AI_Trading && {PY} social_agent.py > /home/carlo/social_agent.log 2>&1'",
-    "cycle_agent":      f"tmux new-session -d -s cycle_agent 'cd /home/carlo/AI_Trading && {PY} cycle_agent.py > /home/carlo/cycle_agent.log 2>&1'",
-    "volume_agent":     f"tmux new-session -d -s volume_agent 'cd /home/carlo/AI_Trading && {PY} volume_agent.py > /home/carlo/volume_agent.log 2>&1'",
-    "experience_agent": f"tmux new-session -d -s experience_agent 'cd /home/carlo/AI_Trading && {PY} experience_agent.py > /home/carlo/experience_agent.log 2>&1'",
-    "kronos_agent":     f"tmux new-session -d -s kronos_agent 'cd /home/carlo/AI_Trading && {PY} kronos_agent.py > /home/carlo/kronos_agent.log 2>&1'",
-    "nzt_agent":        f"tmux new-session -d -s nzt_agent 'cd /home/carlo/AI_Trading && {PY} nzt_agent.py > /home/carlo/nzt_agent.log 2>&1'",
-    "market_anomaly":   f"tmux new-session -d -s market_anomaly 'cd /home/carlo/AI_Trading && {PY} market_anomaly_agent.py > /home/carlo/market_anomaly.log 2>&1'",
-    "signal_observer":  f"tmux new-session -d -s signal_observer 'cd /home/carlo/AI_Trading && {PY} signal_observer_agent.py > /home/carlo/signal_observer.log 2>&1'",
-    "strategy_validator": f"tmux new-session -d -s strategy_validator 'cd /home/carlo/AI_Trading && {PY} strategy_validator.py > /home/carlo/strategy_validator.log 2>&1'",
-    "reflection_agent": f"tmux new-session -d -s reflection_agent 'cd /home/carlo/AI_Trading && {PY} reflection_agent.py > /home/carlo/reflection_agent.log 2>&1'",
-    "technical_agent":  f"tmux new-session -d -s technical_agent 'cd /home/carlo/AI_Trading && {PY} technical_agent.py > /home/carlo/technical_agent.log 2>&1'",
+    "ai_workforce":     f"tmux new-session -d -s ai_workforce 'cd /home/carlo/Progetti/AI_Trading && {PY} orchestrator.py > /home/carlo/ai_workforce.log 2>&1'",
+    "supervisor":       f"tmux new-session -d -s supervisor 'cd /home/carlo/Progetti/AI_Trading && {PY} supervisor_agent.py > /home/carlo/supervisor.log 2>&1'",
+    "news_agent":       f"tmux new-session -d -s news_agent 'cd /home/carlo/Progetti/AI_Trading && {PY} news_agent.py > /home/carlo/news_agent.log 2>&1'",
+    "social_agent":     f"tmux new-session -d -s social_agent 'cd /home/carlo/Progetti/AI_Trading && {PY} social_agent.py > /home/carlo/social_agent.log 2>&1'",
+    "cycle_agent":      f"tmux new-session -d -s cycle_agent 'cd /home/carlo/Progetti/AI_Trading && {PY} cycle_agent.py > /home/carlo/cycle_agent.log 2>&1'",
+    "volume_agent":     f"tmux new-session -d -s volume_agent 'cd /home/carlo/Progetti/AI_Trading && {PY} volume_agent.py > /home/carlo/volume_agent.log 2>&1'",
+    "experience_agent": f"tmux new-session -d -s experience_agent 'cd /home/carlo/Progetti/AI_Trading && {PY} experience_agent.py > /home/carlo/experience_agent.log 2>&1'",
+    "kronos_agent":     f"tmux new-session -d -s kronos_agent 'cd /home/carlo/Progetti/AI_Trading && {PY} kronos_agent.py > /home/carlo/kronos_agent.log 2>&1'",
+    "nzt_agent":        f"tmux new-session -d -s nzt_agent 'cd /home/carlo/Progetti/AI_Trading && {PY} nzt_agent.py > /home/carlo/nzt_agent.log 2>&1'",
+    "market_anomaly":   f"tmux new-session -d -s market_anomaly 'cd /home/carlo/Progetti/AI_Trading && {PY} market_anomaly_agent.py > /home/carlo/market_anomaly.log 2>&1'",
+    "signal_observer":  f"tmux new-session -d -s signal_observer 'cd /home/carlo/Progetti/AI_Trading && {PY} signal_observer_agent.py > /home/carlo/signal_observer.log 2>&1'",
+    "strategy_validator": f"tmux new-session -d -s strategy_validator 'cd /home/carlo/Progetti/AI_Trading && {PY} strategy_validator.py > /home/carlo/strategy_validator.log 2>&1'",
+    "reflection_agent": f"tmux new-session -d -s reflection_agent 'cd /home/carlo/Progetti/AI_Trading && {PY} reflection_agent.py > /home/carlo/reflection_agent.log 2>&1'",
+    "technical_agent":  f"tmux new-session -d -s technical_agent 'cd /home/carlo/Progetti/AI_Trading && {PY} technical_agent.py > /home/carlo/technical_agent.log 2>&1'",
 }
 
 
@@ -187,7 +187,7 @@ def generate_diagnosis():
             
         # Controlla il trend attuale
         try:
-            with open('/home/carlo/AI_Trading/technical_context.txt') as f:
+            with open('/home/carlo/Progetti/AI_Trading/technical_context.txt') as f:
                 tech = f.read().lower()
                 if 'bear=true' in tech and buys > 0:
                     diag.append("ATTENZIONE: Trend BEAR rilevato ma il sistema ha aperto BUY. Il filtro P055 non ha bloccato.")

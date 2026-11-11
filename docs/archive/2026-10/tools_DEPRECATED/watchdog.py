@@ -25,7 +25,7 @@ def check_orchestrator():
         logger.error("❌ Orchestratore non in esecuzione")
         send_telegram("⛔ ALLARME: Orchestratore non in esecuzione. Riavvio...")
         subprocess.run(["tmux", "new-session", "-d", "-s", "ai_workforce",
-                       "cd /home/carlo/AI_Trading && source ~/AI_Trading_Agents/venv/bin/activate && while true; do python3 orchestrator.py 2>&1 | tee -a ~/orchestrator.log; sleep 3600; done"])
+                       "cd /home/carlo/Progetti/AI_Trading && source ~/AI_Trading_Agents/venv/bin/activate && while true; do python3 orchestrator.py 2>&1 | tee -a ~/orchestrator.log; sleep 3600; done"])
         return False
 
     # 2. Controlla il log (ultime 50 righe)

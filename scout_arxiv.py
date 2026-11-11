@@ -2,7 +2,7 @@ import requests, time
 from datetime import datetime
 import xml.etree.ElementTree as ET
 
-OUTPUT = "/home/carlo/AI_Trading/docs/SCOUT_ARXIV.md"
+OUTPUT = "/home/carlo/Progetti/AI_Trading/docs/SCOUT_ARXIV.md"
 # Cerca paper su trading, q-fin.TR (Trading and Market Microstructure)
 QUERY = "http://export.arxiv.org/api/query?search_query=cat:q-fin.TR+OR+(cat:cs.LG+AND+abs:trading)&sortBy=submittedDate&sortOrder=descending&max_results=10"
 

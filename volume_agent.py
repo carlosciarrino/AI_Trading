@@ -3,8 +3,8 @@ from datetime import datetime
 
 # P048: legge volume_data.json (Tick Volume reale da MT4) invece di yfinance.
 VOLUME_JSON = "/home/carlo/Scrivania/XM MT4/MQL4/Files/volume_data.json"
-CONTEXT_PATH = "/home/carlo/AI_Trading/volume_context.txt"
-HISTORY_PATH = "/home/carlo/AI_Trading/volume_history.json"
+CONTEXT_PATH = "/home/carlo/Progetti/AI_Trading/volume_context.txt"
+HISTORY_PATH = "/home/carlo/Progetti/AI_Trading/volume_history.json"
 
 
 def load_history():

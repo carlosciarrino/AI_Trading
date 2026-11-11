@@ -14,18 +14,18 @@ def run_command(cmd):
 
 def backtest_multi():
     logger.info("Avvio backtest multi-asset...")
-    out = run_command("cd /home/carlo/AI_Trading && python3 backtest_multi.py")
+    out = run_command("cd /home/carlo/Progetti/AI_Trading && python3 backtest_multi.py")
     logger.info(out[-500:])
     return out
 
 def equity_curve():
     logger.info("Generazione equity curve...")
-    run_command("cd /home/carlo/AI_Trading && python3 tools/equity_curve.py")
+    run_command("cd /home/carlo/Progetti/AI_Trading && python3 tools/equity_curve.py")
     logger.info("Equity curve aggiornata.")
 
 def fetch_news():
     logger.info("Aggiornamento notizie...")
-    run_command("cd /home/carlo/AI_Trading && python3 -c 'from tools.news_fetcher import get_forex_live_news; print(get_forex_live_news())'")
+    run_command("cd /home/carlo/Progetti/AI_Trading && python3 -c 'from tools.news_fetcher import get_forex_live_news; print(get_forex_live_news())'")
     logger.info("Notizie aggiornate.")
 
 def main():

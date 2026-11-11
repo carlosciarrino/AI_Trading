@@ -5,7 +5,7 @@ import numpy as np
 import yfinance as yf
 from datetime import datetime
 
-OUTPUT_JSON = "/home/carlo/AI_Trading/forecast.json"
+OUTPUT_JSON = "/home/carlo/Progetti/AI_Trading/forecast.json"
 
 def main():
     try:

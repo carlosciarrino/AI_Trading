@@ -10,7 +10,7 @@ import numpy as np
 import time, os
 from datetime import datetime
 
-CONTEXT_PATH = "/home/carlo/AI_Trading/technical_context.txt"
+CONTEXT_PATH = "/home/carlo/Progetti/AI_Trading/technical_context.txt"
 
 VOLUME_JSON = "/home/carlo/Scrivania/XM MT4/MQL4/Files/volume_data.json"
 

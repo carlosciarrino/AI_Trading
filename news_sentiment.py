@@ -3,8 +3,8 @@
 import os, json, re
 from datetime import datetime
 
-NEWS_CONTEXT = "/home/carlo/AI_Trading/news_context.txt"
-OUTPUT_JSON = "/home/carlo/AI_Trading/news_sentiment.json"
+NEWS_CONTEXT = "/home/carlo/Progetti/AI_Trading/news_context.txt"
+OUTPUT_JSON = "/home/carlo/Progetti/AI_Trading/news_sentiment.json"
 
 def extract_titles(text):
     """Estrae i titoli dal formato 'Ultime notizie macro...'"""

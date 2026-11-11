@@ -1,5 +1,5 @@
 import sys, os
-sys.path.insert(0, "/home/carlo/AI_Trading")
+sys.path.insert(0, "/home/carlo/Progetti/AI_Trading")
 
 def test_import_orchestrator():
     try:

@@ -420,10 +420,10 @@ def api_agent(name, action):
         if action == "start":
             if is_active:
                 return jsonify({"message": f"{name} gia' attivo"})
-            script = f"/home/carlo/AI_Trading/{name}.py"
+            script = f"/home/carlo/Progetti/AI_Trading/{name}.py"
             if not os.path.exists(script):
                 return jsonify({"error": f"Script {script} non trovato"}), 404
-            cmd = f"tmux new-session -d -s {name} 'cd /home/carlo/AI_Trading && python3 {name}.py'"
+            cmd = f"tmux new-session -d -s {name} 'cd /home/carlo/Progetti/AI_Trading && python3 {name}.py'"
             subprocess.run(cmd, shell=True, timeout=10)
             return jsonify({"message": f"{name} avviato"})
 
@@ -435,10 +435,10 @@ def api_agent(name, action):
 
         elif action == "restart":
             subprocess.run(f"tmux kill-session -t {name}", shell=True, timeout=10)
-            script = f"/home/carlo/AI_Trading/{name}.py"
+            script = f"/home/carlo/Progetti/AI_Trading/{name}.py"
             if not os.path.exists(script):
                 return jsonify({"error": f"Script {script} non trovato"}), 404
-            cmd = f"tmux new-session -d -s {name} 'cd /home/carlo/AI_Trading && python3 {name}.py'"
+            cmd = f"tmux new-session -d -s {name} 'cd /home/carlo/Progetti/AI_Trading && python3 {name}.py'"
             subprocess.run(cmd, shell=True, timeout=10)
             return jsonify({"message": f"{name} riavviato"})
 

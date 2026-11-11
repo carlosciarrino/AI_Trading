@@ -1,7 +1,7 @@
 import os
 from datetime import datetime
 
-BASE = "/home/carlo/AI_Trading/docs"
+BASE = "/home/carlo/Progetti/AI_Trading/docs"
 OUTPUT = os.path.join(BASE, "RICERCA_SETTIMANALE.md")
 
 def read_file(path):

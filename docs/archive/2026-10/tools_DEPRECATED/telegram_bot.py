@@ -1,5 +1,5 @@
 import sys, os
-sys.path.insert(0, '/home/carlo/AI_Trading')
+sys.path.insert(0, '/home/carlo/Progetti/AI_Trading')
 import json, time, requests, logging
 from datetime import datetime
 from tools.live_data import get_recent
@@ -56,7 +56,7 @@ def handle_commands():
                 os.system("tmux kill-session -t ai_workforce 2>/dev/null")
                 send_message("⛔ Orchestratore fermato.")
             elif text == '/start':
-                os.system("cd /home/carlo/AI_Trading && tmux new-session -d -s ai_workforce 'bash -c \"source ~/AI_Trading_Agents/venv/bin/activate && while true; do python3 orchestrator.py; sleep 3600; done\"'")
+                os.system("cd /home/carlo/Progetti/AI_Trading && tmux new-session -d -s ai_workforce 'bash -c \"source ~/AI_Trading_Agents/venv/bin/activate && while true; do python3 orchestrator.py; sleep 3600; done\"'")
                 send_message("▶️ Orchestratore avviato.")
             elif text == '/orders':
                 try:
@@ -68,7 +68,7 @@ def handle_commands():
                     send_message("Nessun ordine.")
             elif text == '/config':
                 try:
-                    with open('/home/carlo/AI_Trading/config.json') as f:
+                    with open('/home/carlo/Progetti/AI_Trading/config.json') as f:
                         cfg = json.load(f)
                     send_message(f"Config: {cfg}")
                 except:
@@ -84,10 +84,10 @@ def handle_commands():
                 try:
                     parts = text.split()[1].split('=')
                     key, value = parts[0], parts[1]
-                    with open('/home/carlo/AI_Trading/config.json') as f:
+                    with open('/home/carlo/Progetti/AI_Trading/config.json') as f:
                         cfg = json.load(f)
                     cfg[key] = value
-                    with open('/home/carlo/AI_Trading/config.json', 'w') as f:
+                    with open('/home/carlo/Progetti/AI_Trading/config.json', 'w') as f:
                         json.dump(cfg, f, indent=2)
                     send_message(f"✅ Config aggiornata: {key}={value}")
                 except Exception as e:

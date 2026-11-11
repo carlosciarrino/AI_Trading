@@ -5,7 +5,7 @@ Scrive social_context.txt per l'orchestratore.
 import json, os, subprocess, sys
 from datetime import datetime
 
-BASE = "/home/carlo/AI_Trading"
+BASE = "/home/carlo/Progetti/AI_Trading"
 OUTPUT_FILE = os.path.join(BASE, "social_context.txt")
 AGENT_REACH_VENV = "/home/carlo/AI_Trading_sandbox/agent_reach_test/venv_reach/bin/python"
 AGENT_REACH_CMD = "/home/carlo/AI_Trading_sandbox/agent_reach_test/venv_reach/bin/agent-reach"

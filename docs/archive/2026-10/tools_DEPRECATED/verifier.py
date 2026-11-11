@@ -4,8 +4,8 @@ from datetime import datetime
 logging.basicConfig(level=logging.INFO, format='%(asctime)s %(levelname)s: %(message)s')
 logger = logging.getLogger(__name__)
 
-VERIFICATION_DIR = "/home/carlo/AI_Trading/docs/verification"
-PROJECT_DIR = "/home/carlo/AI_Trading"
+VERIFICATION_DIR = "/home/carlo/Progetti/AI_Trading/docs/verification"
+PROJECT_DIR = "/home/carlo/Progetti/AI_Trading"
 TELEGRAM_TOKEN = "8928323847:AAGpoYGzlnAN39q-VM0O4ZlgrbLFXLiEzwk"
 
 WATCH_MAP = {
