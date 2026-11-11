@@ -22,9 +22,6 @@ Git: commit 5325f18: pendenze: P016-P020 (tools fossile, mt4_shared, engram, tes
 
 ## 2. Diario azioni
 
-- 01 November 2026 - e44f306: Docs: esito test freqtrade (scartato)
-- 01 November 2026 - 89e4729: auto-sync dom 1 nov 2026, 11:00:01, -03
-- 01 November 2026 - f5cc036: Feature: Trigger Engine (Volume, Regime, News) + blocco se <2/3 attivi
 - 01 November 2026 - 090896f: Fix: check_triggers integrato in orchestrator (blocco se <2/3 trigger)
 - 01 November 2026 - 7a65898: Feature: FinBERT + keyword inglesi (ibrido). News in inglese.
 - 01 November 2026 - a168511: Feature: TimesFM forecast integrato nel trigger engine (4° trigger)
@@ -222,6 +219,9 @@ Git: commit 5325f18: pendenze: P016-P020 (tools fossile, mt4_shared, engram, tes
 - 10 November 2026 - b5c387c: auto-sync mar 10 nov 2026, 17:00:01, -03
 - 10 November 2026 - 4eb53cf: auto-sync mar 10 nov 2026, 18:00:02, -03
 - 10 November 2026 - 57f25bf: auto-sync mar 10 nov 2026, 19:00:01, -03
+- 10 November 2026 - 13ba4b9: auto-sync mar 10 nov 2026, 20:00:01, -03
+- 10 November 2026 - a8e9435: Feature: trigger candela forte (corpo > 50% ATR)
+- 10 November 2026 - fcc835d: Fix: orchestratore rilegge triggers.json fresco prima di aprire
 
 ## 3. Problemi noti
 
