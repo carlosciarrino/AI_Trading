@@ -45,3 +45,8 @@ Questo file documenta i test effettuati sui progetti trovati dagli scout (GitHub
 - **Test**: `agent-reach reddit search EURUSD --limit 5` -> 5 risultati, 734ms, no anti-scraping.
 - **Esito**: Funziona. Sentiment estratto: neutral-to-slightly-bearish.
 - **Verdetto**: **ADOTTATO** per `social_scout.py`. Integrato nel sistema come segnale aggiuntivo.
+
+## 2026-11-10: social_scout.py (Agent-Reach integrato)
+- **Test**: Eseguito manualmente. Output: sentiment "positivo" da Reddit.
+- **Esito**: Funziona. Cron ogni 30 minuti.
+- **Verdetto**: **ADOTTATO**. Integrato come conferma in `get_ema_volume_signal()`.
