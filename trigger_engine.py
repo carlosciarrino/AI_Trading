@@ -126,8 +126,11 @@ def check_conditions():
         candle_body = abs(close - opn)
         candela_forte = candle_body > atr * CANDLE_BODY_ATR_RATIO if atr > 0 else False
         
-        # 6. Logica combinata: candela_forte AND trend_allineato
-        trigger_attivo = candela_forte and trend_allineato
+        # 6. Trigger EMA di fallback: close > EMA21 (bull) o close < EMA21 (bear)
+        ema_trigger = trend_bull or trend_bear
+        
+        # 7. Logica combinata: (candela_forte OR ema_trigger) AND trend_allineato
+        trigger_attivo = (candela_forte or ema_trigger) and trend_allineato
         
         direction = "BUY" if trend_bull else "SELL" if trend_bear else "NONE"
         
@@ -135,6 +138,8 @@ def check_conditions():
             triggers = []
             if candela_forte:
                 triggers.append(f"candela_forte({candle_body:.5f}>{atr:.5f}*0.5)")
+            if ema_trigger:
+                triggers.append(f"ema_trigger(close{close:.5f} vs ema21{ema21:.5f})")
             return True, f"{direction}: {' + '.join(triggers)} trend_allineato"
         
         # Dettaglio motivo HOLD
