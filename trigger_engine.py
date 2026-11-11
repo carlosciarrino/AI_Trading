@@ -52,18 +52,31 @@ def update_volume_history(current_vol):
     return history
 
 def read_atr(text):
-    """Legge ATR da technical_context.txt, altrimenti calcola approssimazione."""
+    """Legge ATR da technical_context.txt; se mancante, calcola da yfinance M15; fallback 0.00043."""
     import re
     atr_m = re.search(r'atr:\s*([0-9.]+)', text)
     if atr_m:
         return float(atr_m.group(1))
-    # Fallback: approssima ATR da BB width / 4 (BB = 2 std * 2 = 4 std ~= 4*ATR/2)
-    bb_upper_m = re.search(r'bb_upper:\s*([0-9.]+)', text)
-    bb_lower_m = re.search(r'bb_lower:\s*([0-9.]+)', text)
-    if bb_upper_m and bb_lower_m:
-        bb_width = float(bb_upper_m.group(1)) - float(bb_lower_m.group(1))
-        return bb_width / 4.0
-    return 0.0010  # fallback 10 pip
+    # Fallback: calcola ATR reale da yfinance (M15, 14 periodi)
+    try:
+        import yfinance as yf
+        import pandas as pd
+        df = yf.download("EURUSD=X", period="5d", interval="15m", progress=False)
+        if isinstance(df.columns, pd.MultiIndex):
+            df.columns = df.columns.get_level_values(0)
+        if not df.empty and len(df) >= 15:
+            high = df["High"]; low = df["Low"]; close = df["Close"]
+            prev_high = high.shift(1); prev_low = low.shift(1); prev_close = close.shift(1)
+            tr1 = high - low
+            tr2 = (high - prev_close).abs()
+            tr3 = (low - prev_close).abs()
+            tr = pd.concat([tr1, tr2, tr3], axis=1).max(axis=1)
+            atr = tr.ewm(alpha=1/14, min_periods=14).mean().iloc[-1]
+            if atr == atr:
+                return float(atr)
+    except Exception:
+        pass
+    return 0.00043  # fallback ATR reale EURUSD M15
 
 def check_conditions():
     """Ritorna (trade_allowed, reason) con volume spike + candela forte + trend."""

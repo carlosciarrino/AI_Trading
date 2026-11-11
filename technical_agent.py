@@ -71,6 +71,19 @@ def compute_bollinger(close, window=20, num_std=2.0):
     })
 
 
+
+def compute_atr(high, low, close, period=14):
+    """ATR semplice (media mobile esponenziale del True Range)."""
+    prev_high = high.shift(1)
+    prev_low = low.shift(1)
+    prev_close = close.shift(1)
+    tr1 = high - low
+    tr2 = (high - prev_close).abs()
+    tr3 = (low - prev_close).abs()
+    tr = pd.concat([tr1, tr2, tr3], axis=1).max(axis=1)
+    atr = tr.ewm(alpha=1/period, min_periods=period).mean()
+    return atr
+
 def compute_obv(close, volume):
     sign = close.diff().apply(lambda x: 1 if x > 0 else (-1 if x < 0 else 0))
     return (volume * sign).cumsum()
@@ -122,6 +135,10 @@ def compute_signal(df):
         signal = 0
         direction = "STAND_ASIDE"
 
+    # ATR (14 periodi)
+    atr = compute_atr(high, low, close, 14)
+    atr_now = float(atr.iloc[-1]) if not pd.isna(atr.iloc[-1]) else 0.0
+
     # Supporti e Resistenze (rolling 20 periodi)
     resistance = high.rolling(20).max().iloc[-1]
     support = low.rolling(20).min().iloc[-1]
@@ -150,6 +167,7 @@ def compute_signal(df):
         "resistance": round(float(resistance), 5),
         "dist_to_support_pct": round(float(dist_to_sup), 2),
         "dist_to_resistance_pct": round(float(dist_to_res), 2),
+        "atr": round(atr_now, 5),
     }
 
 
@@ -182,6 +200,7 @@ def process():
             f.write(f"Trend: bull={res['trend_bull']} bear={res['trend_bear']}\n")
             f.write(f"MR: oversold={res['mr_oversold']} overbought={res['mr_overbought']}\n")
             f.write(f"Volume: bull={res['vol_bull']} bear={res['vol_bear']}\n")
+            f.write(f"ATR: {res['atr']}\n")
             f.write(f"Punteggio: 0.00\n")
 
         print(f"[technical] {res['direction']} (RSI {res['rsi']}, ADX {res['adx']})", flush=True)
