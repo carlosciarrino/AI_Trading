@@ -35,3 +35,8 @@ Questo file documenta i test effettuati sui progetti trovati dagli scout (GitHub
 - **Test**: Analisi README (no installazione).
 - **Esito**: Python 3.8+ (ok), no GPU per core (ok), no API a pagamento (ok). **Ma non supporta Forex, non supporta MT4, non è un execution engine**. Focus su azioni Cina/USA, alpha mining, backtest.
 - **Verdetto**: **SCARTATO** per MT4. **IDEE DA PRENDERE**: Alpha158/360 (feature engineering), LightGBM/XGBoost per classificazione segnali, cross-validation per serie temporali.
+
+## 2026-11-10: Agent-Reach (Panniantong/Agent-Reach)
+- **Test**: Analisi README (no installazione). Test in sandbox in corso.
+- **Esito**: Python 3.10+ (ok), no GPU (ok), gratis (ok). Estrae da X, Reddit, YouTube, GitHub. Canali social "sperimentali" (anti-scraping aggressivo).
+- **Verdetto**: **TESTARE**. Utile per sentiment da social (X/Reddit) su EUR/USD. Se instabile, passare a Scrapling.
