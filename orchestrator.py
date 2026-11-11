@@ -205,7 +205,7 @@ def get_bear_score(scores):
     return total
 
 def get_ema_volume_signal():
-    """Strategia EMA21 + Volume 1.5x + Candela close vs open + cooldown 240."""
+    """Strategia EMA21 + Volume 1.5x + Candela close vs open + cooldown 240 + Social confirmation."""
     global _EMA_VOL_LAST_TIME
     try:
         # 1. Leggi EMA21 da technical_context.txt
@@ -237,19 +237,54 @@ def get_ema_volume_signal():
             if elapsed < COOLDOWN_MINUTES:
                 return "HOLD", {"reason": f"cooldown {elapsed:.0f}min"}
         
-        # 4. Segnale
+        # 4. Segnale base
         trend_bull = close > ema21
         trend_bear = close < ema21
         vol_spike = vol > vol_ma * 1.5 if vol_ma > 0 else False
         
-        if trend_bull and vol_spike and close > opn:
-            _EMA_VOL_LAST_TIME = now
-            return "BUY", {"ema21": ema21, "close": close, "vol": vol, "vol_ma": vol_ma}
-        if trend_bear and vol_spike and close < opn:
-            _EMA_VOL_LAST_TIME = now
-            return "SELL", {"ema21": ema21, "close": close, "vol": vol, "vol_ma": vol_ma}
+        base_signal = "HOLD"
+        detail = {"ema21": ema21, "close": close, "vol": vol, "vol_ma": vol_ma}
         
-        return "HOLD", {"reason": "no signal", "close": close, "ema21": ema21, "vol": vol, "vol_ma": vol_ma}
+        if trend_bull and vol_spike and close > opn:
+            base_signal = "BUY"
+        elif trend_bear and vol_spike and close < opn:
+            base_signal = "SELL"
+        else:
+            return "HOLD", {"reason": "no signal", **detail}
+        
+        # 5. Leggi social_context.txt per conferma
+        social_sentiment = "neutro"
+        try:
+            with open('/home/carlo/AI_Trading/social_context.txt') as f:
+                social_text = f.read().lower()
+            if 'sentiment: positivo' in social_text:
+                social_sentiment = "positivo"
+            elif 'sentiment: negativo' in social_text:
+                social_sentiment = "negativo"
+        except Exception:
+            pass
+        
+        # 6. Applica conferma social
+        social_confirm = "neutral"
+        if base_signal == "BUY":
+            if social_sentiment == "positivo":
+                social_confirm = "confirm"
+                print(f"[SOCIAL] BUY confermato da sentiment positivo", flush=True)
+            elif social_sentiment == "negativo":
+                social_confirm = "contradict"
+                print(f"[SOCIAL] BUY contraddetto da sentiment negativo - size dimezzata", flush=True)
+        elif base_signal == "SELL":
+            if social_sentiment == "negativo":
+                social_confirm = "confirm"
+                print(f"[SOCIAL] SELL confermato da sentiment negativo", flush=True)
+            elif social_sentiment == "positivo":
+                social_confirm = "contradict"
+                print(f"[SOCIAL] SELL contraddetto da sentiment positivo - size dimezzata", flush=True)
+        
+        _EMA_VOL_LAST_TIME = now
+        detail["social_sentiment"] = social_sentiment
+        detail["social_confirm"] = social_confirm
+        return base_signal, detail
     except Exception as e:
         return "HOLD", {"reason": f"errore: {e}"}
 
@@ -823,6 +858,14 @@ def main():
                     lots = risk["lots"]
                     if lots <= 0:
                         lots = 0.01
+                    
+                    # Social confirmation: dimezza size se contraddetto
+                    social_confirm = detail.get("social_confirm", "neutral")
+                    if social_confirm == "contradict":
+                        lots = round(lots / 2, 2)
+                        if lots < 0.01:
+                            lots = 0.01
+                        print(f"[SOCIAL] Size dimezzata a {lots} per sentiment contrario", flush=True)
 
                     cmd = f"{action} {lots} {sl} {tp}"
                     print(f"Ordine {action} {lots} inviato con SL={sl} TP={tp}", flush=True)
