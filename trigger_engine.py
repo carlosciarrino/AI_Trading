@@ -113,15 +113,13 @@ def check_conditions():
         candle_body = abs(close - opn)
         candela_forte = candle_body > atr * CANDLE_BODY_ATR_RATIO if atr > 0 else False
         
-        # 6. Logica combinata: (volume_spike OR candela_forte) AND trend_allineato
-        trigger_attivo = (vol_spike or candela_forte) and trend_allineato
+        # 6. Logica combinata: candela_forte AND trend_allineato
+        trigger_attivo = candela_forte and trend_allineato
         
         direction = "BUY" if trend_bull else "SELL" if trend_bear else "NONE"
         
         if trigger_attivo and direction != "NONE":
             triggers = []
-            if vol_spike:
-                triggers.append(f"vol_spike({current_vol}>{avg_vol:.0f}*1.5)")
             if candela_forte:
                 triggers.append(f"candela_forte({candle_body:.5f}>{atr:.5f}*0.5)")
             return True, f"{direction}: {' + '.join(triggers)} trend_allineato"
@@ -130,8 +128,6 @@ def check_conditions():
         reasons = []
         if not trend_allineato:
             reasons.append("trend_non_allineato")
-        if not vol_spike:
-            reasons.append(f"no_vol_spike({current_vol}<={avg_vol:.0f}*1.5)")
         if not candela_forte:
             reasons.append(f"no_candela_forte(body{candle_body:.5f}<={atr:.5f}*0.5)")
         return False, "HOLD: " + ", ".join(reasons)
