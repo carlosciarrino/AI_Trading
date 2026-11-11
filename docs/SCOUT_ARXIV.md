@@ -1,42 +1,42 @@
-# SCOUT ARXIV (aggiornato 2026-11-10T07:20:02.453545)
+# SCOUT ARXIV (aggiornato 2026-11-11T07:20:02.473088)
 
-### Clique Constraints for Exact Causal Structure Learning
-- **Link**: http://arxiv.org/abs/2611.12747v1
-- **Abstract**: Exact score-based causal structure learning supports explicit structural constraints and optimisation certificates, but its branch-and-cut search can be computationally demanding. We augment exact cau...
+### A Margin Perspective on LoRA: Robustness to Catastrophic Forgetting and Adapter Merging (MaLoRA)
+- **Link**: http://arxiv.org/abs/2611.14397v1
+- **Abstract**: Low-rank adaptation (LoRA) is the de facto method for parameter-efficient fine-tuning of large neural networks, achieving strong task adaptation with minimal trainable parameters and low optimization ...
 
-### Trade Promotion Optimisation for Consumer Goods
-- **Link**: http://arxiv.org/abs/2611.12665v1
-- **Abstract**: Trade promotions consume a large share of consumer-goods revenue, yet most planners still set discounts with a single, often unreliable, price elasticity per item. We present an end-to-end Trade Promo...
+### Deep Learning for Operator Maps in Optimal Liquidation
+- **Link**: http://arxiv.org/abs/2611.14245v1
+- **Abstract**: We analyze the solution map of a optimal execution problem in which price dynamics are subject to a general transient impact kernel. Given the structure of the optimal trading strategy derived by Abi ...
 
-### AudioCodex: Streaming Autoencoders for Live Audio
-- **Link**: http://arxiv.org/abs/2611.12375v1
-- **Abstract**: We introduce AudioCodex, a fully causal autoencoder for live generative audio applications that compresses stereo audio into compact continuous latent sequences at ~10 Hz. It combines a Mean Flow magn...
+### Fine-Tuning an Order-Flow Foundation Model for Sub-Second Forecasting
+- **Link**: http://arxiv.org/abs/2611.14117v1
+- **Abstract**: Generative models have become the standard approach in language and vision. These models are typically pretrained first and then fine-tuned. Recent work demonstrates how to pretrain an autoregressive ...
 
-### NearFormer: Linear-Size Sparse Attention via Randomized Near Neighbors
-- **Link**: http://arxiv.org/abs/2611.12186v1
-- **Abstract**: Graph transformers can capture long-range interactions, but their quadratic attention cost limits their use on large graphs. We introduce \emph{NearFormer}, a graph transformer whose global attention ...
+### PARDIG: Global Precipitation Estimates Learned from Sparse Satellite Observations
+- **Link**: http://arxiv.org/abs/2611.13941v1
+- **Abstract**: Estimating precipitation at the global scale is vital for Earth system science and disaster response, yet observational coverage and measurement precision remain constrained. Existing solutions provid...
 
-### Same Physics, Different Gradients: A State-of-the-Art Report on Differentiable Physics Simulation
-- **Link**: http://arxiv.org/abs/2611.12162v1
-- **Abstract**: Differentiable simulation propagates derivatives through a physics simulator, turning animation, system identification, control, and computational design into gradient-based optimization. Engines diff...
+### Conformal Risk Control for QoT-Aware Lightpath Feasibility Under Technology-Driven Domain Shift
+- **Link**: http://arxiv.org/abs/2611.13893v1
+- **Abstract**: Artificial intelligence and machine learning (AI/ML)-based regression models support operational decision-making in optical networks but typically expose only point predictions, which carry no statist...
 
-### Beyond Flat Walks: Compositional Abstraction for Autoregressive Graph Generation
-- **Link**: http://arxiv.org/abs/2611.12160v1
-- **Abstract**: Autoregressive graph generators typically linearize graphs through flat node-edge walks, which can obscure higher-order structure in large and complex graphs. We introduce a hierarchical graph abstrac...
+### MusicFlux: Flexible Conditioning for Text-Guided Music Generation and Editing
+- **Link**: http://arxiv.org/abs/2611.13834v1
+- **Abstract**: Music editing transforms existing recordings while preserving their original attributes. Recent approaches adapt pretrained text-to-music models for tasks like inpainting, event insertion, or restorat...
 
-### The balance between feature learning and collapse in dynamical systems-based generative models
-- **Link**: http://arxiv.org/abs/2611.12156v1
-- **Abstract**: Over the past decade, a growing body of work has established that implicit biases in learning dynamics fundamentally shape the solutions found by neural networks, governing their learned features and ...
+### Omni-JEV: Text and Dual-Stream Speech Decisions
+- **Link**: http://arxiv.org/abs/2611.13777v1
+- **Abstract**: A user utterance does not uniquely determine the next action in full-duplex dialogue: its consequences depend on the assistant's response state and interaction history. Speech activity, utterance comp...
 
-### CARE-PO: Controllable Tool-Call Efficiency for LLM Agents
-- **Link**: http://arxiv.org/abs/2611.12125v1
-- **Abstract**: External tool calls are a major running cost of an LLM agent, while its training objectives align almost exclusively with task completion. In a step-level diagnosis of Qwen3.5 trajectories at two mode...
+### Optimal Trading Speed on Blockchain
+- **Link**: http://arxiv.org/abs/2611.13616v1
+- **Abstract**: On blockchain-based exchanges, faster blocks weaken the priority-fee competition among arbitrageurs and shift rents from the block producer to them. Equilibrium liquidity peaks at an interior block sp...
 
-### Operation-aware Multimodal Clinical Decision Support System for ICU Discharge Risk Assessment
-- **Link**: http://arxiv.org/abs/2611.11960v1
-- **Abstract**: Unplanned 30-day intensive care unit (ICU) readmission is a critical benchmark for evaluating healthcare quality. Most predictive models assume readmission risk depends solely on a patient's individua...
+### Tabular Foundation Models in Financial Predictions
+- **Link**: http://arxiv.org/abs/2611.13550v1
+- **Abstract**: This technical note introduces tabular foundation models (TFMs) to accounting research and evaluates their performance in one common benchmark task: predicting firms' next-year earnings changes. TFMs ...
 
-### Constrained Variational Policy Optimization for Hybrid Action Spaces
-- **Link**: http://arxiv.org/abs/2611.11936v1
-- **Abstract**: Constrained reinforcement learning in hybrid action spaces must coordinate discrete modes and mode-conditioned continuous controls under long-horizon cost constraints. Existing constrained hybrid-acti...
+### The RSI Tax: When Recursive Self-Improvement Is Not Worth the Cost
+- **Link**: http://arxiv.org/abs/2611.13524v1
+- **Abstract**: Recursive self-improvement (RSI) seeks to improve an agent using its own task experience. Its practical value depends on whether performance gains justify the full cost of self-improvement and task ex...
 
