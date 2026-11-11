@@ -25,3 +25,8 @@ Questo file documenta i test effettuati sui progetti trovati dagli scout (GitHub
 ## 2026-11-01: Freqtrade (freqtrade/freqtrade)
 - **Test**: Non eseguito (richiede Python 3.12+). Licenza GPL-3.0.
 - **Verdetto**: **SCARTATO**. Progetto per crypto exchange, non per MT4/Forex. Inutile per il nostro scopo.
+
+## 2026-11-10: LumiBot (Lumiwealth/lumibot)
+- **Test**: Analisi README (no installazione).
+- **Esito**: Python 3.10+ (ok), no GPU (ok), ma **non supporta MT4/Wine**. Broker supportati: Alpaca, Interactive Brokers, Tradier, Schwab, CCXT, ecc. Richiede API keys a pagamento per AI agents.
+- **Verdetto**: **SCARTATO**. Non compatibile con il nostro stack MT4/Wine. Utile solo se in futuro migriamo a un broker API.
