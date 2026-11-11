@@ -2,8 +2,8 @@ import requests, time, os, json, re
 from bs4 import BeautifulSoup
 from datetime import datetime
 
-CONTEXT_PATH = os.path.expanduser("~/AI_Trading/social_context.txt")
-HISTORY_PATH = os.path.expanduser("~/AI_Trading/social_history.json")
+CONTEXT_PATH = os.path.expanduser("~/Progetti/AI_Trading/social_context.txt")
+HISTORY_PATH = os.path.expanduser("~/Progetti/AI_Trading/social_history.json")
 
 POSITIVE_WORDS = ["surge", "rally", "gain", "strong", "boost", "optimism",
                   "deal", "peace", "growth", "record", "rialzo", "crescita",
