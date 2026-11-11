@@ -30,3 +30,8 @@ Questo file documenta i test effettuati sui progetti trovati dagli scout (GitHub
 - **Test**: Analisi README (no installazione).
 - **Esito**: Python 3.10+ (ok), no GPU (ok), ma **non supporta MT4/Wine**. Broker supportati: Alpaca, Interactive Brokers, Tradier, Schwab, CCXT, ecc. Richiede API keys a pagamento per AI agents.
 - **Verdetto**: **SCARTATO**. Non compatibile con il nostro stack MT4/Wine. Utile solo se in futuro migriamo a un broker API.
+
+## 2026-11-10: Qlib (microsoft/qlib)
+- **Test**: Analisi README (no installazione).
+- **Esito**: Python 3.8+ (ok), no GPU per core (ok), no API a pagamento (ok). **Ma non supporta Forex, non supporta MT4, non è un execution engine**. Focus su azioni Cina/USA, alpha mining, backtest.
+- **Verdetto**: **SCARTATO** per MT4. **IDEE DA PRENDERE**: Alpha158/360 (feature engineering), LightGBM/XGBoost per classificazione segnali, cross-validation per serie temporali.
