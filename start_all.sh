@@ -23,3 +23,7 @@ tmux new-session -d -s scouting_agent "cd /home/carlo/Progetti/AI_Trading && $PY
 tmux new-session -d -s scout_github "cd /home/carlo/Progetti/AI_Trading && $PY scout_github.py > /home/carlo/scout_github.log 2>&1"
 tmux new-session -d -s scout_hf "cd /home/carlo/Progetti/AI_Trading && $PY scout_hf.py > /home/carlo/scout_hf.log 2>&1"
 tmux new-session -d -s scout_arxiv "cd /home/carlo/Progetti/AI_Trading && $PY scout_arxiv.py > /home/carlo/scout_arxiv.log 2>&1"
+
+# Dashboard web (Flask) su localhost:5000
+tmux new-session -d -s web_app "cd /home/carlo/Progetti/AI_Trading && $PY web_app.py > /home/carlo/web_app.log 2>&1"
+

@@ -1,77 +1,77 @@
-# SCOUT HUGGING FACE (aggiornato 2026-11-11T07:10:01.689380)
+# SCOUT HUGGING FACE (aggiornato 2026-11-12T16:38:43.322266)
 
 ### xtools-at/DeepSeek-V4-Pro-Qwen3.5-9B-UNCENSORED-heretic
-- **Downloads**: 14378 | **Likes**: 1295
+- **Downloads**: 18933 | **Likes**: 4673
 - **Task**: text-generation
 - **URL**: https://huggingface.co/xtools-at/DeepSeek-V4-Pro-Qwen3.5-9B-UNCENSORED-heretic
 
-### speridlabs/idol
-- **Downloads**: 26470 | **Likes**: 1915
-- **Task**: image-to-3d
-- **URL**: https://huggingface.co/speridlabs/idol
-
-### moonshotai/Kimi-K3.1-Pro
-- **Downloads**: 30721 | **Likes**: 1894
-- **Task**: image-text-to-text
-- **URL**: https://huggingface.co/moonshotai/Kimi-K3.1-Pro
-
 ### MiniMaxAI/MiniMax-H3-Image
-- **Downloads**: 667 | **Likes**: 561
+- **Downloads**: 306718 | **Likes**: 842
 - **Task**: text-to-image
 - **URL**: https://huggingface.co/MiniMaxAI/MiniMax-H3-Image
 
-### ricursiveAI/Ripple-65B-Preview
-- **Downloads**: 6480 | **Likes**: 492
-- **Task**: N/A
-- **URL**: https://huggingface.co/ricursiveAI/Ripple-65B-Preview
-
 ### NousResearch/Arete-27B
-- **Downloads**: 3431 | **Likes**: 416
+- **Downloads**: 4669 | **Likes**: 474
 - **Task**: text-generation
 - **URL**: https://huggingface.co/NousResearch/Arete-27B
 
+### speridlabs/idol
+- **Downloads**: 29904 | **Likes**: 2216
+- **Task**: image-to-3d
+- **URL**: https://huggingface.co/speridlabs/idol
+
 ### Lightricks/LTX-2.5
-- **Downloads**: 2791606 | **Likes**: 11428
+- **Downloads**: 2782513 | **Likes**: 11599
 - **Task**: image-to-video
 - **URL**: https://huggingface.co/Lightricks/LTX-2.5
 
 ### DavidAU/Qwen3.8-27B-TURBO-Fable-Cold-Fusion-735-882-Heretic-Uncensored-NEO-CODER-MAX-MTP-GGUF
-- **Downloads**: 1459029 | **Likes**: 2868
+- **Downloads**: 1599836 | **Likes**: 2968
 - **Task**: image-text-to-text
 - **URL**: https://huggingface.co/DavidAU/Qwen3.8-27B-TURBO-Fable-Cold-Fusion-735-882-Heretic-Uncensored-NEO-CODER-MAX-MTP-GGUF
 
-### ccore/Qwen3.5-4B-3D-Coder
-- **Downloads**: 319405 | **Likes**: 985
-- **Task**: N/A
-- **URL**: https://huggingface.co/ccore/Qwen3.5-4B-3D-Coder
-
 ### Qwen/Qwen3.8-27B
-- **Downloads**: 7443748 | **Likes**: 19592
+- **Downloads**: 7094218 | **Likes**: 19719
 - **Task**: image-text-to-text
 - **URL**: https://huggingface.co/Qwen/Qwen3.8-27B
 
-### webAI-Official/TwIL-8B
-- **Downloads**: 43175 | **Likes**: 280
-- **Task**: text-generation
-- **URL**: https://huggingface.co/webAI-Official/TwIL-8B
+### ccore/Qwen3.5-4B-3D-Coder
+- **Downloads**: 368236 | **Likes**: 1042
+- **Task**: N/A
+- **URL**: https://huggingface.co/ccore/Qwen3.5-4B-3D-Coder
 
-### Viggle/Viggle-Remake
-- **Downloads**: 115384 | **Likes**: 277
-- **Task**: video-to-video
-- **URL**: https://huggingface.co/Viggle/Viggle-Remake
+### Comfy-Org/MiniMax-H3-Image
+- **Downloads**: 835593 | **Likes**: 285
+- **Task**: text-to-image
+- **URL**: https://huggingface.co/Comfy-Org/MiniMax-H3-Image
 
-### unsloth/Qwen3.8-Flash-Next-GGUF
-- **Downloads**: 1816522 | **Likes**: 1581
+### ricursiveAI/Ripple-65B-Preview
+- **Downloads**: 7667 | **Likes**: 528
+- **Task**: N/A
+- **URL**: https://huggingface.co/ricursiveAI/Ripple-65B-Preview
+
+### moonshotai/Kimi-K3.1-Pro
+- **Downloads**: 37486 | **Likes**: 1972
 - **Task**: image-text-to-text
-- **URL**: https://huggingface.co/unsloth/Qwen3.8-Flash-Next-GGUF
+- **URL**: https://huggingface.co/moonshotai/Kimi-K3.1-Pro
 
 ### black-forest-labs/flux-3-image-klein-comfy
-- **Downloads**: 1251688 | **Likes**: 2895
+- **Downloads**: 1296849 | **Likes**: 3011
 - **Task**: image-to-image
 - **URL**: https://huggingface.co/black-forest-labs/flux-3-image-klein-comfy
 
-### nvidia/NVIDIA-Nemotron-3.5-Transcribe-30B-A4B
-- **Downloads**: 72455 | **Likes**: 3158
-- **Task**: automatic-speech-recognition
-- **URL**: https://huggingface.co/nvidia/NVIDIA-Nemotron-3.5-Transcribe-30B-A4B
+### Viggle/Viggle-Remake
+- **Downloads**: 152819 | **Likes**: 329
+- **Task**: video-to-video
+- **URL**: https://huggingface.co/Viggle/Viggle-Remake
+
+### VideoRebirthAI/hyperflow-h3-flash
+- **Downloads**: 326487 | **Likes**: 237
+- **Task**: image-text-to-video
+- **URL**: https://huggingface.co/VideoRebirthAI/hyperflow-h3-flash
+
+### mradermacher/gemma-4-31B-it-ARA-heretic-GGUF
+- **Downloads**: 96342 | **Likes**: 237
+- **Task**: N/A
+- **URL**: https://huggingface.co/mradermacher/gemma-4-31B-it-ARA-heretic-GGUF
 

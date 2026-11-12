@@ -55,3 +55,11 @@ Questo file documenta i test effettuati sui progetti trovati dagli scout (GitHub
 - **Test**: Riavvio orchestratore, log con `[SOCIAL]`.
 - **Esito**: Funziona. Se il social contraddice il segnale, la size viene dimezzata.
 - **Verdetto**: **ADOTTATO**. Filtro di rischio sociale attivo.
+
+## Test reale 2 settimane - iniziato 2026-11-12 16:38
+
+- Sistema riallineato: systemd + crontab + news_agent + cycle_agent + start_all.sh (web_app)
+- Backup: ai-workforce.service.bak_20261112_161742, crontab_backup_20261112_*, md5_pre_test_20261112_161655.txt
+- Stato iniziale: balance 99970.22, 0 ordini aperti, forecast NEUTRAL (1.10595 → 1.10643)
+- Monitoraggio: tools/check_test.sh (giornaliero), tools/report_settimana1.sh (domenica 16 nov)
+- Criteri stop: supervisore automatico (drawdown 8%, 3 loss) + manuale (PNL<0 e WR<30% a fine sett. 1)

@@ -1,4 +1,4 @@
-# SCOUT ARXIV (aggiornato 2026-11-11T07:20:02.473088)
+# SCOUT ARXIV (aggiornato 2026-11-12T16:38:43.076605)
 
 ### A Margin Perspective on LoRA: Robustness to Catastrophic Forgetting and Adapter Merging (MaLoRA)
 - **Link**: http://arxiv.org/abs/2611.14397v1

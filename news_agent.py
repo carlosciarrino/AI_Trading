@@ -6,7 +6,7 @@ Loop ogni 10 minuti.
 import os, time, requests, re
 from bs4 import BeautifulSoup
 
-CONTEXT_PATH = os.path.expanduser("~/AI_Trading/news_context.txt")
+CONTEXT_PATH = os.path.expanduser("~/Progetti/AI_Trading/news_context.txt")
 RSS_URL = "https://www.investing.com/rss/news_1.rss"
 MAX_TITLES = 15
 

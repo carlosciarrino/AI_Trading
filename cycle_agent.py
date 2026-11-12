@@ -1,7 +1,7 @@
 import yfinance as yf, time, os
 from datetime import datetime
 
-CYCLES_PATH = os.path.expanduser("~/AI_Trading/cycles_context.txt")
+CYCLES_PATH = os.path.expanduser("~/Progetti/AI_Trading/cycles_context.txt")
 
 def analyze_cycles():
     try:
