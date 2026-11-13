@@ -2749,3 +2749,15 @@
 {"timestamp": "2026-11-13T05:47:10.139449", "scores": {}, "weights": {}, "final_score": 0.0, "signal": "HOLD", "action_taken": "none", "ticket": null, "reason": "no_short_signal"}
 {"timestamp": "2026-11-13T05:52:10.238554", "scores": {}, "weights": {}, "final_score": 0.0, "signal": "HOLD", "action_taken": "none", "ticket": null, "reason": "no_short_signal"}
 {"timestamp": "2026-11-13T05:57:10.339864", "scores": {}, "weights": {}, "final_score": 0.0, "signal": "HOLD", "action_taken": "none", "ticket": null, "reason": "no_short_signal"}
+{"timestamp": "2026-11-13T06:02:10.441530", "scores": {}, "weights": {}, "final_score": 0.0, "signal": "HOLD", "action_taken": "none", "ticket": null, "reason": "no_short_signal"}
+{"timestamp": "2026-11-13T06:07:10.541514", "scores": {}, "weights": {}, "final_score": 0.0, "signal": "HOLD", "action_taken": "none", "ticket": null, "reason": "no_short_signal"}
+{"timestamp": "2026-11-13T06:12:10.641500", "scores": {}, "weights": {}, "final_score": 0.0, "signal": "HOLD", "action_taken": "none", "ticket": null, "reason": "no_short_signal"}
+{"timestamp": "2026-11-13T06:17:10.742566", "scores": {}, "weights": {}, "final_score": 0.0, "signal": "HOLD", "action_taken": "none", "ticket": null, "reason": "no_short_signal"}
+{"timestamp": "2026-11-13T06:22:10.842672", "scores": {}, "weights": {}, "final_score": 0.0, "signal": "HOLD", "action_taken": "none", "ticket": null, "reason": "no_short_signal"}
+{"timestamp": "2026-11-13T06:27:10.945653", "scores": {}, "weights": {}, "final_score": 0.0, "signal": "HOLD", "action_taken": "none", "ticket": null, "reason": "no_short_signal"}
+{"timestamp": "2026-11-13T06:32:11.048086", "scores": {}, "weights": {}, "final_score": 0.0, "signal": "HOLD", "action_taken": "none", "ticket": null, "reason": "no_short_signal"}
+{"timestamp": "2026-11-13T06:37:11.149750", "scores": {}, "weights": {}, "final_score": 0.0, "signal": "HOLD", "action_taken": "none", "ticket": null, "reason": "no_short_signal"}
+{"timestamp": "2026-11-13T06:42:11.249727", "scores": {}, "weights": {}, "final_score": 0.0, "signal": "HOLD", "action_taken": "none", "ticket": null, "reason": "no_short_signal"}
+{"timestamp": "2026-11-13T06:47:11.351656", "scores": {}, "weights": {}, "final_score": 0.0, "signal": "HOLD", "action_taken": "none", "ticket": null, "reason": "no_short_signal"}
+{"timestamp": "2026-11-13T06:52:11.453480", "scores": {}, "weights": {}, "final_score": 0.0, "signal": "HOLD", "action_taken": "none", "ticket": null, "reason": "no_short_signal"}
+{"timestamp": "2026-11-13T06:57:11.557663", "scores": {}, "weights": {}, "final_score": 0.0, "signal": "HOLD", "action_taken": "none", "ticket": null, "reason": "no_short_signal"}
