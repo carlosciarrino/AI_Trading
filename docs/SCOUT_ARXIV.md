@@ -1,42 +1,42 @@
-# SCOUT ARXIV (aggiornato 2026-11-12T16:38:43.076605)
+# SCOUT ARXIV (aggiornato 2026-11-13T07:20:03.014380)
 
-### A Margin Perspective on LoRA: Robustness to Catastrophic Forgetting and Adapter Merging (MaLoRA)
-- **Link**: http://arxiv.org/abs/2611.14397v1
-- **Abstract**: Low-rank adaptation (LoRA) is the de facto method for parameter-efficient fine-tuning of large neural networks, achieving strong task adaptation with minimal trainable parameters and low optimization ...
+### Maximizing Capacity Utilization of LoRA Adapters for Mitigating the Learning-Forgetting Trade-off
+- **Link**: http://arxiv.org/abs/2611.17191v1
+- **Abstract**: Low-Rank Adaptation (LoRA) often underperforms full fine-tuning, especially in heterogeneous and continual-learning settings in which substantial forgetting occurs. In general, it suffers from an unde...
 
-### Deep Learning for Operator Maps in Optimal Liquidation
-- **Link**: http://arxiv.org/abs/2611.14245v1
-- **Abstract**: We analyze the solution map of a optimal execution problem in which price dynamics are subject to a general transient impact kernel. Given the structure of the optimal trading strategy derived by Abi ...
+### Improving Algorithmic Trading for BESS on Intraday Electricity Markets through Distributional Price Forecasts
+- **Link**: http://arxiv.org/abs/2611.17170v1
+- **Abstract**: Grid-scale battery energy storage systems (BESS) are becoming increasingly important in short-term energy markets, where they help balance fluctuations in variable renewable generation. In many countr...
 
-### Fine-Tuning an Order-Flow Foundation Model for Sub-Second Forecasting
-- **Link**: http://arxiv.org/abs/2611.14117v1
-- **Abstract**: Generative models have become the standard approach in language and vision. These models are typically pretrained first and then fine-tuned. Recent work demonstrates how to pretrain an autoregressive ...
+### Support-Constrained Offline Policy Improvement for Pediatric ECMO from Limited Clinical Data
+- **Link**: http://arxiv.org/abs/2611.17134v1
+- **Abstract**: Managing children on ECMO (Extracorporeal Membrane Oxygenation) requires balancing short-term physiological stability with the long-term goal of preventing neurological injury. Standard reinforcement ...
 
-### PARDIG: Global Precipitation Estimates Learned from Sparse Satellite Observations
-- **Link**: http://arxiv.org/abs/2611.13941v1
-- **Abstract**: Estimating precipitation at the global scale is vital for Earth system science and disaster response, yet observational coverage and measurement precision remain constrained. Existing solutions provid...
+### Capacity-Constrained Delayed Feedback for Online Conformal Risk Control
+- **Link**: http://arxiv.org/abs/2611.17059v1
+- **Abstract**: Online conformal risk control (OCRC) enables reliable uncertainty quantification in machine learning by converting model outputs into prediction sets with long-term risk guarantees. These guarantees, ...
 
-### Conformal Risk Control for QoT-Aware Lightpath Feasibility Under Technology-Driven Domain Shift
-- **Link**: http://arxiv.org/abs/2611.13893v1
-- **Abstract**: Artificial intelligence and machine learning (AI/ML)-based regression models support operational decision-making in optical networks but typically expose only point predictions, which carry no statist...
+### Beyond Binary Classification: Multiclass Machine Learning for Diabetes and Prediabetes Risk Prediction Using NHANES
+- **Link**: http://arxiv.org/abs/2611.16756v1
+- **Abstract**: Detecting diabetes risk early is important for preventing disease progression. Most existing machine learning approaches focus on binary classification, which limits their ability to capture intermedi...
 
-### MusicFlux: Flexible Conditioning for Text-Guided Music Generation and Editing
-- **Link**: http://arxiv.org/abs/2611.13834v1
-- **Abstract**: Music editing transforms existing recordings while preserving their original attributes. Recent approaches adapt pretrained text-to-music models for tasks like inpainting, event insertion, or restorat...
+### Verifiable Settlement and Pricing for Local Energy Markets: Architecture and Deployment on Hyperledger Besu
+- **Link**: http://arxiv.org/abs/2611.16495v1
+- **Abstract**: We implement privacy-preserving local electricity exchanges using an automated market maker on the Hyperledger Besu network under QBFT consensus. The proposed protocol operator collects individual ele...
 
-### Omni-JEV: Text and Dual-Stream Speech Decisions
-- **Link**: http://arxiv.org/abs/2611.13777v1
-- **Abstract**: A user utterance does not uniquely determine the next action in full-duplex dialogue: its consequences depend on the assistant's response state and interaction history. Speech activity, utterance comp...
+### Fewer Expert Transfers Without Changing Routing: Expert Eviction for MoE Offloading
+- **Link**: http://arxiv.org/abs/2611.15842v1
+- **Abstract**: A mixture-of-experts (MoE) language model uses only a few experts per token, so a server can keep most expert weights in CPU memory and copy an expert to the GPU when the router requests it. Recent me...
 
-### Optimal Trading Speed on Blockchain
-- **Link**: http://arxiv.org/abs/2611.13616v1
-- **Abstract**: On blockchain-based exchanges, faster blocks weaken the priority-fee competition among arbitrageurs and shift rents from the block producer to them. Equilibrium liquidity peaks at an interior block sp...
+### TraceKV: Policy-Preserving Low-Rank KV Cache Compression for Reasoning Vision-Language Models
+- **Link**: http://arxiv.org/abs/2611.15569v1
+- **Abstract**: Reasoning vision-language models (VLMs) impose substantial KV cache demands from both large multimodal contexts and growing reasoning traces. Low-rank KV compression has emerged as a promising paradig...
 
-### Tabular Foundation Models in Financial Predictions
-- **Link**: http://arxiv.org/abs/2611.13550v1
-- **Abstract**: This technical note introduces tabular foundation models (TFMs) to accounting research and evaluates their performance in one common benchmark task: predicting firms' next-year earnings changes. TFMs ...
+### DETER: Suppression During Pretraining for Tamper Resistance
+- **Link**: http://arxiv.org/abs/2611.15479v1
+- **Abstract**: Open-weight language models can acquire knowledge that could enable biological, chemical, or cyber misuse. Any attempt to limit such knowledge must remain effective after the model weights are release...
 
-### The RSI Tax: When Recursive Self-Improvement Is Not Worth the Cost
-- **Link**: http://arxiv.org/abs/2611.13524v1
-- **Abstract**: Recursive self-improvement (RSI) seeks to improve an agent using its own task experience. Its practical value depends on whether performance gains justify the full cost of self-improvement and task ex...
+### MOON-RL: Multi-Objective Optimization via Objective Space Navigation with Reinforcement Learning
+- **Link**: http://arxiv.org/abs/2611.15227v1
+- **Abstract**: Many engineering design problems involve multiple conflicting objectives and strict feasibility constraints. They are typically solved with population-based optimizers that require many evaluations an...
 
