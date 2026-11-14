@@ -1,4 +1,4 @@
-# SCOUT ARXIV (aggiornato 2026-11-13T07:20:03.014380)
+# SCOUT ARXIV (aggiornato 2026-11-14T07:20:01.806537)
 
 ### Maximizing Capacity Utilization of LoRA Adapters for Mitigating the Learning-Forgetting Trade-off
 - **Link**: http://arxiv.org/abs/2611.17191v1
