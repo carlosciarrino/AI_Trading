@@ -2931,3 +2931,15 @@
 {"timestamp": "2026-11-13T20:48:35.248855", "scores": {}, "weights": {}, "final_score": 0.0, "signal": "HOLD", "action_taken": "none", "ticket": null, "reason": "p013_friday_late"}
 {"timestamp": "2026-11-13T20:53:35.354321", "scores": {}, "weights": {}, "final_score": 0.0, "signal": "HOLD", "action_taken": "none", "ticket": null, "reason": "p013_friday_late"}
 {"timestamp": "2026-11-13T20:58:35.459413", "scores": {}, "weights": {}, "final_score": 0.0, "signal": "HOLD", "action_taken": "none", "ticket": null, "reason": "p013_friday_late"}
+{"timestamp": "2026-11-13T21:03:41.050367", "scores": {}, "weights": {}, "final_score": 0.0, "signal": "HOLD", "action_taken": "none", "ticket": null, "reason": "ea_err", "error": "ERR: 132 - Errore generico 132"}
+{"timestamp": "2026-11-13T21:08:46.217053", "scores": {}, "weights": {}, "final_score": 0.0, "signal": "HOLD", "action_taken": "none", "ticket": null, "reason": "ea_err", "error": "ERR: 132 - Errore generico 132"}
+{"timestamp": "2026-11-13T21:13:51.100119", "scores": {}, "weights": {}, "final_score": 0.0, "signal": "HOLD", "action_taken": "none", "ticket": null, "reason": "ea_err", "error": "ERR: 132 - Errore generico 132"}
+{"timestamp": "2026-11-13T21:18:56.027772", "scores": {}, "weights": {}, "final_score": 0.0, "signal": "HOLD", "action_taken": "none", "ticket": null, "reason": "ea_err", "error": "ERR: 132 - Errore generico 132"}
+{"timestamp": "2026-11-13T21:24:04.418911", "scores": {}, "weights": {}, "final_score": 0.0, "signal": "HOLD", "action_taken": "none", "ticket": null, "reason": "timeout_ea", "error": "timeout_ea"}
+{"timestamp": "2026-11-13T21:29:05.924489", "scores": {}, "weights": {}, "final_score": 0.0, "signal": "HOLD", "action_taken": "none", "ticket": null, "reason": "ea_err", "error": "ERR: 132 - Errore generico 132"}
+{"timestamp": "2026-11-13T21:34:11.069383", "scores": {}, "weights": {}, "final_score": 0.0, "signal": "HOLD", "action_taken": "none", "ticket": null, "reason": "ea_err", "error": "ERR: 132 - Errore generico 132"}
+{"timestamp": "2026-11-13T21:39:15.707535", "scores": {}, "weights": {}, "final_score": 0.0, "signal": "HOLD", "action_taken": "none", "ticket": null, "reason": "ea_err", "error": "ERR: 2 - Errore generico 2"}
+{"timestamp": "2026-11-13T21:44:21.107577", "scores": {}, "weights": {}, "final_score": 0.0, "signal": "HOLD", "action_taken": "none", "ticket": null, "reason": "ea_err", "error": "ERR: 132 - Errore generico 132"}
+{"timestamp": "2026-11-13T21:49:31.033340", "scores": {}, "weights": {}, "final_score": 0.0, "signal": "HOLD", "action_taken": "none", "ticket": null, "reason": "ea_err", "error": "ERR: 132 - Errore generico 132"}
+{"timestamp": "2026-11-13T21:54:36.276751", "scores": {}, "weights": {}, "final_score": 0.0, "signal": "HOLD", "action_taken": "none", "ticket": null, "reason": "ea_err", "error": "ERR: 132 - Errore generico 132"}
+{"timestamp": "2026-11-13T21:59:41.419921", "scores": {}, "weights": {}, "final_score": 0.0, "signal": "HOLD", "action_taken": "none", "ticket": null, "reason": "ea_err", "error": "ERR: 132 - Errore generico 132"}
