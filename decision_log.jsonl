@@ -3201,3 +3201,15 @@
 {"timestamp": "2026-11-14T19:47:41.301620", "scores": {}, "weights": {}, "final_score": 0.0, "signal": "HOLD", "action_taken": "none", "ticket": null, "reason": "timeout_ea", "error": "timeout_ea"}
 {"timestamp": "2026-11-14T19:52:49.716850", "scores": {}, "weights": {}, "final_score": 0.0, "signal": "HOLD", "action_taken": "none", "ticket": null, "reason": "timeout_ea", "error": "timeout_ea"}
 {"timestamp": "2026-11-14T19:57:58.126575", "scores": {}, "weights": {}, "final_score": 0.0, "signal": "HOLD", "action_taken": "none", "ticket": null, "reason": "timeout_ea", "error": "timeout_ea"}
+{"timestamp": "2026-11-14T20:03:06.759980", "scores": {}, "weights": {}, "final_score": 0.0, "signal": "HOLD", "action_taken": "none", "ticket": null, "reason": "timeout_ea", "error": "timeout_ea"}
+{"timestamp": "2026-11-14T20:08:15.166163", "scores": {}, "weights": {}, "final_score": 0.0, "signal": "HOLD", "action_taken": "none", "ticket": null, "reason": "timeout_ea", "error": "timeout_ea"}
+{"timestamp": "2026-11-14T20:13:23.564687", "scores": {}, "weights": {}, "final_score": 0.0, "signal": "HOLD", "action_taken": "none", "ticket": null, "reason": "timeout_ea", "error": "timeout_ea"}
+{"timestamp": "2026-11-14T20:18:32.231522", "scores": {}, "weights": {}, "final_score": 0.0, "signal": "HOLD", "action_taken": "none", "ticket": null, "reason": "timeout_ea", "error": "timeout_ea"}
+{"timestamp": "2026-11-14T20:23:40.654055", "scores": {}, "weights": {}, "final_score": 0.0, "signal": "HOLD", "action_taken": "none", "ticket": null, "reason": "timeout_ea", "error": "timeout_ea"}
+{"timestamp": "2026-11-14T20:28:49.103935", "scores": {}, "weights": {}, "final_score": 0.0, "signal": "HOLD", "action_taken": "none", "ticket": null, "reason": "timeout_ea", "error": "timeout_ea"}
+{"timestamp": "2026-11-14T20:33:57.804757", "scores": {}, "weights": {}, "final_score": 0.0, "signal": "HOLD", "action_taken": "none", "ticket": null, "reason": "timeout_ea", "error": "timeout_ea"}
+{"timestamp": "2026-11-14T20:39:06.199877", "scores": {}, "weights": {}, "final_score": 0.0, "signal": "HOLD", "action_taken": "none", "ticket": null, "reason": "timeout_ea", "error": "timeout_ea"}
+{"timestamp": "2026-11-14T20:44:14.891015", "scores": {}, "weights": {}, "final_score": 0.0, "signal": "HOLD", "action_taken": "none", "ticket": null, "reason": "timeout_ea", "error": "timeout_ea"}
+{"timestamp": "2026-11-14T20:49:23.277611", "scores": {}, "weights": {}, "final_score": 0.0, "signal": "HOLD", "action_taken": "none", "ticket": null, "reason": "timeout_ea", "error": "timeout_ea"}
+{"timestamp": "2026-11-14T20:54:31.675930", "scores": {}, "weights": {}, "final_score": 0.0, "signal": "HOLD", "action_taken": "none", "ticket": null, "reason": "timeout_ea", "error": "timeout_ea"}
+{"timestamp": "2026-11-14T20:59:40.122363", "scores": {}, "weights": {}, "final_score": 0.0, "signal": "HOLD", "action_taken": "none", "ticket": null, "reason": "timeout_ea", "error": "timeout_ea"}
