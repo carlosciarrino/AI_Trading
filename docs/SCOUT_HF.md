@@ -1,77 +1,77 @@
-# SCOUT HUGGING FACE (aggiornato 2026-11-14T07:10:01.980400)
-
-### xtools-at/DeepSeek-V4-Pro-Qwen3.5-9B-UNCENSORED-heretic
-- **Downloads**: 21586 | **Likes**: 7108
-- **Task**: text-generation
-- **URL**: https://huggingface.co/xtools-at/DeepSeek-V4-Pro-Qwen3.5-9B-UNCENSORED-heretic
+# SCOUT HUGGING FACE (aggiornato 2026-11-17T15:59:37.705828)
 
 ### MiniMaxAI/MiniMax-H3-Image
-- **Downloads**: 437039 | **Likes**: 1066
+- **Downloads**: 727110 | **Likes**: 1415
 - **Task**: text-to-image
 - **URL**: https://huggingface.co/MiniMaxAI/MiniMax-H3-Image
 
-### Lightricks/LTX-2.5
-- **Downloads**: 2777667 | **Likes**: 11836
-- **Task**: image-to-video
-- **URL**: https://huggingface.co/Lightricks/LTX-2.5
-
 ### Qwen/Qwen3.8-27B
-- **Downloads**: 6757964 | **Likes**: 19925
+- **Downloads**: 6942530 | **Likes**: 20386
 - **Task**: image-text-to-text
 - **URL**: https://huggingface.co/Qwen/Qwen3.8-27B
 
-### NousResearch/Arete-27B
-- **Downloads**: 5545 | **Likes**: 580
-- **Task**: text-generation
-- **URL**: https://huggingface.co/NousResearch/Arete-27B
+### Lightricks/LTX-2.5
+- **Downloads**: 2828071 | **Likes**: 12370
+- **Task**: image-to-video
+- **URL**: https://huggingface.co/Lightricks/LTX-2.5
 
-### speridlabs/idol
-- **Downloads**: 31367 | **Likes**: 2322
-- **Task**: image-to-3d
-- **URL**: https://huggingface.co/speridlabs/idol
-
-### DavidAU/Qwen3.8-27B-TURBO-Fable-Cold-Fusion-735-882-Heretic-Uncensored-NEO-CODER-MAX-MTP-GGUF
-- **Downloads**: 1657783 | **Likes**: 3091
-- **Task**: image-text-to-text
-- **URL**: https://huggingface.co/DavidAU/Qwen3.8-27B-TURBO-Fable-Cold-Fusion-735-882-Heretic-Uncensored-NEO-CODER-MAX-MTP-GGUF
-
-### moonshotai/Kimi-K3.1-Pro
-- **Downloads**: 40953 | **Likes**: 2060
-- **Task**: image-text-to-text
-- **URL**: https://huggingface.co/moonshotai/Kimi-K3.1-Pro
-
-### Comfy-Org/MiniMax-H3-Image
-- **Downloads**: 1257301 | **Likes**: 370
-- **Task**: text-to-image
-- **URL**: https://huggingface.co/Comfy-Org/MiniMax-H3-Image
-
-### Zyphra/ZONOS3-Mini
-- **Downloads**: 13068 | **Likes**: 321
-- **Task**: text-to-speech
-- **URL**: https://huggingface.co/Zyphra/ZONOS3-Mini
+### higurashi-ai/Haru-4B
+- **Downloads**: 4445 | **Likes**: 485
+- **Task**: audio-to-audio
+- **URL**: https://huggingface.co/higurashi-ai/Haru-4B
 
 ### thinkingmachines/Inkling-2-Small
-- **Downloads**: 1064 | **Likes**: 280
+- **Downloads**: 18359 | **Likes**: 434
 - **Task**: image-text-to-text
 - **URL**: https://huggingface.co/thinkingmachines/Inkling-2-Small
 
-### black-forest-labs/flux-3-image-klein-comfy
-- **Downloads**: 1330289 | **Likes**: 3133
-- **Task**: image-to-image
-- **URL**: https://huggingface.co/black-forest-labs/flux-3-image-klein-comfy
-
 ### unsloth/Qwen3.8-27B-GGUF
-- **Downloads**: 6422783 | **Likes**: 5902
+- **Downloads**: 6827598 | **Likes**: 6128
 - **Task**: N/A
 - **URL**: https://huggingface.co/unsloth/Qwen3.8-27B-GGUF
 
-### ccore/Qwen3.5-4B-3D-Coder
-- **Downloads**: 392582 | **Likes**: 1112
-- **Task**: N/A
-- **URL**: https://huggingface.co/ccore/Qwen3.5-4B-3D-Coder
+### Comfy-Org/MiniMax-H3-Image
+- **Downloads**: 2660341 | **Likes**: 516
+- **Task**: text-to-image
+- **URL**: https://huggingface.co/Comfy-Org/MiniMax-H3-Image
 
-### mradermacher/gemma-4-31B-it-ARA-heretic-GGUF
-- **Downloads**: 105256 | **Likes**: 281
+### black-forest-labs/flux-3-image-klein-comfy
+- **Downloads**: 1062051 | **Likes**: 3398
+- **Task**: image-to-image
+- **URL**: https://huggingface.co/black-forest-labs/flux-3-image-klein-comfy
+
+### chatrlabs/Qwen-Image-2.1-Uncensored-Omni-Quantized
+- **Downloads**: 160748 | **Likes**: 480
+- **Task**: text-to-image
+- **URL**: https://huggingface.co/chatrlabs/Qwen-Image-2.1-Uncensored-Omni-Quantized
+
+### DavidAU/Qwen3.8-27B-TURBO-Fable-Cold-Fusion-735-882-Heretic-Uncensored-NEO-CODER-MAX-MTP-GGUF
+- **Downloads**: 1759757 | **Likes**: 3278
+- **Task**: image-text-to-text
+- **URL**: https://huggingface.co/DavidAU/Qwen3.8-27B-TURBO-Fable-Cold-Fusion-735-882-Heretic-Uncensored-NEO-CODER-MAX-MTP-GGUF
+
+### n4ze3m/tiny-voca
+- **Downloads**: 3042 | **Likes**: 224
+- **Task**: text-to-speech
+- **URL**: https://huggingface.co/n4ze3m/tiny-voca
+
+### speridlabs/idol
+- **Downloads**: 36388 | **Likes**: 2447
+- **Task**: image-to-3d
+- **URL**: https://huggingface.co/speridlabs/idol
+
+### Zyphra/ZONOS3-Mini
+- **Downloads**: 93909 | **Likes**: 505
+- **Task**: text-to-speech
+- **URL**: https://huggingface.co/Zyphra/ZONOS3-Mini
+
+### meituan-longcat/LongCat-Video-Avatar-1.6
+- **Downloads**: 489 | **Likes**: 191
 - **Task**: N/A
-- **URL**: https://huggingface.co/mradermacher/gemma-4-31B-it-ARA-heretic-GGUF
+- **URL**: https://huggingface.co/meituan-longcat/LongCat-Video-Avatar-1.6
+
+### maxwell-model/Maxwell-V1-Flash
+- **Downloads**: 287 | **Likes**: 142
+- **Task**: text-generation
+- **URL**: https://huggingface.co/maxwell-model/Maxwell-V1-Flash
 
