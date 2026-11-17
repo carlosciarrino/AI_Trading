@@ -1,12 +1,12 @@
-# NOVITA' ESTERNE (aggiornato 2026-11-17T15:59:41.905685)
+# NOVITA' ESTERNE (aggiornato 2026-11-17T16:59:37.237749)
 
 ## GitHub (Python, ultimi 60gg, >30 stelle)
 
-- **Gathin23/cleanyourtv** (⭐ 58948) — Debloat any Android or Google TV over Wi-Fi and get an Apple TV-style home. (https://github.com/Gathin23/cleanyourtv)
+- **Gathin23/cleanyourtv** (⭐ 58966) — Debloat any Android or Google TV over Wi-Fi and get an Apple TV-style home. (https://github.com/Gathin23/cleanyourtv)
 - **NandhaKishorM/laya** (⭐ 35639) — Non-autoregressive System 1 decision engine. Typed choice, score and yes/no decisions over any text in a single forward pass, in 100+ languages, with  (https://github.com/NandhaKishorM/laya)
 - **deepseek-ai/DeepInfer** (⭐ 26162) — DeepInfer: High-performance, large-scale inference framework for DeepSeek models (https://github.com/deepseek-ai/DeepInfer)
-- **browser-use/jev-ultrafast** (⭐ 24566) — Fastest and cheapest web agent (https://github.com/browser-use/jev-ultrafast)
-- **google-research/harness2** (⭐ 24271) —  (https://github.com/google-research/harness2)
+- **browser-use/jev-ultrafast** (⭐ 24567) — Fastest and cheapest web agent (https://github.com/browser-use/jev-ultrafast)
+- **google-research/harness2** (⭐ 24276) —  (https://github.com/google-research/harness2)
 
 ## HuggingFace (trending)
 

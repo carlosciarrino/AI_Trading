@@ -1,4 +1,4 @@
-# SCOUT ARXIV (aggiornato 2026-11-17T15:59:37.467062)
+# SCOUT ARXIV (aggiornato 2026-11-17T16:59:32.949389)
 
 ### The cost of enforcing long-run coverage: a phase transition in online conformal prediction
 - **Link**: http://arxiv.org/abs/2611.21542v1
