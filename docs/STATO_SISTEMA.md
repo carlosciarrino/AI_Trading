@@ -236,3 +236,8 @@ Git: commit 5325f18: pendenze: P016-P020 (tools fossile, mt4_shared, engram, tes
 - recuperare dashboard da web_app_backup.py per ripristinare funzionalità complete
 - correggere supervisor verificando percorso venv e riavviando servizi
 - aggiungere account.json scritto dall'EA per sincronizzare conto di trading
+
+## 2026-11-17: Forward test sweep XAUUSD
+- Strategia: liquidity sweep M15, PF 1,25 (2026), validata su 4 anni + 2026.
+- Forward test in corso su demo FP Trading, lotto 0,01.
+- File: forward_test/ in backtest_lab.

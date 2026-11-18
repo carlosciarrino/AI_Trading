@@ -63,3 +63,42 @@ Questo file documenta i test effettuati sui progetti trovati dagli scout (GitHub
 - Stato iniziale: balance 99970.22, 0 ordini aperti, forecast NEUTRAL (1.10595 → 1.10643)
 - Monitoraggio: tools/check_test.sh (giornaliero), tools/report_settimana1.sh (domenica 16 nov)
 - Criteri stop: supervisore automatico (drawdown 8%, 3 loss) + manuale (PNL<0 e WR<30% a fine sett. 1)
+
+## 2026-11-17: Strategia Sweep XAUUSD M15 - VALIDATA
+
+### Origine
+Derivata dalla ricerca su liquidity sweep (Pattern #6, documentato in RICERCA_SETTIMANALE.md)
+e dal test controllato su parametri (sweep depth, bias, TP, sessione).
+
+### Logica (v2 finale)
+- **Timeframe**: M15
+- **Pattern**: liquidity sweep di swing high/low (5 barre lookback), wick > 0,30×ATR, chiusura di ritorno
+- **Bias**: EMA50 H1 (sopra = solo BUY, sotto = solo SELL)
+- **Conferma**: entro 3 barre, candela chiude attraverso il corpo dello sweep, range ≥ 0,3×ATR
+- **SL**: 0,1×ATR oltre il wick
+- **TP**: 2× SL (R:R 1:2)
+- **News window**: 30/30 min (NFP 30/60)
+- **Sessione**: nessuna (24h)
+- **Lotto**: 0,01 (Quarter Kelly su conto 500 €)
+
+### Risultati backtest
+| Periodo | PF | Win rate | R:R | Trade | Expectancy |
+|---|---|---|---|---|---|
+| 2022-2025 (OOS) | 1,17 | 27,07% | 3,11 | 410 | +0,69 € |
+| 2026 (OOS finale) | 1,25 | 30,0% | 2,90 | 120 | +2,23 € |
+
+### File
+- `strategia_sweep_xau.py` (backtest_lab)
+- `run_backtest_sweep_xau.py` (backtest_lab)
+- Forward test: `forward_test/sweep_forward.py` + `forward_test/SweepBridge.mq4`
+
+### Forward test
+- **Iniziato**: 2026-11-17 19:30
+- **Ambiente**: MT4 demo FP Trading 450000065, XAUUSD.r M15
+- **Durata prevista**: 8-12 settimane o 30+ trade
+- **Criteri**: aderenza ≥ 90%, expectancy > 0, max DD ≤ 0,41%
+
+### Decisioni
+- **Lotto fisso 0,01** (Quarter Kelly su conto 500 €). 0,10 è fuori discussione (10% di rischio per trade, insostenibile con 12 perdite consecutive possibili).
+- **Nessun indicatore** (solo struttura di prezzo e ATR, che è volatilità, non direzione).
+- **Solo SELL/BUY in base a EMA50 H1**, ma EMA50 è l'unico indicatore rimasto (validato dalla ricerca e dai test).
