@@ -1,11 +1,11 @@
-# SCOUT GITHUB (aggiornato 2026-11-18T06:00:00.347047)
+# SCOUT GITHUB (aggiornato 2026-11-18T06:59:55.838036)
 
-### TauricResearch/TradingAgents (⭐ 123024)
+### TauricResearch/TradingAgents (⭐ 123027)
 - **Desc**: TradingAgents: Multi-Agents LLM Financial Trading Framework
 - **URL**: https://github.com/TauricResearch/TradingAgents
 - **Creato**: 2024-12-28
 
-### freqtrade/freqtrade (⭐ 57013)
+### freqtrade/freqtrade (⭐ 57015)
 - **Desc**: Free, open source crypto trading bot
 - **URL**: https://github.com/freqtrade/freqtrade
 - **Creato**: 2017-05-17
@@ -15,22 +15,22 @@
 - **URL**: https://github.com/vnpy/vnpy
 - **Creato**: 2015-03-02
 
-### ccxt/ccxt (⭐ 44914)
+### ccxt/ccxt (⭐ 44915)
 - **Desc**: A unified trading API with more than 100 crypto exchanges and prediction markets in JavaScript / TypeScript / Python / C# / PHP / Go / Java / Rust
 - **URL**: https://github.com/ccxt/ccxt
 - **Creato**: 2017-05-14
 
-### HKUDS/Vibe-Trading (⭐ 38471)
+### HKUDS/Vibe-Trading (⭐ 38475)
 - **Desc**: "Vibe-Trading: Your Personal Trading Agent"
 - **URL**: https://github.com/HKUDS/Vibe-Trading
 - **Creato**: 2026-04-01
 
-### NousResearch/hermes-agent (⭐ 264331)
+### NousResearch/hermes-agent (⭐ 264341)
 - **Desc**: The agent that grows with you
 - **URL**: https://github.com/NousResearch/hermes-agent
 - **Creato**: 2025-07-22
 
-### langgenius/dify (⭐ 161403)
+### langgenius/dify (⭐ 161406)
 - **Desc**: Build Agentic workflows, RAG pipelines, with rich AI model and tool support on one collaborative workspace. Deploy on cloud, VPC, or self-hosted, so teams move from prototype to production without rebuilding the stack.
 - **URL**: https://github.com/langgenius/dify
 - **Creato**: 2023-04-12
@@ -40,27 +40,27 @@
 - **URL**: https://github.com/langchain-ai/langchain
 - **Creato**: 2022-10-17
 
-### Shubhamsaboo/awesome-llm-apps (⭐ 144989)
+### Shubhamsaboo/awesome-llm-apps (⭐ 144990)
 - **Desc**: 100+ AI Agents, Agent Skills and RAG Apps - Free and Open Source.
 - **URL**: https://github.com/Shubhamsaboo/awesome-llm-apps
 - **Creato**: 2024-04-29
 
-### Graphify-Labs/graphify (⭐ 149839)
+### Graphify-Labs/graphify (⭐ 149859)
 - **Desc**: Turn any codebase, with its docs, SQL schemas, configs, and PDFs, into a queryable knowledge graph. A /graphify skill for Claude Code, Cursor, Codex, and Gemini CLI: local deterministic AST parsing, every edge explained, no vector store.
 - **URL**: https://github.com/Graphify-Labs/graphify
 - **Creato**: 2026-04-03
 
-### browser-use/browser-use (⭐ 121379)
+### browser-use/browser-use (⭐ 121382)
 - **Desc**: Open-source Python library for AI browser agents, plus Browser Use Cloud: stealth browsers and a hosted agent API.
 - **URL**: https://github.com/browser-use/browser-use
 - **Creato**: 2024-10-31
 
-### Panniantong/Agent-Reach (⭐ 112895)
+### Panniantong/Agent-Reach (⭐ 112912)
 - **Desc**: Give your AI agent eyes to see the entire internet. Read & search Twitter, Reddit, YouTube, GitHub, Bilibili, XiaoHongShu — one CLI, zero API fees.
 - **URL**: https://github.com/Panniantong/Agent-Reach
 - **Creato**: 2026-02-24
 
-### D4Vinci/Scrapling (⭐ 104047)
+### D4Vinci/Scrapling (⭐ 104060)
 - **Desc**: 🕷️ The BEST Web Scraping framework that handles everything from a single request to a full-scale crawl! Don't be shy, join here: https://discord.gg/EMgGbDceNQ and follow here for daily tips and tricks: https://x.com/Scrapling_dev
 - **URL**: https://github.com/D4Vinci/Scrapling
 - **Creato**: 2024-10-13
@@ -75,7 +75,7 @@
 - **URL**: https://github.com/bbfamily/abu
 - **Creato**: 2016-09-19
 
-### paperswithbacktest/awesome-systematic-trading (⭐ 15439)
+### paperswithbacktest/awesome-systematic-trading (⭐ 15441)
 - **Desc**: A curated list of awesome libraries, packages, strategies, books, blogs, tutorials for systematic trading.
 - **URL**: https://github.com/paperswithbacktest/awesome-systematic-trading
 - **Creato**: 2022-02-05
