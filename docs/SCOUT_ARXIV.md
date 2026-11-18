@@ -1,4 +1,16 @@
-# SCOUT ARXIV (aggiornato 2026-11-17T22:59:43.268166)
+# SCOUT ARXIV (aggiornato 2026-11-17T23:59:38.777964)
+
+### Towards Optimism-Pessimism Trade-off in Model-based Offline-to-Online Reinforcement Learning
+- **Link**: http://arxiv.org/abs/2611.22172v1
+- **Abstract**: Model-based offline-to-online reinforcement learning (RL) enables sample-efficient adaptation by leveraging offline pre-training for online fine-tuning. However, the distribution shifts between offlin...
+
+### Centroid Spectral Coupling: Implicit Alignment and Representation Diversity in Self-Supervised Learning
+- **Link**: http://arxiv.org/abs/2611.22158v1
+- **Abstract**: Self-Supervised Learning (SSL) aims to align augmented views while preserving representation diversity and preventing collapse. Existing non-contrastive methods often address these goals using multipl...
+
+### When AUC Meets Generative Reconstruction: A Unified Principle for Balanced Visual Representation Learning
+- **Link**: http://arxiv.org/abs/2611.22094v1
+- **Abstract**: Multimodal large language models (MLLMs) require visual encoders that extract fine-grained visual features while constructing semantically disentangled and discriminative representations. Conventional...
 
 ### The cost of enforcing long-run coverage: a phase transition in online conformal prediction
 - **Link**: http://arxiv.org/abs/2611.21542v1
@@ -27,16 +39,4 @@
 ### Rethinking Supervision Scaling in On-Policy Distillation: From Dense Supervision to Stochastic Horizons
 - **Link**: http://arxiv.org/abs/2611.20687v1
 - **Abstract**: On-policy distillation (OPD) provides dense token-level supervision along student-generated trajectories, yet the learning benefits of longer trajectories may not scale proportionally with their compu...
-
-### ParGLU: Partial Gating Improves Language Modeling in MoE Transformers
-- **Link**: http://arxiv.org/abs/2611.20663v1
-- **Abstract**: Multiplicative gating improves Transformer feed-forward networks (FFNs), but it reduces intermediate representation width under a fixed parameter budget. This trade-off is particularly relevant to Mix...
-
-### Safety-Preserving Medical LLM Fine-Tuning via Bilevel Data Selection
-- **Link**: http://arxiv.org/abs/2611.20643v1
-- **Abstract**: As general large language models (LLMs) are increasingly adapted for patient-facing medical applications, improving medical capability while controlling patient-facing risks remains a critical challen...
-
-### DNA: A Double-Helix Hierarchical Deep Interaction Network Architecture for Industrial Digital Twin
-- **Link**: http://arxiv.org/abs/2611.20607v1
-- **Abstract**: High-fidelity modeling is fundamental to industrial digital twin, yet a trade-off persists between the physical transparency of mechanistic models and the superior predictive power of data-driven appr...
 
