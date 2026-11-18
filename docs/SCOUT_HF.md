@@ -1,17 +1,17 @@
-# SCOUT HUGGING FACE (aggiornato 2026-11-18T09:59:29.104369)
+# SCOUT HUGGING FACE (aggiornato 2026-11-18T10:59:59.911740)
 
 ### higurashi-ai/Haru-4B
-- **Downloads**: 5314 | **Likes**: 590
+- **Downloads**: 5314 | **Likes**: 596
 - **Task**: audio-to-audio
 - **URL**: https://huggingface.co/higurashi-ai/Haru-4B
 
 ### Lightricks/LTX-2.5
-- **Downloads**: 2871190 | **Likes**: 12485
+- **Downloads**: 2871190 | **Likes**: 12487
 - **Task**: image-to-video
 - **URL**: https://huggingface.co/Lightricks/LTX-2.5
 
 ### thinkingmachines/Inkling-2-Small
-- **Downloads**: 30082 | **Likes**: 477
+- **Downloads**: 30082 | **Likes**: 479
 - **Task**: image-text-to-text
 - **URL**: https://huggingface.co/thinkingmachines/Inkling-2-Small
 
@@ -21,57 +21,57 @@
 - **URL**: https://huggingface.co/MiniMaxAI/MiniMax-H3-Image
 
 ### harness-hub/Qwen3.8-27B-pi-adapted
-- **Downloads**: 377 | **Likes**: 282
+- **Downloads**: 377 | **Likes**: 297
 - **Task**: image-text-to-text
 - **URL**: https://huggingface.co/harness-hub/Qwen3.8-27B-pi-adapted
 
 ### Qwen/Qwen3.8-27B
-- **Downloads**: 6888351 | **Likes**: 20521
+- **Downloads**: 6888351 | **Likes**: 20523
 - **Task**: image-text-to-text
 - **URL**: https://huggingface.co/Qwen/Qwen3.8-27B
 
 ### chatrlabs/Qwen-Image-2.1-Uncensored-Omni-Quantized
-- **Downloads**: 224306 | **Likes**: 569
+- **Downloads**: 224306 | **Likes**: 572
 - **Task**: text-to-image
 - **URL**: https://huggingface.co/chatrlabs/Qwen-Image-2.1-Uncensored-Omni-Quantized
 
 ### n4ze3m/tiny-voca
-- **Downloads**: 4430 | **Likes**: 267
+- **Downloads**: 4430 | **Likes**: 268
 - **Task**: text-to-speech
 - **URL**: https://huggingface.co/n4ze3m/tiny-voca
 
-### DavidAU/Qwen3.8-27B-TURBO-Fable-Cold-Fusion-735-882-Heretic-Uncensored-NEO-CODER-MAX-MTP-GGUF
-- **Downloads**: 1773418 | **Likes**: 3327
-- **Task**: image-text-to-text
-- **URL**: https://huggingface.co/DavidAU/Qwen3.8-27B-TURBO-Fable-Cold-Fusion-735-882-Heretic-Uncensored-NEO-CODER-MAX-MTP-GGUF
-
 ### meituan-longcat/LongCat-Video-Avatar-1.6
-- **Downloads**: 1226 | **Likes**: 239
+- **Downloads**: 1226 | **Likes**: 242
 - **Task**: N/A
 - **URL**: https://huggingface.co/meituan-longcat/LongCat-Video-Avatar-1.6
 
+### DavidAU/Qwen3.8-27B-TURBO-Fable-Cold-Fusion-735-882-Heretic-Uncensored-NEO-CODER-MAX-MTP-GGUF
+- **Downloads**: 1773418 | **Likes**: 3328
+- **Task**: image-text-to-text
+- **URL**: https://huggingface.co/DavidAU/Qwen3.8-27B-TURBO-Fable-Cold-Fusion-735-882-Heretic-Uncensored-NEO-CODER-MAX-MTP-GGUF
+
 ### maxwell-model/Maxwell-V1-Flash
-- **Downloads**: 1052 | **Likes**: 212
+- **Downloads**: 1052 | **Likes**: 213
 - **Task**: text-generation
 - **URL**: https://huggingface.co/maxwell-model/Maxwell-V1-Flash
 
 ### unsloth/Qwen3.8-27B-GGUF
-- **Downloads**: 6998076 | **Likes**: 6173
+- **Downloads**: 6998076 | **Likes**: 6174
 - **Task**: N/A
 - **URL**: https://huggingface.co/unsloth/Qwen3.8-27B-GGUF
 
 ### tencent/Hy4-flash
-- **Downloads**: 159 | **Likes**: 164
+- **Downloads**: 159 | **Likes**: 170
 - **Task**: image-text-to-text
 - **URL**: https://huggingface.co/tencent/Hy4-flash
 
 ### apple/FastFrames-L
-- **Downloads**: 0 | **Likes**: 154
+- **Downloads**: 0 | **Likes**: 160
 - **Task**: text-to-video
 - **URL**: https://huggingface.co/apple/FastFrames-L
 
 ### sensenova/SenseNova-Loop-9B
-- **Downloads**: 964 | **Likes**: 298
+- **Downloads**: 964 | **Likes**: 302
 - **Task**: image-text-to-text
 - **URL**: https://huggingface.co/sensenova/SenseNova-Loop-9B
 
