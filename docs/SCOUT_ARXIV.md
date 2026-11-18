@@ -1,4 +1,20 @@
-# SCOUT ARXIV (aggiornato 2026-11-17T23:59:38.777964)
+# SCOUT ARXIV (aggiornato 2026-11-18T00:59:34.224209)
+
+### Sub-Meter Canopy Height Synthesis from Sentinel-2 via Anchored Residual Flow
+- **Link**: http://arxiv.org/abs/2611.22636v1
+- **Abstract**: Canopy height models (CHMs) - per-pixel maps of vegetation top height - are essential for forest carbon accounting, wildfire fuel mapping, and tree-level ecology, yet sub-meter CHMs require airborne L...
+
+### COTTI: Contrastive Training and Time-Aware Inference for Robust Industrial Recommendation under Promotional Drift
+- **Link**: http://arxiv.org/abs/2611.22597v1
+- **Abstract**: Promotional events shift traffic composition, purchase behavior, and the scale of conversion probabilities on different time horizons. We present \textbf{COTTI} (\textbf{CO}ntrastive \textbf{T}raining...
+
+### Efficient Self-Supervised Adaptation of 3D Abdominal Vision-Language Model for Institution-Specific HCC Classification via Full Fine-Tuning and PEFT
+- **Link**: http://arxiv.org/abs/2611.22504v1
+- **Abstract**: Medical vision-language models (VLMs) capture cross-modal relationships between image and text, yet their adaptation to institution-specific clinical tasks remains underexplored. In this study, we fin...
+
+### Scaling Laws for Vision-Language Fusion
+- **Link**: http://arxiv.org/abs/2611.22351v1
+- **Abstract**: Vision-language models (VLMs) have emerged as central foundation models combining multimodal perception with text comprehension. While VLMs are traditionally built via late fusion by continued pre-tra...
 
 ### Towards Optimism-Pessimism Trade-off in Model-based Offline-to-Online Reinforcement Learning
 - **Link**: http://arxiv.org/abs/2611.22172v1
@@ -23,20 +39,4 @@
 ### Cap-Aware Boosting for Green Day-Ahead Electricity Price Forecasting
 - **Link**: http://arxiv.org/abs/2611.21149v1
 - **Abstract**: Accurate forecasting of Green Day-Ahead Market (GDAM) electricity prices is essential for market participants in the Indian power sector. We present a LightGBM-based forecasting framework for Indian E...
-
-### Inference Equivalence and Quotient Coding
-- **Link**: http://arxiv.org/abs/2611.21096v1
-- **Abstract**: Incomplete observations can admit multiple physical interpretations without making every task conclusion ambiguous. Recovering all compatible scenes is often unnecessary, whereas indiscriminate compre...
-
-### Comfort as a Constraint or as a Cost in Reinforcement Learning and Model Predictive Building Control
-- **Link**: http://arxiv.org/abs/2611.20889v1
-- **Abstract**: A building controller that keeps a zone within comfort bounds at minimum energy can treat the bounds as a soft constraint, by adding the weighted violation to its cost, or as a hard constraint. We ana...
-
-### Markov-Equivalent Conditional Independence Graphs on Path Spaces
-- **Link**: http://arxiv.org/abs/2611.20877v1
-- **Abstract**: Causal discovery for continuous-time stochastic processes with latent confounding typically faces a trade-off between (i) approaches that are highly informative about the causal structure but are diff...
-
-### Rethinking Supervision Scaling in On-Policy Distillation: From Dense Supervision to Stochastic Horizons
-- **Link**: http://arxiv.org/abs/2611.20687v1
-- **Abstract**: On-policy distillation (OPD) provides dense token-level supervision along student-generated trajectories, yet the learning benefits of longer trajectories may not scale proportionally with their compu...
 
