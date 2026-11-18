@@ -3295,3 +3295,6 @@
 {"timestamp": "2026-11-17T20:45:25.998715", "scores": {}, "weights": {}, "final_score": 0.0, "signal": "HOLD", "action_taken": "none", "ticket": null, "reason": "risk_halt: halt: limite 2 ordini sell raggiunto (2)"}
 {"timestamp": "2026-11-17T20:50:27.455868", "scores": {}, "weights": {}, "final_score": 0.0, "signal": "HOLD", "action_taken": "none", "ticket": null, "reason": "risk_halt: halt: limite 2 ordini sell raggiunto (2)"}
 {"timestamp": "2026-11-17T20:55:29.041597", "scores": {}, "weights": {}, "final_score": 0.0, "signal": "HOLD", "action_taken": "none", "ticket": null, "reason": "risk_halt: halt: limite 2 ordini sell raggiunto (2)"}
+{"timestamp": "2026-11-17T21:00:31.813306", "scores": {}, "weights": {}, "final_score": 0.0, "signal": "HOLD", "action_taken": "sell", "ticket": "1311586", "reason": "ea_ok"}
+{"timestamp": "2026-11-17T21:50:47.342889", "scores": {}, "weights": {}, "final_score": 0.0, "signal": "HOLD", "action_taken": "none", "ticket": null, "reason": "rsi_oversold_27.5"}
+{"timestamp": "2026-11-17T21:55:49.206073", "scores": {}, "weights": {}, "final_score": 0.0, "signal": "HOLD", "action_taken": "none", "ticket": null, "reason": "rsi_oversold_27.5"}
