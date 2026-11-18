@@ -1,4 +1,4 @@
-# SCOUT ARXIV (aggiornato 2026-11-18T06:59:42.473391)
+# SCOUT ARXIV (aggiornato 2026-11-18T07:59:37.975470)
 
 ### The Illusion of Grounding: Do Vision-Language Models Weigh Retrieved Text and Images Like an Ideal Observer?
 - **Link**: http://arxiv.org/abs/2611.23127v1
