@@ -1,11 +1,11 @@
-# SCOUT GITHUB (aggiornato 2026-11-18T20:59:34.912250)
+# SCOUT GITHUB (aggiornato 2026-11-18T21:59:30.727303)
 
-### TauricResearch/TradingAgents (⭐ 123081)
+### TauricResearch/TradingAgents (⭐ 123083)
 - **Desc**: TradingAgents: Multi-Agents LLM Financial Trading Framework
 - **URL**: https://github.com/TauricResearch/TradingAgents
 - **Creato**: 2024-12-28
 
-### freqtrade/freqtrade (⭐ 57043)
+### freqtrade/freqtrade (⭐ 57044)
 - **Desc**: Free, open source crypto trading bot
 - **URL**: https://github.com/freqtrade/freqtrade
 - **Creato**: 2017-05-17
@@ -20,47 +20,47 @@
 - **URL**: https://github.com/ccxt/ccxt
 - **Creato**: 2017-05-14
 
-### HKUDS/Vibe-Trading (⭐ 38492)
+### HKUDS/Vibe-Trading (⭐ 38494)
 - **Desc**: "Vibe-Trading: Your Personal Trading Agent"
 - **URL**: https://github.com/HKUDS/Vibe-Trading
 - **Creato**: 2026-04-01
 
-### NousResearch/hermes-agent (⭐ 264490)
+### NousResearch/hermes-agent (⭐ 264501)
 - **Desc**: The agent that grows with you
 - **URL**: https://github.com/NousResearch/hermes-agent
 - **Creato**: 2025-07-22
 
-### langgenius/dify (⭐ 161443)
+### langgenius/dify (⭐ 161446)
 - **Desc**: Build Agentic workflows, RAG pipelines, with rich AI model and tool support on one collaborative workspace. Deploy on cloud, VPC, or self-hosted, so teams move from prototype to production without rebuilding the stack.
 - **URL**: https://github.com/langgenius/dify
 - **Creato**: 2023-04-12
 
-### langchain-ai/langchain (⭐ 149860)
+### langchain-ai/langchain (⭐ 149849)
 - **Desc**: The agent engineering platform.
 - **URL**: https://github.com/langchain-ai/langchain
 - **Creato**: 2022-10-17
 
-### Shubhamsaboo/awesome-llm-apps (⭐ 145029)
+### Shubhamsaboo/awesome-llm-apps (⭐ 145032)
 - **Desc**: 100+ AI Agents, Agent Skills and RAG Apps - Free and Open Source.
 - **URL**: https://github.com/Shubhamsaboo/awesome-llm-apps
 - **Creato**: 2024-04-29
 
-### Graphify-Labs/graphify (⭐ 150159)
+### Graphify-Labs/graphify (⭐ 150173)
 - **Desc**: Turn any codebase, with its docs, SQL schemas, configs, and PDFs, into a queryable knowledge graph. A /graphify skill for Claude Code, Cursor, Codex, and Gemini CLI: local deterministic AST parsing, every edge explained, no vector store.
 - **URL**: https://github.com/Graphify-Labs/graphify
 - **Creato**: 2026-04-03
 
-### browser-use/browser-use (⭐ 121442)
+### browser-use/browser-use (⭐ 121446)
 - **Desc**: Open-source Python library for AI browser agents, plus Browser Use Cloud: stealth browsers and a hosted agent API.
 - **URL**: https://github.com/browser-use/browser-use
 - **Creato**: 2024-10-31
 
-### Panniantong/Agent-Reach (⭐ 113057)
+### Panniantong/Agent-Reach (⭐ 113062)
 - **Desc**: Give your AI agent eyes to see the entire internet. Read & search Twitter, Reddit, YouTube, GitHub, Bilibili, XiaoHongShu — one CLI, zero API fees.
 - **URL**: https://github.com/Panniantong/Agent-Reach
 - **Creato**: 2026-02-24
 
-### D4Vinci/Scrapling (⭐ 104196)
+### D4Vinci/Scrapling (⭐ 104207)
 - **Desc**: 🕷️ The BEST Web Scraping framework that handles everything from a single request to a full-scale crawl! Don't be shy, join here: https://discord.gg/EMgGbDceNQ and follow here for daily tips and tricks: https://x.com/Scrapling_dev
 - **URL**: https://github.com/D4Vinci/Scrapling
 - **Creato**: 2024-10-13
