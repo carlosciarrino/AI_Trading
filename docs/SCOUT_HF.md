@@ -1,52 +1,52 @@
-# SCOUT HUGGING FACE (aggiornato 2026-11-19T13:59:51.568402)
+# SCOUT HUGGING FACE (aggiornato 2026-11-19T14:59:48.953236)
 
 ### higurashi-ai/Haru-4B
-- **Downloads**: 6266 | **Likes**: 2876
+- **Downloads**: 6266 | **Likes**: 3072
 - **Task**: audio-to-audio
 - **URL**: https://huggingface.co/higurashi-ai/Haru-4B
 
 ### tencent/Hy4-flash
-- **Downloads**: 2053 | **Likes**: 306
+- **Downloads**: 2053 | **Likes**: 308
 - **Task**: image-text-to-text
 - **URL**: https://huggingface.co/tencent/Hy4-flash
 
-### Qwen/Qwen3.8-27B
-- **Downloads**: 6647301 | **Likes**: 20634
-- **Task**: image-text-to-text
-- **URL**: https://huggingface.co/Qwen/Qwen3.8-27B
-
 ### apple/FastFrames-L
-- **Downloads**: 0 | **Likes**: 281
+- **Downloads**: 0 | **Likes**: 286
 - **Task**: text-to-video
 - **URL**: https://huggingface.co/apple/FastFrames-L
 
+### Qwen/Qwen3.8-27B
+- **Downloads**: 6647301 | **Likes**: 20639
+- **Task**: image-text-to-text
+- **URL**: https://huggingface.co/Qwen/Qwen3.8-27B
+
 ### harness-hub/Qwen3.8-27B-pi-adapted
-- **Downloads**: 1320 | **Likes**: 687
+- **Downloads**: 1320 | **Likes**: 692
 - **Task**: image-text-to-text
 - **URL**: https://huggingface.co/harness-hub/Qwen3.8-27B-pi-adapted
 
 ### n4ze3m/tiny-voca
-- **Downloads**: 6368 | **Likes**: 317
+- **Downloads**: 6368 | **Likes**: 318
 - **Task**: text-to-speech
 - **URL**: https://huggingface.co/n4ze3m/tiny-voca
 
 ### MiniMaxAI/MiniMax-H3-Image
-- **Downloads**: 821710 | **Likes**: 1616
+- **Downloads**: 821710 | **Likes**: 1618
 - **Task**: text-to-image
 - **URL**: https://huggingface.co/MiniMaxAI/MiniMax-H3-Image
 
 ### meituan-longcat/LongCat-Video-Avatar-1.6
-- **Downloads**: 1923 | **Likes**: 308
+- **Downloads**: 1923 | **Likes**: 312
 - **Task**: N/A
 - **URL**: https://huggingface.co/meituan-longcat/LongCat-Video-Avatar-1.6
 
 ### maxwell-model/Maxwell-V1-Flash
-- **Downloads**: 1703 | **Likes**: 264
+- **Downloads**: 1703 | **Likes**: 266
 - **Task**: text-generation
 - **URL**: https://huggingface.co/maxwell-model/Maxwell-V1-Flash
 
 ### Lightricks/LTX-2.5
-- **Downloads**: 2934937 | **Likes**: 12700
+- **Downloads**: 2934937 | **Likes**: 12702
 - **Task**: image-to-video
 - **URL**: https://huggingface.co/Lightricks/LTX-2.5
 
@@ -55,23 +55,23 @@
 - **Task**: image-text-to-text
 - **URL**: https://huggingface.co/thinkingmachines/Inkling-2-Small
 
+### inworld/voice-isolator
+- **Downloads**: 0 | **Likes**: 202
+- **Task**: audio-to-audio
+- **URL**: https://huggingface.co/inworld/voice-isolator
+
 ### chatrlabs/Qwen-Image-2.1-Uncensored-Omni-Quantized
 - **Downloads**: 268540 | **Likes**: 666
 - **Task**: text-to-image
 - **URL**: https://huggingface.co/chatrlabs/Qwen-Image-2.1-Uncensored-Omni-Quantized
 
-### inworld/voice-isolator
-- **Downloads**: 0 | **Likes**: 193
-- **Task**: audio-to-audio
-- **URL**: https://huggingface.co/inworld/voice-isolator
-
 ### sensenova/SenseNova-Loop-9B
-- **Downloads**: 1447 | **Likes**: 360
+- **Downloads**: 1447 | **Likes**: 363
 - **Task**: image-text-to-text
 - **URL**: https://huggingface.co/sensenova/SenseNova-Loop-9B
 
 ### nvidia/NVIDIA-Nemotron-3.5-Bolt-E4B-4GB
-- **Downloads**: 172088 | **Likes**: 598
+- **Downloads**: 172088 | **Likes**: 599
 - **Task**: text-generation
 - **URL**: https://huggingface.co/nvidia/NVIDIA-Nemotron-3.5-Bolt-E4B-4GB
 
