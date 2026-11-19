@@ -3800,3 +3800,15 @@
 {"timestamp": "2026-11-19T15:47:58.806203", "scores": {}, "weights": {}, "final_score": 0.0, "signal": "HOLD", "action_taken": "none", "ticket": null, "reason": "risk_halt: halt: limite 2 ordini sell raggiunto (2)"}
 {"timestamp": "2026-11-19T15:53:00.035348", "scores": {}, "weights": {}, "final_score": 0.0, "signal": "HOLD", "action_taken": "none", "ticket": null, "reason": "no_short_signal"}
 {"timestamp": "2026-11-19T15:58:02.596404", "scores": {}, "weights": {}, "final_score": 0.0, "signal": "HOLD", "action_taken": "none", "ticket": null, "reason": "no_short_signal"}
+{"timestamp": "2026-11-19T16:03:05.375765", "scores": {}, "weights": {}, "final_score": 0.0, "signal": "HOLD", "action_taken": "none", "ticket": null, "reason": "no_short_signal"}
+{"timestamp": "2026-11-19T16:08:11.138294", "scores": {}, "weights": {}, "final_score": 0.0, "signal": "HOLD", "action_taken": "none", "ticket": null, "reason": "no_short_signal"}
+{"timestamp": "2026-11-19T16:13:14.055243", "scores": {}, "weights": {}, "final_score": 0.0, "signal": "HOLD", "action_taken": "none", "ticket": null, "reason": "no_short_signal"}
+{"timestamp": "2026-11-19T16:18:16.792820", "scores": {}, "weights": {}, "final_score": 0.0, "signal": "HOLD", "action_taken": "none", "ticket": null, "reason": "no_short_signal"}
+{"timestamp": "2026-11-19T16:23:19.733485", "scores": {}, "weights": {}, "final_score": 0.0, "signal": "HOLD", "action_taken": "none", "ticket": null, "reason": "risk_halt: halt: limite 2 ordini sell raggiunto (2)"}
+{"timestamp": "2026-11-19T16:28:23.110849", "scores": {}, "weights": {}, "final_score": 0.0, "signal": "HOLD", "action_taken": "none", "ticket": null, "reason": "risk_halt: halt: limite 2 ordini sell raggiunto (2)"}
+{"timestamp": "2026-11-19T16:33:26.413170", "scores": {}, "weights": {}, "final_score": 0.0, "signal": "HOLD", "action_taken": "none", "ticket": null, "reason": "risk_halt: halt: limite 2 ordini sell raggiunto (2)"}
+{"timestamp": "2026-11-19T16:38:30.288375", "scores": {}, "weights": {}, "final_score": 0.0, "signal": "HOLD", "action_taken": "none", "ticket": null, "reason": "risk_halt: halt: limite 2 ordini sell raggiunto (2)"}
+{"timestamp": "2026-11-19T16:43:34.120043", "scores": {}, "weights": {}, "final_score": 0.0, "signal": "HOLD", "action_taken": "none", "ticket": null, "reason": "risk_halt: halt: limite 2 ordini sell raggiunto (2)"}
+{"timestamp": "2026-11-19T16:48:37.485669", "scores": {}, "weights": {}, "final_score": 0.0, "signal": "HOLD", "action_taken": "none", "ticket": null, "reason": "risk_halt: halt: limite 2 ordini sell raggiunto (2)"}
+{"timestamp": "2026-11-19T16:53:40.962902", "scores": {}, "weights": {}, "final_score": 0.0, "signal": "HOLD", "action_taken": "none", "ticket": null, "reason": "risk_halt: halt: limite 2 ordini sell raggiunto (2)"}
+{"timestamp": "2026-11-19T16:58:45.075626", "scores": {}, "weights": {}, "final_score": 0.0, "signal": "HOLD", "action_taken": "none", "ticket": null, "reason": "risk_halt: halt: limite 2 ordini sell raggiunto (2)"}
