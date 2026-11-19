@@ -1,4 +1,20 @@
-# SCOUT ARXIV (aggiornato 2026-11-18T22:59:48.144616)
+# SCOUT ARXIV (aggiornato 2026-11-18T23:59:43.812498)
+
+### MoMoVL: Modality-Aware Adaptive Compression for On-Device Sparsely-Activated Vision-Language Models
+- **Link**: http://arxiv.org/abs/2611.23695v1
+- **Abstract**: The rise of the agentic web has been accompanied by growing demand for on-device Vision-Language Models (VLMs) that perform diverse cross-modal web tasks with enhanced privacy and reduced latency. Mix...
+
+### A Free Lunch: Gradient Averaging Achieves Optimal Statistical Efficiency in Newton Sketch
+- **Link**: http://arxiv.org/abs/2611.23671v1
+- **Abstract**: We study statistical inference for online sketched Newton methods, in which each Newton system is approximately solved by an inner randomized sketching solver. Existing work reveals a computational--s...
+
+### Entropy-Regularized Integrated Gradients for Stable Feature Attribution
+- **Link**: http://arxiv.org/abs/2611.23600v1
+- **Abstract**: Path-based attribution methods like Integrated Gradients (IG) are widely used to interpret neural networks, yet imperceptible input perturbations can drastically alter their attribution maps while lea...
+
+### Why Sub-4-Bit Vision CNNs Collapse and Where Mixed-Precision Recovery Stops
+- **Link**: http://arxiv.org/abs/2611.23445v1
+- **Abstract**: Deep vision models operating in resource-constrained environments depend heavily on low-bit quantization, yet compressing weights below 4 bits frequently induces catastrophic accuracy collapse. While ...
 
 ### The Illusion of Grounding: Do Vision-Language Models Weigh Retrieved Text and Images Like an Ideal Observer?
 - **Link**: http://arxiv.org/abs/2611.23127v1
@@ -23,20 +39,4 @@
 ### Path-Aligned Constraint Equivariance
 - **Link**: http://arxiv.org/abs/2611.22873v1
 - **Abstract**: Learned super-resolution of physical fields must satisfy structural constraints---such as divergence-free flow ($\nabla\cdot u=0$), curl-free fields ($\nabla\times u=0$), and pointwise sum-to-one norm...
-
-### Sub-Meter Canopy Height Synthesis from Sentinel-2 via Anchored Residual Flow
-- **Link**: http://arxiv.org/abs/2611.22636v1
-- **Abstract**: Canopy height models (CHMs) - per-pixel maps of vegetation top height - are essential for forest carbon accounting, wildfire fuel mapping, and tree-level ecology, yet sub-meter CHMs require airborne L...
-
-### COTTI: Contrastive Training and Time-Aware Inference for Robust Industrial Recommendation under Promotional Drift
-- **Link**: http://arxiv.org/abs/2611.22597v1
-- **Abstract**: Promotional events shift traffic composition, purchase behavior, and the scale of conversion probabilities on different time horizons. We present \textbf{COTTI} (\textbf{CO}ntrastive \textbf{T}raining...
-
-### Efficient Self-Supervised Adaptation of 3D Abdominal Vision-Language Model for Institution-Specific HCC Classification via Full Fine-Tuning and PEFT
-- **Link**: http://arxiv.org/abs/2611.22504v1
-- **Abstract**: Medical vision-language models (VLMs) capture cross-modal relationships between image and text, yet their adaptation to institution-specific clinical tasks remains underexplored. In this study, we fin...
-
-### Scaling Laws for Vision-Language Fusion
-- **Link**: http://arxiv.org/abs/2611.22351v1
-- **Abstract**: Vision-language models (VLMs) have emerged as central foundation models combining multimodal perception with text comprehension. While VLMs are traditionally built via late fusion by continued pre-tra...
 
