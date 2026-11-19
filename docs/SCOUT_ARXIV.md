@@ -1,4 +1,32 @@
-# SCOUT ARXIV (aggiornato 2026-11-19T00:59:39.191275)
+# SCOUT ARXIV (aggiornato 2026-11-19T01:59:50.275334)
+
+### Stock bubbles in limited participation models with power utilities
+- **Link**: http://arxiv.org/abs/2611.24912v1
+- **Abstract**: We prove that the equilibrium state-price deflated cum-dividend stock-price process in Guasoni, Larsen, and Leoni (2025) is a strict local martingale. Our result is based on proving that the unrestric...
+
+### Vibe-Trading: Towards Agent-Native Trading
+- **Link**: http://arxiv.org/abs/2611.24845v1
+- **Abstract**: Existing AI agents can retrieve information, call tools, run experiments, and produce multi-step outputs. Yet most are built around relatively static workflows and struggle to preserve reliable state ...
+
+### Reconstruction vs. Prediction Pre-Training of Discrete Video Representations for Continuous Control
+- **Link**: http://arxiv.org/abs/2611.24781v1
+- **Abstract**: Self-supervised video encoders are commonly trained to either reconstruct pixels or predict latent features, yet it remains unclear how these objectives shape representations for downstream dynamics. ...
+
+### When Does Continual Pre-Training Help? A Controlled Study of Dialectal Adaptation for Québec French
+- **Link**: http://arxiv.org/abs/2611.24699v1
+- **Abstract**: Continual pre-training (CPT) is widely used to adapt pretrained language models to dialectal and non-standard language varieties, yet it remains unclear when this additional training is necessary, wha...
+
+### GateWatch: Low-Overhead LLM Monitoring with Boolean Circuits
+- **Link**: http://arxiv.org/abs/2611.24619v1
+- **Abstract**: As large language models (LLMs) and LLM-based agents are increasingly deployed, monitoring their behavior becomes important for detecting unsafe or unintended actions. Activation probes offer an effic...
+
+### DyNA-Mixer: Decoupling Time and Topology for Scalable Dynamic Node Affinity Prediction
+- **Link**: http://arxiv.org/abs/2611.24426v1
+- **Abstract**: Continuous-time dynamic graphs preserve the ordering, timing, and evolving strength of interactions that static snapshots discard, making dynamic graph mining essential for evolving systems such as re...
+
+### MINT: Meeting-time Indicators for Truncation in Multi-Step Off-Policy RL
+- **Link**: http://arxiv.org/abs/2611.24413v1
+- **Abstract**: Many multi-step off-policy temporal-difference methods handle policy mismatch through products of per-step trace coefficients, leading to a trade-off between variance control and long-horizon signal. ...
 
 ### Can Weight-Space Programming Alter Learned Ethical Priorities?
 - **Link**: http://arxiv.org/abs/2611.24330v1
@@ -11,32 +39,4 @@
 ### OMNIS+: Semantic RAN Slicing and Quantization for Dynamic Split Neural Networks
 - **Link**: http://arxiv.org/abs/2611.23977v1
 - **Abstract**: Edge computing enables resource-constrained devices to execute machine learning (ML) applications via task offloading, with radio access network (RAN) slicing playing a crucial role in provisioning jo...
-
-### How Complete Must an Environment Be to Train a Capable GUI Agent?
-- **Link**: http://arxiv.org/abs/2611.23946v1
-- **Abstract**: Graphical user interface (GUI) agents are widely trained in executable GUI environments. To lower cost, build environments in batches, and reduce manual effort, each work trades away part of the envir...
-
-### CoSlice: Coordinated Multi-Agent Reinforcement Learning for 5G Network Slicing Allocation
-- **Link**: http://arxiv.org/abs/2611.23909v1
-- **Abstract**: Radio Access Network (RAN) slicing is a shared resource allocation problem: each slice seeks to satisfy its Service Level Agreement (SLA) with minimal radio-resource consumption, while all slices comp...
-
-### MoMoVL: Modality-Aware Adaptive Compression for On-Device Sparsely-Activated Vision-Language Models
-- **Link**: http://arxiv.org/abs/2611.23695v1
-- **Abstract**: The rise of the agentic web has been accompanied by growing demand for on-device Vision-Language Models (VLMs) that perform diverse cross-modal web tasks with enhanced privacy and reduced latency. Mix...
-
-### A Free Lunch: Gradient Averaging Achieves Optimal Statistical Efficiency in Newton Sketch
-- **Link**: http://arxiv.org/abs/2611.23671v1
-- **Abstract**: We study statistical inference for online sketched Newton methods, in which each Newton system is approximately solved by an inner randomized sketching solver. Existing work reveals a computational--s...
-
-### Entropy-Regularized Integrated Gradients for Stable Feature Attribution
-- **Link**: http://arxiv.org/abs/2611.23600v1
-- **Abstract**: Path-based attribution methods like Integrated Gradients (IG) are widely used to interpret neural networks, yet imperceptible input perturbations can drastically alter their attribution maps while lea...
-
-### Why Sub-4-Bit Vision CNNs Collapse and Where Mixed-Precision Recovery Stops
-- **Link**: http://arxiv.org/abs/2611.23445v1
-- **Abstract**: Deep vision models operating in resource-constrained environments depend heavily on low-bit quantization, yet compressing weights below 4 bits frequently induces catastrophic accuracy collapse. While ...
-
-### The Illusion of Grounding: Do Vision-Language Models Weigh Retrieved Text and Images Like an Ideal Observer?
-- **Link**: http://arxiv.org/abs/2611.23127v1
-- **Abstract**: Retrieval-augmented vision-language models (VLMs) answer from two sources of evidence that can each fail: the retrieved text can be wrong or noisy, and the image can be degraded or contradicted. We in...
 
