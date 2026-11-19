@@ -1,6 +1,6 @@
-# SCOUT GITHUB (aggiornato 2026-11-19T07:00:00.716837)
+# SCOUT GITHUB (aggiornato 2026-11-19T07:59:56.294443)
 
-### TauricResearch/TradingAgents (⭐ 123122)
+### TauricResearch/TradingAgents (⭐ 123128)
 - **Desc**: TradingAgents: Multi-Agents LLM Financial Trading Framework
 - **URL**: https://github.com/TauricResearch/TradingAgents
 - **Creato**: 2024-12-28
@@ -10,7 +10,7 @@
 - **URL**: https://github.com/freqtrade/freqtrade
 - **Creato**: 2017-05-17
 
-### vnpy/vnpy (⭐ 46427)
+### vnpy/vnpy (⭐ 46426)
 - **Desc**: 基于Python的开源量化交易平台开发框架
 - **URL**: https://github.com/vnpy/vnpy
 - **Creato**: 2015-03-02
@@ -20,52 +20,52 @@
 - **URL**: https://github.com/ccxt/ccxt
 - **Creato**: 2017-05-14
 
-### HKUDS/Vibe-Trading (⭐ 38515)
+### HKUDS/Vibe-Trading (⭐ 38516)
 - **Desc**: "Vibe-Trading: Your Personal Trading Agent"
 - **URL**: https://github.com/HKUDS/Vibe-Trading
 - **Creato**: 2026-04-01
 
-### NousResearch/hermes-agent (⭐ 264607)
+### NousResearch/hermes-agent (⭐ 264621)
 - **Desc**: The agent that grows with you
 - **URL**: https://github.com/NousResearch/hermes-agent
 - **Creato**: 2025-07-22
 
-### langgenius/dify (⭐ 161478)
+### langgenius/dify (⭐ 161479)
 - **Desc**: Build Agentic workflows, RAG pipelines, with rich AI model and tool support on one collaborative workspace. Deploy on cloud, VPC, or self-hosted, so teams move from prototype to production without rebuilding the stack.
 - **URL**: https://github.com/langgenius/dify
 - **Creato**: 2023-04-12
 
-### langchain-ai/langchain (⭐ 149879)
+### langchain-ai/langchain (⭐ 149883)
 - **Desc**: The agent engineering platform.
 - **URL**: https://github.com/langchain-ai/langchain
 - **Creato**: 2022-10-17
 
-### Shubhamsaboo/awesome-llm-apps (⭐ 145050)
+### Shubhamsaboo/awesome-llm-apps (⭐ 145054)
 - **Desc**: 100+ AI Agents, Agent Skills and RAG Apps - Free and Open Source.
 - **URL**: https://github.com/Shubhamsaboo/awesome-llm-apps
 - **Creato**: 2024-04-29
 
-### Graphify-Labs/graphify (⭐ 150350)
+### Graphify-Labs/graphify (⭐ 150375)
 - **Desc**: Turn any codebase, with its docs, SQL schemas, configs, and PDFs, into a queryable knowledge graph. A /graphify skill for Claude Code, Cursor, Codex, and Gemini CLI: local deterministic AST parsing, every edge explained, no vector store.
 - **URL**: https://github.com/Graphify-Labs/graphify
 - **Creato**: 2026-04-03
 
-### browser-use/browser-use (⭐ 121470)
+### browser-use/browser-use (⭐ 121477)
 - **Desc**: Open-source Python library for AI browser agents, plus Browser Use Cloud: stealth browsers and a hosted agent API.
 - **URL**: https://github.com/browser-use/browser-use
 - **Creato**: 2024-10-31
 
-### Panniantong/Agent-Reach (⭐ 113162)
+### Panniantong/Agent-Reach (⭐ 113174)
 - **Desc**: Give your AI agent eyes to see the entire internet. Read & search Twitter, Reddit, YouTube, GitHub, Bilibili, XiaoHongShu — one CLI, zero API fees.
 - **URL**: https://github.com/Panniantong/Agent-Reach
 - **Creato**: 2026-02-24
 
-### D4Vinci/Scrapling (⭐ 104292)
+### D4Vinci/Scrapling (⭐ 104304)
 - **Desc**: 🕷️ The BEST Web Scraping framework that handles everything from a single request to a full-scale crawl! Don't be shy, join here: https://discord.gg/EMgGbDceNQ and follow here for daily tips and tricks: https://x.com/Scrapling_dev
 - **URL**: https://github.com/D4Vinci/Scrapling
 - **Creato**: 2024-10-13
 
-### microsoft/qlib (⭐ 50409)
+### microsoft/qlib (⭐ 50411)
 - **Desc**: Qlib is an AI-oriented Quant investment platform that aims to use AI tech to empower Quant Research, from exploring ideas to implementing productions. Qlib supports diverse ML modeling paradigms, including supervised learning, market dynamics modeling, and RL, and is now equipped with https://github.com/microsoft/RD-Agent to automate R&D process.
 - **URL**: https://github.com/microsoft/qlib
 - **Creato**: 2020-08-14
@@ -75,7 +75,7 @@
 - **URL**: https://github.com/bbfamily/abu
 - **Creato**: 2016-09-19
 
-### paperswithbacktest/awesome-systematic-trading (⭐ 15457)
+### paperswithbacktest/awesome-systematic-trading (⭐ 15456)
 - **Desc**: A curated list of awesome libraries, packages, strategies, books, blogs, tutorials for systematic trading.
 - **URL**: https://github.com/paperswithbacktest/awesome-systematic-trading
 - **Creato**: 2022-02-05

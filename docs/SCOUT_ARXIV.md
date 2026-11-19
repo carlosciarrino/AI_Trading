@@ -1,4 +1,4 @@
-# SCOUT ARXIV (aggiornato 2026-11-19T06:59:47.519142)
+# SCOUT ARXIV (aggiornato 2026-11-19T07:59:43.039474)
 
 ### Stock bubbles in limited participation models with power utilities
 - **Link**: http://arxiv.org/abs/2611.24912v1
