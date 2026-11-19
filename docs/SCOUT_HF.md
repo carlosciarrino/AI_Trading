@@ -1,17 +1,17 @@
-# SCOUT HUGGING FACE (aggiornato 2026-11-18T23:59:43.851530)
+# SCOUT HUGGING FACE (aggiornato 2026-11-19T00:59:39.288929)
 
 ### higurashi-ai/Haru-4B
-- **Downloads**: 5314 | **Likes**: 699
+- **Downloads**: 5314 | **Likes**: 712
 - **Task**: audio-to-audio
 - **URL**: https://huggingface.co/higurashi-ai/Haru-4B
 
 ### harness-hub/Qwen3.8-27B-pi-adapted
-- **Downloads**: 377 | **Likes**: 425
+- **Downloads**: 377 | **Likes**: 434
 - **Task**: image-text-to-text
 - **URL**: https://huggingface.co/harness-hub/Qwen3.8-27B-pi-adapted
 
 ### Lightricks/LTX-2.5
-- **Downloads**: 2871190 | **Likes**: 12569
+- **Downloads**: 2871190 | **Likes**: 12574
 - **Task**: image-to-video
 - **URL**: https://huggingface.co/Lightricks/LTX-2.5
 
@@ -21,32 +21,32 @@
 - **URL**: https://huggingface.co/thinkingmachines/Inkling-2-Small
 
 ### MiniMaxAI/MiniMax-H3-Image
-- **Downloads**: 759661 | **Likes**: 1585
+- **Downloads**: 759661 | **Likes**: 1586
 - **Task**: text-to-image
 - **URL**: https://huggingface.co/MiniMaxAI/MiniMax-H3-Image
 
 ### Qwen/Qwen3.8-27B
-- **Downloads**: 6888351 | **Likes**: 20562
+- **Downloads**: 6888351 | **Likes**: 20565
 - **Task**: image-text-to-text
 - **URL**: https://huggingface.co/Qwen/Qwen3.8-27B
 
 ### tencent/Hy4-flash
-- **Downloads**: 159 | **Likes**: 238
+- **Downloads**: 159 | **Likes**: 240
 - **Task**: image-text-to-text
 - **URL**: https://huggingface.co/tencent/Hy4-flash
 
 ### n4ze3m/tiny-voca
-- **Downloads**: 4430 | **Likes**: 290
+- **Downloads**: 4430 | **Likes**: 291
 - **Task**: text-to-speech
 - **URL**: https://huggingface.co/n4ze3m/tiny-voca
 
 ### apple/FastFrames-L
-- **Downloads**: 0 | **Likes**: 220
+- **Downloads**: 0 | **Likes**: 222
 - **Task**: text-to-video
 - **URL**: https://huggingface.co/apple/FastFrames-L
 
 ### meituan-longcat/LongCat-Video-Avatar-1.6
-- **Downloads**: 1226 | **Likes**: 265
+- **Downloads**: 1226 | **Likes**: 266
 - **Task**: N/A
 - **URL**: https://huggingface.co/meituan-longcat/LongCat-Video-Avatar-1.6
 
@@ -56,22 +56,22 @@
 - **URL**: https://huggingface.co/maxwell-model/Maxwell-V1-Flash
 
 ### chatrlabs/Qwen-Image-2.1-Uncensored-Omni-Quantized
-- **Downloads**: 224306 | **Likes**: 621
+- **Downloads**: 224306 | **Likes**: 625
 - **Task**: text-to-image
 - **URL**: https://huggingface.co/chatrlabs/Qwen-Image-2.1-Uncensored-Omni-Quantized
 
 ### DavidAU/Qwen3.8-27B-TURBO-Fable-Cold-Fusion-735-882-Heretic-Uncensored-NEO-CODER-MAX-MTP-GGUF
-- **Downloads**: 1773418 | **Likes**: 3356
+- **Downloads**: 1773418 | **Likes**: 3357
 - **Task**: image-text-to-text
 - **URL**: https://huggingface.co/DavidAU/Qwen3.8-27B-TURBO-Fable-Cold-Fusion-735-882-Heretic-Uncensored-NEO-CODER-MAX-MTP-GGUF
 
 ### sensenova/SenseNova-Loop-9B
-- **Downloads**: 964 | **Likes**: 329
+- **Downloads**: 964 | **Likes**: 331
 - **Task**: image-text-to-text
 - **URL**: https://huggingface.co/sensenova/SenseNova-Loop-9B
 
 ### unsloth/Qwen3.8-27B-GGUF
-- **Downloads**: 6998076 | **Likes**: 6188
+- **Downloads**: 6998076 | **Likes**: 6190
 - **Task**: N/A
 - **URL**: https://huggingface.co/unsloth/Qwen3.8-27B-GGUF
 

@@ -1,4 +1,24 @@
-# SCOUT ARXIV (aggiornato 2026-11-18T23:59:43.812498)
+# SCOUT ARXIV (aggiornato 2026-11-19T00:59:39.191275)
+
+### Can Weight-Space Programming Alter Learned Ethical Priorities?
+- **Link**: http://arxiv.org/abs/2611.24330v1
+- **Abstract**: We investigate whether a weight edit can alter how a model trades off honoring a commitment against benefiting more people. In a concept-supervised text model, we alter fitted choice weights so that t...
+
+### Algorithmic Market Making Can Lead to Rough Volatility Through the Order Book
+- **Link**: http://arxiv.org/abs/2611.24028v1
+- **Abstract**: Existing work suggests that markets can show volatility with paths rougher than those of Brownian motion. In theory this can happen when the order flow is close to instability with memory that decays ...
+
+### OMNIS+: Semantic RAN Slicing and Quantization for Dynamic Split Neural Networks
+- **Link**: http://arxiv.org/abs/2611.23977v1
+- **Abstract**: Edge computing enables resource-constrained devices to execute machine learning (ML) applications via task offloading, with radio access network (RAN) slicing playing a crucial role in provisioning jo...
+
+### How Complete Must an Environment Be to Train a Capable GUI Agent?
+- **Link**: http://arxiv.org/abs/2611.23946v1
+- **Abstract**: Graphical user interface (GUI) agents are widely trained in executable GUI environments. To lower cost, build environments in batches, and reduce manual effort, each work trades away part of the envir...
+
+### CoSlice: Coordinated Multi-Agent Reinforcement Learning for 5G Network Slicing Allocation
+- **Link**: http://arxiv.org/abs/2611.23909v1
+- **Abstract**: Radio Access Network (RAN) slicing is a shared resource allocation problem: each slice seeks to satisfy its Service Level Agreement (SLA) with minimal radio-resource consumption, while all slices comp...
 
 ### MoMoVL: Modality-Aware Adaptive Compression for On-Device Sparsely-Activated Vision-Language Models
 - **Link**: http://arxiv.org/abs/2611.23695v1
@@ -19,24 +39,4 @@
 ### The Illusion of Grounding: Do Vision-Language Models Weigh Retrieved Text and Images Like an Ideal Observer?
 - **Link**: http://arxiv.org/abs/2611.23127v1
 - **Abstract**: Retrieval-augmented vision-language models (VLMs) answer from two sources of evidence that can each fail: the retrieved text can be wrong or noisy, and the image can be degraded or contradicted. We in...
-
-### Pareto-Informed Smart "Predict, then Optimize" for Multi-Objective Combinatorial Problems
-- **Link**: http://arxiv.org/abs/2611.23076v1
-- **Abstract**: Many real-world planning applications, from logistics, routing to resource allocation, give rise to optimization problems that need to balance multiple, conflicting objectives. While machine learning ...
-
-### Variance Restoration over Covariance Rank: Memory-Budgeted Analytic Continual Learning
-- **Link**: http://arxiv.org/abs/2611.23040v1
-- **Abstract**: Analytic continual learning replaces iterative gradient updates with closed-form ridge regression over frozen pre-trained representations, summarizing all past sessions in two running sufficient stati...
-
-### When Anchors Shift the Target: Advantage-Gated Adaptation for Diffusion Reinforcement Learning
-- **Link**: http://arxiv.org/abs/2611.23038v1
-- **Abstract**: Forward-process reinforcement learning adapts diffusion and flow-matching models by re-noising rewarded generations into regression targets. Because negative advantages induce concave updates with unb...
-
-### Residual-Guided Lightweight Reinforcement Learning for Risk-Aware Trajectory Selection with a Frozen World Model
-- **Link**: http://arxiv.org/abs/2611.22998v1
-- **Abstract**: In automated driving, world models provide future scene predictions for evaluating candidate trajectories, but fixed selection rules may not capture scene-dependent trade-offs. We propose a residual-g...
-
-### Path-Aligned Constraint Equivariance
-- **Link**: http://arxiv.org/abs/2611.22873v1
-- **Abstract**: Learned super-resolution of physical fields must satisfy structural constraints---such as divergence-free flow ($\nabla\cdot u=0$), curl-free fields ($\nabla\times u=0$), and pointwise sum-to-one norm...
 
