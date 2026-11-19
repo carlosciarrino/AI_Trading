@@ -1,39 +1,39 @@
-# SCOUT HUGGING FACE (aggiornato 2026-11-19T18:59:39.285036)
+# SCOUT HUGGING FACE (aggiornato 2026-11-19T19:59:37.627254)
 
 ### higurashi-ai/Haru-4B
-- **Downloads**: 6266 | **Likes**: 3615
+- **Downloads**: 6266 | **Likes**: 3623
 - **Task**: audio-to-audio
 - **URL**: https://huggingface.co/higurashi-ai/Haru-4B
 
 ### tencent/Hy4-flash
-- **Downloads**: 2053 | **Likes**: 333
+- **Downloads**: 2053 | **Likes**: 339
 - **Task**: image-text-to-text
 - **URL**: https://huggingface.co/tencent/Hy4-flash
 
 ### apple/FastFrames-L
-- **Downloads**: 0 | **Likes**: 321
+- **Downloads**: 0 | **Likes**: 326
 - **Task**: text-to-video
 - **URL**: https://huggingface.co/apple/FastFrames-L
 
 ### harness-hub/Qwen3.8-27B-pi-adapted
-- **Downloads**: 1320 | **Likes**: 730
+- **Downloads**: 1320 | **Likes**: 734
 - **Task**: image-text-to-text
 - **URL**: https://huggingface.co/harness-hub/Qwen3.8-27B-pi-adapted
 
 ### Qwen/Qwen3.8-27B
-- **Downloads**: 6647301 | **Likes**: 20671
+- **Downloads**: 6647301 | **Likes**: 20678
 - **Task**: image-text-to-text
 - **URL**: https://huggingface.co/Qwen/Qwen3.8-27B
 
-### MiniMaxAI/MiniMax-H3-Image
-- **Downloads**: 821710 | **Likes**: 1643
-- **Task**: text-to-image
-- **URL**: https://huggingface.co/MiniMaxAI/MiniMax-H3-Image
-
 ### inworld/voice-isolator
-- **Downloads**: 0 | **Likes**: 242
+- **Downloads**: 0 | **Likes**: 246
 - **Task**: audio-to-audio
 - **URL**: https://huggingface.co/inworld/voice-isolator
+
+### MiniMaxAI/MiniMax-H3-Image
+- **Downloads**: 821710 | **Likes**: 1644
+- **Task**: text-to-image
+- **URL**: https://huggingface.co/MiniMaxAI/MiniMax-H3-Image
 
 ### maxwell-model/Maxwell-V1-Flash
 - **Downloads**: 1703 | **Likes**: 287
@@ -41,24 +41,24 @@
 - **URL**: https://huggingface.co/maxwell-model/Maxwell-V1-Flash
 
 ### Lightricks/LTX-2.5
-- **Downloads**: 2934937 | **Likes**: 12731
+- **Downloads**: 2934937 | **Likes**: 12733
 - **Task**: image-to-video
 - **URL**: https://huggingface.co/Lightricks/LTX-2.5
 
 ### chatrlabs/Qwen-Image-2.1-Uncensored-Omni-Quantized
-- **Downloads**: 268540 | **Likes**: 689
+- **Downloads**: 268540 | **Likes**: 692
 - **Task**: text-to-image
 - **URL**: https://huggingface.co/chatrlabs/Qwen-Image-2.1-Uncensored-Omni-Quantized
 
-### thinkingmachines/Inkling-2-Small
-- **Downloads**: 37318 | **Likes**: 582
-- **Task**: image-text-to-text
-- **URL**: https://huggingface.co/thinkingmachines/Inkling-2-Small
-
 ### sensenova/SenseNova-Loop-9B
-- **Downloads**: 1447 | **Likes**: 384
+- **Downloads**: 1447 | **Likes**: 386
 - **Task**: image-text-to-text
 - **URL**: https://huggingface.co/sensenova/SenseNova-Loop-9B
+
+### thinkingmachines/Inkling-2-Small
+- **Downloads**: 37318 | **Likes**: 583
+- **Task**: image-text-to-text
+- **URL**: https://huggingface.co/thinkingmachines/Inkling-2-Small
 
 ### nvidia/NVIDIA-Nemotron-3.5-Bolt-E4B-4GB
 - **Downloads**: 172088 | **Likes**: 619

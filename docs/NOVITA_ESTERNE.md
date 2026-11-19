@@ -1,8 +1,12 @@
-# NOVITA' ESTERNE (aggiornato 2026-11-19T18:59:59.015578)
+# NOVITA' ESTERNE (aggiornato 2026-11-19T19:59:41.806014)
 
 ## GitHub (Python, ultimi 60gg, >30 stelle)
 
-- (nessun risultato)
+- **Gathin23/cleanyourtv** (⭐ 59589) — Debloat any Android or Google TV over Wi-Fi and get an Apple TV-style home. (https://github.com/Gathin23/cleanyourtv)
+- **NandhaKishorM/laya** (⭐ 35711) — Non-autoregressive System 1 decision engine. Typed choice, score and yes/no decisions over any text in a single forward pass, in 100+ languages, with  (https://github.com/NandhaKishorM/laya)
+- **deepseek-ai/DeepInfer** (⭐ 26236) — DeepInfer: High-performance, large-scale inference framework for DeepSeek models (https://github.com/deepseek-ai/DeepInfer)
+- **browser-use/jev-ultrafast** (⭐ 24678) — Fastest and cheapest web agent (https://github.com/browser-use/jev-ultrafast)
+- **google-research/harness2** (⭐ 24477) —  (https://github.com/google-research/harness2)
 
 ## HuggingFace (trending)
 

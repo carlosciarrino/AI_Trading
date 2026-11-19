@@ -1,0 +1,25 @@
+
+Running check 'Fase 1: Preparazione'
+=================
+APT Repositories:
+=================
+Repos:
+  No active apt repos in: /etc/apt/sources.list
+  Active apt repos in: /etc/apt/sources.list.d/additional-repositories.list
+    1: deb [signed-by=/etc/apt/keyrings/winehq-archive.key] https://dl.winehq.org/wine-builds/ubuntu/ jammy main
+  Active apt repos in: /etc/apt/sources.list.d/ngrok.list
+    1: deb https://ngrok-agent.s3.amazonaws.com buster main
+  Active apt repos in: /etc/apt/sources.list.d/official-package-repositories.list
+    1: deb http://packages.linuxmint.com victoria main upstream import backport
+    2: deb http://archive.ubuntu.com/ubuntu jammy main restricted universe multiverse
+    3: deb http://archive.ubuntu.com/ubuntu jammy-updates main restricted universe multiverse
+    4: deb http://archive.ubuntu.com/ubuntu jammy-backports main restricted universe multiverse
+    5: deb http://security.ubuntu.com/ubuntu/ jammy-security main restricted universe multiverse
+  Active apt repos in: /etc/apt/sources.list.d/tailscale.list
+    1: deb [signed-by=/usr/share/keyrings/tailscale-archive-keyring.gpg] https://pkgs.tailscale.com/stable/ubuntu jammy main
+  Active apt repos in: /etc/apt/sources.list.d/brave-browser-release.sources
+    1: deb [arch=amd64 arm64] https://brave-browser-apt-release.s3.brave.com stable main
+=================
+
+Running check 'Versione di Linux Mint'
+mintupgrade-inhibit-power: nessun processo trovato
