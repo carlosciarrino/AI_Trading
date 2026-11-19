@@ -1,12 +1,12 @@
-# NOVITA' ESTERNE (aggiornato 2026-11-19T09:59:41.591660)
+# NOVITA' ESTERNE (aggiornato 2026-11-19T10:59:34.172105)
 
 ## GitHub (Python, ultimi 60gg, >30 stelle)
 
-- **Gathin23/cleanyourtv** (⭐ 59486) — Debloat any Android or Google TV over Wi-Fi and get an Apple TV-style home. (https://github.com/Gathin23/cleanyourtv)
-- **NandhaKishorM/laya** (⭐ 35689) — Non-autoregressive System 1 decision engine. Typed choice, score and yes/no decisions over any text in a single forward pass, in 100+ languages, with  (https://github.com/NandhaKishorM/laya)
-- **deepseek-ai/DeepInfer** (⭐ 26227) — DeepInfer: High-performance, large-scale inference framework for DeepSeek models (https://github.com/deepseek-ai/DeepInfer)
-- **browser-use/jev-ultrafast** (⭐ 24668) — Fastest and cheapest web agent (https://github.com/browser-use/jev-ultrafast)
-- **google-research/harness2** (⭐ 24449) —  (https://github.com/google-research/harness2)
+- **Gathin23/cleanyourtv** (⭐ 59498) — Debloat any Android or Google TV over Wi-Fi and get an Apple TV-style home. (https://github.com/Gathin23/cleanyourtv)
+- **NandhaKishorM/laya** (⭐ 35692) — Non-autoregressive System 1 decision engine. Typed choice, score and yes/no decisions over any text in a single forward pass, in 100+ languages, with  (https://github.com/NandhaKishorM/laya)
+- **deepseek-ai/DeepInfer** (⭐ 26228) — DeepInfer: High-performance, large-scale inference framework for DeepSeek models (https://github.com/deepseek-ai/DeepInfer)
+- **browser-use/jev-ultrafast** (⭐ 24672) — Fastest and cheapest web agent (https://github.com/browser-use/jev-ultrafast)
+- **google-research/harness2** (⭐ 24455) —  (https://github.com/google-research/harness2)
 
 ## HuggingFace (trending)
 
