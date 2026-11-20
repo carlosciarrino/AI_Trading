@@ -1,4 +1,4 @@
-# SCOUT HUGGING FACE (aggiornato 2026-11-19T20:58:57.790073)
+# SCOUT HUGGING FACE (aggiornato 2026-11-19T21:00:36.104906)
 
 ### higurashi-ai/Haru-4B
 - **Downloads**: 6266 | **Likes**: 3634

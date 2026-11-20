@@ -1,4 +1,4 @@
-# SCOUT GITHUB (aggiornato 2026-11-19T20:59:10.893356)
+# SCOUT GITHUB (aggiornato 2026-11-19T21:01:04.453371)
 
 ### TauricResearch/TradingAgents (⭐ 123177)
 - **Desc**: TradingAgents: Multi-Agents LLM Financial Trading Framework
@@ -35,7 +35,7 @@
 - **URL**: https://github.com/langgenius/dify
 - **Creato**: 2023-04-12
 
-### langchain-ai/langchain (⭐ 149925)
+### langchain-ai/langchain (⭐ 149926)
 - **Desc**: The agent engineering platform.
 - **URL**: https://github.com/langchain-ai/langchain
 - **Creato**: 2022-10-17
@@ -44,26 +44,6 @@
 - **Desc**: 100+ AI Agents, Agent Skills and RAG Apps - Free and Open Source.
 - **URL**: https://github.com/Shubhamsaboo/awesome-llm-apps
 - **Creato**: 2024-04-29
-
-### Graphify-Labs/graphify (⭐ 150633)
-- **Desc**: Turn any codebase, with its docs, SQL schemas, configs, and PDFs, into a queryable knowledge graph. A /graphify skill for Claude Code, Cursor, Codex, and Gemini CLI: local deterministic AST parsing, every edge explained, no vector store.
-- **URL**: https://github.com/Graphify-Labs/graphify
-- **Creato**: 2026-04-03
-
-### browser-use/browser-use (⭐ 121520)
-- **Desc**: Open-source Python library for AI browser agents, plus Browser Use Cloud: stealth browsers and a hosted agent API.
-- **URL**: https://github.com/browser-use/browser-use
-- **Creato**: 2024-10-31
-
-### Panniantong/Agent-Reach (⭐ 113323)
-- **Desc**: Give your AI agent eyes to see the entire internet. Read & search Twitter, Reddit, YouTube, GitHub, Bilibili, XiaoHongShu — one CLI, zero API fees.
-- **URL**: https://github.com/Panniantong/Agent-Reach
-- **Creato**: 2026-02-24
-
-### D4Vinci/Scrapling (⭐ 104421)
-- **Desc**: 🕷️ The BEST Web Scraping framework that handles everything from a single request to a full-scale crawl! Don't be shy, join here: https://discord.gg/EMgGbDceNQ and follow here for daily tips and tricks: https://x.com/Scrapling_dev
-- **URL**: https://github.com/D4Vinci/Scrapling
-- **Creato**: 2024-10-13
 
 ### microsoft/qlib (⭐ 50428)
 - **Desc**: Qlib is an AI-oriented Quant investment platform that aims to use AI tech to empower Quant Research, from exploring ideas to implementing productions. Qlib supports diverse ML modeling paradigms, including supervised learning, market dynamics modeling, and RL, and is now equipped with https://github.com/microsoft/RD-Agent to automate R&D process.
