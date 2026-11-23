@@ -1,42 +1,42 @@
-# SCOUT ARXIV (aggiornato 2026-11-22T12:07:52.380807)
+# SCOUT ARXIV (aggiornato 2026-11-23T07:20:02.523125)
 
-### Depth Pro 2: Sharp and Temporally Consistent Metric Monocular Depth
-- **Link**: http://arxiv.org/abs/2611.26603v1
-- **Abstract**: We present Depth Pro 2, an approach to estimating dense metric depth for images and video at full resolution. By analyzing prior methods for monocular depth estimation, we find that they commonly trad...
+### Mixture of Latent Recursions for Low-Rank Adaptation
+- **Link**: http://arxiv.org/abs/2611.27823v1
+- **Abstract**: Low-Rank Adaptation (LoRA) performs task-specific adaptation using a fixed low-rank architecture, whose expressiveness is typically increased by enlarging or adding learnable modules with a proportion...
 
-### Scaling classical hardware for accurate real-time quantum error correction
-- **Link**: http://arxiv.org/abs/2611.26447v1
-- **Abstract**: Fault-tolerant quantum computation requires a classical decoder fast enough to process syndrome measurements at the rate at which they are generated, and to return its decisions with low latency. This...
+### Beyond Resolution: Inference-Time Parameterized Temporal Consistency in Generative Regional Climate Downscaling
+- **Link**: http://arxiv.org/abs/2611.27641v1
+- **Abstract**: GCM-to-RCM downscaling emulation is dominated by generative diffusion models, but most existing work evaluates skill only per timestep, treating each field as an independent snapshot. This leaves open...
 
-### Budget Internalization: Fixed-Budget RLVR Trades Test-Time Scaling for In-Budget Accuracy
-- **Link**: http://arxiv.org/abs/2611.26172v1
-- **Abstract**: Reasoning models often become more accurate when they can generate longer answers at test time. This behavior is known as test-time scaling. However, RL with verifiable rewards (RLVR) usually trains t...
+### Circular Predictive Coding Unlocks Effective Depth
+- **Link**: http://arxiv.org/abs/2611.27610v1
+- **Abstract**: Predictive coding networks perform credit assignment through an energy minimization process. Despite their ability to train models with arbitrary network topologies, they have mostly been used to trai...
 
-### The Delayed Societal Cost of Unfairness
-- **Link**: http://arxiv.org/abs/2611.26030v1
-- **Abstract**: Fair machine learning typically evaluates the societal costs of a decision policy -- the loss incurred by the decision-maker (DM) and the unfair distribution of costs among demographic groups of decis...
+### Spiking Neural Networks Incrementally Track Firing-Rate Networks
+- **Link**: http://arxiv.org/abs/2611.27322v1
+- **Abstract**: Understanding how spiking neural networks (SNNs) efficiently process data streams is key to (i) studying how biological brains conserve energy for lifelong predictions and (ii) enabling efficient cont...
 
-### Trading Before a Committed Rebalance
-- **Link**: http://arxiv.org/abs/2611.25762v1
-- **Abstract**: An institution must complete a portfolio adjustment, but traders who prepare inventory for it can choose whether to participate. We study how public forecasts affect the institution's cost in a Bayesi...
+### Preserving Pretrained CFG Structure in RL for Diffusion Models with Conditional Contrast Regularization
+- **Link**: http://arxiv.org/abs/2611.27288v1
+- **Abstract**: Reinforcement Learning (RL) has become an important component in the post-training of diffusion models. In practice, however, standard RL often improves the target reward without reliably preserving h...
 
-### Differentially Private Score Estimation with Applications to Score-Based Generative Models
-- **Link**: http://arxiv.org/abs/2611.25536v1
-- **Abstract**: Estimating the score function of a distribution plays a central role in statistics and machine learning, with applications in distribution estimation, sampling, and score-based generative modeling. Ho...
+### Proactive Defense Benchmark against Deepfake Generation
+- **Link**: http://arxiv.org/abs/2611.27253v1
+- **Abstract**: Despite the proliferation of proactive defenses against deepfakes, the lack of a unified evaluation protocol precludes fair comparison and masks critical vulnerabilities. To bridge this gap, we presen...
 
-### Causal Discovery with False Positive Error Control
-- **Link**: http://arxiv.org/abs/2611.25376v1
-- **Abstract**: Causal discovery methods produce data-driven hypotheses about causal relationships, which may become new scientific findings or inform decisions about downstream interventions. In such settings, false...
+### cmHC: Balancing Stream Mixing in Hyper-Connections via Geometric Contraction
+- **Link**: http://arxiv.org/abs/2611.27193v1
+- **Abstract**: Manifold-constrained Hyper-Connections (mHC) extends residual connections to multiple streams and stabilizes residual propagation by constraining stream-mixing residual matrices to the Birkhoff polyto...
 
-### Class-Conditional Conformal Triage for ICAO Face-Image Compliance under Class Imbalance
-- **Link**: http://arxiv.org/abs/2611.25342v1
-- **Abstract**: Automated ICAO/ISO face-image compliance analysers provide criterion-level pass/fail decisions, yet these verdicts do not quantify uncertainty when deciding whether to accept, reject, or retake a phot...
+### Federated and Balanced $k$-means: Communication Efficiency, Privacy, and Heterogeneity
+- **Link**: http://arxiv.org/abs/2611.27114v1
+- **Abstract**: Collaborating on data across organizations in healthcare and finance demands methods that preserve privacy while enabling effective analysis. Vertical Federated Learning (VFL) facilitates clustering a...
 
-### Prescribed Bayesian Efficiency under Lifetime Adjustment Costs
-- **Link**: http://arxiv.org/abs/2611.25311v1
-- **Abstract**: A Bayesian learner may retain an issued action while updating its posterior, trading predictive loss against adjustment charges. We assume population curvature, boundary control, an order-$1/n$ lower ...
+### Writing Weights or Training Them? Spatial Reasoning through Weight-Space Programming and Low-Rank Adaptation
+- **Link**: http://arxiv.org/abs/2611.27089v1
+- **Abstract**: Weight-space programming lets a language model inspect and edit another model's weights, offering an alternative to gradient-based adaptation. We evaluated both approaches using Qwen3.5-0.8B on a fixe...
 
-### Rate-distortion Assessment for Hierarchical Content Summarization
-- **Link**: http://arxiv.org/abs/2611.25151v1
-- **Abstract**: Powerful generative models including large language and vision models have demonstrated success across a wide range of content generation, editing and manipulation tasks via end-to-end prompt-based ge...
+### Ruby: State-of-the-Art Potency Prediction across Discovery Regimes Using Learned Structural Representations
+- **Link**: http://arxiv.org/abs/2611.27015v1
+- **Abstract**: Small-molecule drug discovery proceeds through repeated design-make-test-analyze cycles. The goal is often to maximize potency while keeping other properties within the ranges required for a viable th...
 
