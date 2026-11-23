@@ -4196,3 +4196,15 @@
 {"timestamp": "2026-11-23T12:46:33.237225", "scores": {}, "weights": {}, "final_score": 0.0, "signal": "HOLD", "action_taken": "none", "ticket": null, "reason": "rsi_oversold_26.0"}
 {"timestamp": "2026-11-23T12:51:34.581688", "scores": {}, "weights": {}, "final_score": 0.0, "signal": "HOLD", "action_taken": "none", "ticket": null, "reason": "rsi_oversold_26.0"}
 {"timestamp": "2026-11-23T12:56:35.971596", "scores": {}, "weights": {}, "final_score": 0.0, "signal": "HOLD", "action_taken": "none", "ticket": null, "reason": "rsi_oversold_21.7"}
+{"timestamp": "2026-11-23T13:01:37.352320", "scores": {}, "weights": {}, "final_score": 0.0, "signal": "HOLD", "action_taken": "none", "ticket": null, "reason": "rsi_oversold_21.7"}
+{"timestamp": "2026-11-23T13:06:39.786621", "scores": {}, "weights": {}, "final_score": 0.0, "signal": "HOLD", "action_taken": "none", "ticket": null, "reason": "rsi_oversold_21.7"}
+{"timestamp": "2026-11-23T13:11:42.404541", "scores": {}, "weights": {}, "final_score": 0.0, "signal": "HOLD", "action_taken": "none", "ticket": null, "reason": "rsi_oversold_24.4"}
+{"timestamp": "2026-11-23T13:16:43.726178", "scores": {}, "weights": {}, "final_score": 0.0, "signal": "HOLD", "action_taken": "none", "ticket": null, "reason": "rsi_oversold_24.4"}
+{"timestamp": "2026-11-23T13:21:45.258841", "scores": {}, "weights": {}, "final_score": 0.0, "signal": "HOLD", "action_taken": "none", "ticket": null, "reason": "rsi_oversold_24.4"}
+{"timestamp": "2026-11-23T13:26:46.663527", "scores": {}, "weights": {}, "final_score": 0.0, "signal": "HOLD", "action_taken": "none", "ticket": null, "reason": "rsi_oversold_18.8"}
+{"timestamp": "2026-11-23T13:31:48.889514", "scores": {}, "weights": {}, "final_score": 0.0, "signal": "HOLD", "action_taken": "none", "ticket": null, "reason": "rsi_oversold_18.8"}
+{"timestamp": "2026-11-23T13:36:50.280523", "scores": {}, "weights": {}, "final_score": 0.0, "signal": "HOLD", "action_taken": "none", "ticket": null, "reason": "rsi_oversold_18.8"}
+{"timestamp": "2026-11-23T13:41:52.190631", "scores": {}, "weights": {}, "final_score": 0.0, "signal": "HOLD", "action_taken": "none", "ticket": null, "reason": "rsi_oversold_23.5"}
+{"timestamp": "2026-11-23T13:46:53.294447", "scores": {}, "weights": {}, "final_score": 0.0, "signal": "HOLD", "action_taken": "none", "ticket": null, "reason": "rsi_oversold_23.5"}
+{"timestamp": "2026-11-23T13:51:54.747310", "scores": {}, "weights": {}, "final_score": 0.0, "signal": "HOLD", "action_taken": "none", "ticket": null, "reason": "rsi_oversold_23.5"}
+{"timestamp": "2026-11-23T13:56:56.169999", "scores": {}, "weights": {}, "final_score": 0.0, "signal": "HOLD", "action_taken": "none", "ticket": null, "reason": "rsi_oversold_17.8"}
