@@ -1,42 +1,42 @@
-# SCOUT ARXIV (aggiornato 2026-11-24T07:20:02.670001)
+# SCOUT ARXIV (aggiornato 2026-11-25T07:20:02.863760)
 
-### World Models as Native Latent Action Models
-- **Link**: http://arxiv.org/abs/2611.30898v1
-- **Abstract**: Large and diverse video sources, such as egocentric human video and heterogeneous robot recordings, carry rich dynamics but come either without actions or without a shared action space. Latent action ...
+### Tabra Blends: Improving the Accuracy--Latency Trade-off with Complementary Tabular Models
+- **Link**: http://arxiv.org/abs/2611.32859v1
+- **Abstract**: Tabular foundation models make different trade-offs between prediction accuracy and latency. We study whether a compact ensemble can deliver higher accuracy in less time. Across 816 TabArena splits, o...
 
-### Potential Games for Self-Neighborhood Channel Mixing in Graph Neural Networks
-- **Link**: http://arxiv.org/abs/2611.30829v1
-- **Abstract**: Graph message passing must balance two competing objectives: incorporating neighborhood signals while preserving node-specific information. We model this trade-off as a game in which nodes choose how ...
+### OpenWoud: Vendor-Unlocked Scalable Adaptive Random Forest Accelerator
+- **Link**: http://arxiv.org/abs/2611.32662v1
+- **Abstract**: Online Machine Learning (ML) enables real-time decision-making on evolving data streams. These dynamic models learn continuously to adapt to new concepts, as previous ones become invalid, but their pe...
 
-### Do Candlestick Charts Suffice? The Incremental Economic Value of Technical Indicators in Stock Return Prediction
-- **Link**: http://arxiv.org/abs/2611.30584v1
-- **Abstract**: Although technical analysis remains widely used in practice, the need for manually constructed indicators is increasingly questioned as deep learning models can extract features directly from OHLC pri...
+### Boiling Down Uncertainty: Deep Generative Scenario Search with Decision-Guided Evolution Strategies for Two-Stage Stochastic Optimization
+- **Link**: http://arxiv.org/abs/2611.32573v1
+- **Abstract**: One of the most common models for handling uncertainty is two-stage stochastic programming. Choosing the right number of scenarios is a trade-off between the uncertainty that can be represented and co...
 
-### SCAN: Neural Additive Networks for Scalable High-Order Component Selection and Estimation
-- **Link**: http://arxiv.org/abs/2611.30452v1
-- **Abstract**: Functional ANOVA models express a prediction as a sum of main effects and interactions, but existing neural functional ANOVA models require the interactions to be specified in advance, which forces a ...
+### Beyond Robust Algorithmic Recourse: Sharing the Burden of Validity through Model Multiplicity
+- **Link**: http://arxiv.org/abs/2611.32543v1
+- **Abstract**: Algorithmic recourse provides actionable recommendations that enable individuals to achieve favourable outcomes. Implementing recourse for individuals requires significant time and effort, thus emphas...
 
-### AutoClip-DPZO: Practical Private Clipping Selection for Differentially Private Zeroth-Order LLM Fine-Tuning
-- **Link**: http://arxiv.org/abs/2611.30352v1
-- **Abstract**: Differentially private zeroth-order optimization (DPZO) is a promising approach for privacy-preserving LLM fine-tuning, offering exceptional memory efficiency. However, its utility is highly sensitive...
+### Optimal Transport Meets t-SNE: Integrated Visualization without Batch Effects in OT-tSNE
+- **Link**: http://arxiv.org/abs/2611.32402v1
+- **Abstract**: Visual exploration is an integral step in understanding the structure of datasets. However, systematic variation between datasets collected under different conditions, known as batch effects, can obsc...
 
-### SGPC: Safety-Guiding Policy Constraint for Stable Off-Policy Safe Reinforcement Learning
-- **Link**: http://arxiv.org/abs/2611.30265v1
-- **Abstract**: Off-policy safe reinforcement learning (RL) faces a challenging trade-off between task optimality and constraint feasibility. In primal-dual methods, the coupled optimization of cumulative reward and ...
+### Beyond Hard Tokens: Predictive Memory for Multimodal Protein Generation
+- **Link**: http://arxiv.org/abs/2611.32347v1
+- **Abstract**: Multimodal protein language models unify sequence and discrete structural tokens via iterative masked decoding, offering a promising paradigm for joint protein design. However, standard decoders rely ...
 
-### PackLoop: Row-Packed Self-Speculative Decoding for Looped Language Models under Concurrency
-- **Link**: http://arxiv.org/abs/2611.30205v1
-- **Abstract**: Looped language models reuse one block of weights T times per token, trading parameters for test-time depth, but autoregressive decoding then pays T sequential passes per token. Self-speculative decod...
+### Who gets the information? An $α$-fair label-coverage framework for multi-label feature selection
+- **Link**: http://arxiv.org/abs/2611.32200v1
+- **Abstract**: Recent information-theoretic filters for multi-label feature selection disagree on how to distribute relevance over labels: some amplify features that inform a few labels, others balance what every la...
 
-### AdaptRouter: Adaptive Routing across Evolving Tasks and Models
-- **Link**: http://arxiv.org/abs/2611.30162v1
-- **Abstract**: Model routing assigns each query to a suitable foundation model, but tasks and available models keep changing, and existing routers are either untrained for the pool at hand or fit once and forget ear...
+### A Unified Control Framework for Gradient Inversion Defense in Federated Learning
+- **Link**: http://arxiv.org/abs/2611.32174v1
+- **Abstract**: Gradient perturbations are widely recognized as an effective defense against gradient inversion attacks in federated learning, but they are equally known to impair optimization, creating a persistent ...
 
-### FToken: Factors as Tokens for Dual-Axis Cross-Sectional Return Prediction
-- **Link**: http://arxiv.org/abs/2611.30112v1
-- **Abstract**: On a given trading day, a stock-factor panel describes both how stocks differ across factors and how each factor varies across stocks. Most stock Transformers model relationships among stocks or acros...
+### Calibrated Reading of Latent Reasoning and Communication
+- **Link**: http://arxiv.org/abs/2611.32143v1
+- **Abstract**: Latent reasoning and key-value communication store intermediate information in continuous representations, limiting direct inspection of model behavior. Existing activation readers trade the low cost ...
 
-### The Growth Path Is the Missing Half of Neural Networks
-- **Link**: http://arxiv.org/abs/2611.30081v1
-- **Abstract**: An artificial neuron computes and learns, but it does not live: the units of a network are fixed when it is designed, and every one of them is kept and paid for whether it is used or not. We give each...
+### A Fused Gaussian Process Bandit Framework for Multi-Fidelity Bayesian Optimization
+- **Link**: http://arxiv.org/abs/2611.32092v1
+- **Abstract**: Bayesian optimization (BO) is widely used to maximize expensive black-box functions when direct evaluation is costly. In many real-world applications, the high-fidelity objective can be approximated b...
 
