@@ -1,77 +1,77 @@
-# SCOUT HUGGING FACE (aggiornato 2026-11-25T07:10:01.723974)
+# SCOUT HUGGING FACE (aggiornato 2026-11-26T07:10:02.127242)
 
 ### thinkingmachines/Inkling-2-Mini
-- **Downloads**: 69042 | **Likes**: 5869
+- **Downloads**: 96527 | **Likes**: 6116
 - **Task**: image-text-to-text
 - **URL**: https://huggingface.co/thinkingmachines/Inkling-2-Mini
 
 ### unsloth/Inkling-2-Mini-GGUF
-- **Downloads**: 1913407 | **Likes**: 1293
+- **Downloads**: 2445633 | **Likes**: 1404
 - **Task**: image-text-to-text
 - **URL**: https://huggingface.co/unsloth/Inkling-2-Mini-GGUF
 
 ### inworld/voice-isolator
-- **Downloads**: 12733 | **Likes**: 843
+- **Downloads**: 15244 | **Likes**: 916
 - **Task**: audio-to-audio
 - **URL**: https://huggingface.co/inworld/voice-isolator
 
 ### AtomicChat/Inkling-2-Mini-Uncensored-GGUF
-- **Downloads**: 573775 | **Likes**: 780
+- **Downloads**: 762491 | **Likes**: 865
 - **Task**: image-text-to-text
 - **URL**: https://huggingface.co/AtomicChat/Inkling-2-Mini-Uncensored-GGUF
 
 ### SulphurAI/Sulphur-3
-- **Downloads**: 160965 | **Likes**: 965
+- **Downloads**: 189735 | **Likes**: 1141
 - **Task**: N/A
 - **URL**: https://huggingface.co/SulphurAI/Sulphur-3
 
-### harness-hub/Qwen3.8-27B-pi-adapted
-- **Downloads**: 3529 | **Likes**: 1082
-- **Task**: image-text-to-text
-- **URL**: https://huggingface.co/harness-hub/Qwen3.8-27B-pi-adapted
-
-### higurashi-ai/Haru-4B
-- **Downloads**: 9575 | **Likes**: 983
-- **Task**: audio-to-audio
-- **URL**: https://huggingface.co/higurashi-ai/Haru-4B
-
-### apple/DepthPro2
-- **Downloads**: 0 | **Likes**: 1209
-- **Task**: depth-estimation
-- **URL**: https://huggingface.co/apple/DepthPro2
-
 ### prism-ml/Ternary-Bonsai-2.5-27B-GGUF
-- **Downloads**: 0 | **Likes**: 194
+- **Downloads**: 59366 | **Likes**: 409
 - **Task**: text-generation
 - **URL**: https://huggingface.co/prism-ml/Ternary-Bonsai-2.5-27B-GGUF
 
-### tencent/Hy4-flash
-- **Downloads**: 9167 | **Likes**: 685
-- **Task**: image-text-to-text
-- **URL**: https://huggingface.co/tencent/Hy4-flash
+### Lightricks/LTX-2.5
+- **Downloads**: 3041405 | **Likes**: 13477
+- **Task**: image-to-video
+- **URL**: https://huggingface.co/Lightricks/LTX-2.5
+
+### apple/DepthPro2
+- **Downloads**: 0 | **Likes**: 1264
+- **Task**: depth-estimation
+- **URL**: https://huggingface.co/apple/DepthPro2
 
 ### llamaindex/OCRia-nano-1
-- **Downloads**: 0 | **Likes**: 190
+- **Downloads**: 126 | **Likes**: 247
 - **Task**: image-to-text
 - **URL**: https://huggingface.co/llamaindex/OCRia-nano-1
 
 ### inclusionAI/Ling-3.2-air
-- **Downloads**: 733 | **Likes**: 192
+- **Downloads**: 1467 | **Likes**: 240
 - **Task**: N/A
 - **URL**: https://huggingface.co/inclusionAI/Ling-3.2-air
 
-### Lightricks/LTX-2.5
-- **Downloads**: 3024745 | **Likes**: 13352
-- **Task**: image-to-video
-- **URL**: https://huggingface.co/Lightricks/LTX-2.5
+### nvidia/Nemotron-Labs-Image-30B-A3B
+- **Downloads**: 218 | **Likes**: 212
+- **Task**: text-to-image
+- **URL**: https://huggingface.co/nvidia/Nemotron-Labs-Image-30B-A3B
 
-### Qwen/Qwen3.8-27B
-- **Downloads**: 6122057 | **Likes**: 21747
+### harness-hub/Qwen3.8-27B-pi-adapted
+- **Downloads**: 3844 | **Likes**: 1122
 - **Task**: image-text-to-text
-- **URL**: https://huggingface.co/Qwen/Qwen3.8-27B
+- **URL**: https://huggingface.co/harness-hub/Qwen3.8-27B-pi-adapted
 
-### apple/FastFrames-L
-- **Downloads**: 0 | **Likes**: 601
-- **Task**: text-to-video
-- **URL**: https://huggingface.co/apple/FastFrames-L
+### higurashi-ai/Haru-4B
+- **Downloads**: 10026 | **Likes**: 1035
+- **Task**: audio-to-audio
+- **URL**: https://huggingface.co/higurashi-ai/Haru-4B
+
+### nari-labs/Qwen3.8-27B-NariQ-GGUF
+- **Downloads**: 14337 | **Likes**: 171
+- **Task**: image-text-to-text
+- **URL**: https://huggingface.co/nari-labs/Qwen3.8-27B-NariQ-GGUF
+
+### inclusionAI/LingSante-3.1-flash
+- **Downloads**: 1487 | **Likes**: 198
+- **Task**: text-generation
+- **URL**: https://huggingface.co/inclusionAI/LingSante-3.1-flash
 
