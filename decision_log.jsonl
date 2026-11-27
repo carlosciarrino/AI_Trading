@@ -5473,3 +5473,8 @@
 {"timestamp": "2026-11-27T16:22:59.615939", "scores": {}, "weights": {}, "final_score": 0.0, "signal": "HOLD", "action_taken": "none", "ticket": null, "reason": "p013_friday_late"}
 {"timestamp": "2024-01-02T12:00:00", "scores": {}, "weights": {}, "final_score": 0.0, "signal": "HOLD", "action_taken": "none", "ticket": null, "reason": "risk_halt: halt: limite 2 ordini sell raggiunto (2)"}
 {"timestamp": "2026-11-27T16:27:59.717448", "scores": {}, "weights": {}, "final_score": 0.0, "signal": "HOLD", "action_taken": "none", "ticket": null, "reason": "p013_friday_late"}
+{"timestamp": "2026-11-27T17:04:04.701737", "scores": {}, "weights": {}, "final_score": 0.0, "signal": "HOLD", "action_taken": "none", "ticket": "2243615", "reason": "friday_close_all_timeout", "error": "timeout_ea"}
+{"timestamp": "2026-11-27T17:09:12.856427", "scores": {}, "weights": {}, "final_score": 0.0, "signal": "HOLD", "action_taken": "none", "ticket": "2243615", "reason": "friday_close_all_timeout", "error": "timeout_ea"}
+{"timestamp": "2026-11-27T17:14:21.007376", "scores": {}, "weights": {}, "final_score": 0.0, "signal": "HOLD", "action_taken": "none", "ticket": "2243615", "reason": "friday_close_all_timeout", "error": "timeout_ea"}
+{"timestamp": "2026-11-27T17:19:29.110180", "scores": {}, "weights": {}, "final_score": 0.0, "signal": "HOLD", "action_taken": "none", "ticket": "2243615", "reason": "friday_close_all_timeout", "error": "timeout_ea"}
+{"timestamp": "2026-11-27T17:24:37.243336", "scores": {}, "weights": {}, "final_score": 0.0, "signal": "HOLD", "action_taken": "none", "ticket": "2243615", "reason": "friday_close_all_timeout", "error": "timeout_ea"}
