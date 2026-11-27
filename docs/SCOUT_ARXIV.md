@@ -1,4 +1,4 @@
-# SCOUT ARXIV (aggiornato 2026-11-26T07:20:02.042576)
+# SCOUT ARXIV (aggiornato 2026-11-27T07:20:03.197713)
 
 ### Focus Only on What's Important: Training-Free Focus Maps for Frozen Vision Transformers in Long-Video Object Segmentation
 - **Link**: http://arxiv.org/abs/2611.34863v1
