@@ -4,7 +4,7 @@ import json, os
 from datetime import datetime, timezone
 
 CONFIG_PATH = "/home/carlo/Progetti/AI_Trading/config/risk_budget.json"
-ACCOUNT_PATH = "/home/carlo/Scrivania/XM MT4/MQL4/Files/account.json"
+ACCOUNT_PATH = os.environ.get("ORCHESTRATOR_FILES_DIR", os.path.expanduser("~/Scrivania/XM MT4/MQL4/Files")) + "/account.json"
 
 
 def load_config():
@@ -94,7 +94,7 @@ def check_daily_loss(account, config):
 
 def check_side_limit(action):
     """Blocca se ci sono gia' 2 ordini aperti nella stessa direzione (buy o sell)."""
-    orders_path = "/home/carlo/Scrivania/XM MT4/MQL4/Files/orders.json"
+    orders_path = os.environ.get("ORCHESTRATOR_FILES_DIR", os.path.expanduser("~/Scrivania/XM MT4/MQL4/Files")) + "/orders.json"
     try:
         with open(orders_path) as f:
             orders = json.load(f)

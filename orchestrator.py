@@ -1,19 +1,26 @@
 import yfinance as yf
 import json, time, os, requests
 from datetime import datetime, timezone, timedelta
+
+def get_now():
+    sim_date = os.environ.get("ORCHESTRATOR_SIM_DATE")
+    if sim_date:
+        return datetime.fromisoformat(sim_date)
+    return datetime.now()
 import risk_manager
 
 CONFIG_PATH = os.path.expanduser("~/Progetti/AI_Trading/config.json")
 OLLAMA_URL = "http://localhost:11434/api/generate"
 MODEL = "qwen2.5:0.5b"
 MAX_OPEN_ORDERS = 1
-MT4_FILES = os.path.expanduser("~/Scrivania/XM MT4/MQL4/Files")
+MT4_FILES_DIR = os.environ.get("ORCHESTRATOR_FILES_DIR", os.path.expanduser("~/Scrivania/XM MT4/MQL4/Files"))
+MT4_FILES = MT4_FILES_DIR
 MAX_ORDERS_FILE = os.path.join(MT4_FILES, "max_orders.txt")
 EA_PARAMS_FILE = os.path.join(MT4_FILES, "ea_params.json")
-ORDERS_JSON = "/home/carlo/Scrivania/XM MT4/MQL4/Files/orders.json"
-OPEN_TIME_FILE = "/home/carlo/Scrivania/XM MT4/MQL4/Files/open_time.json"
-ACCOUNT_JSON = "/home/carlo/Scrivania/XM MT4/MQL4/Files/account.json"
-SL_COMMANDS_FILE = "/home/carlo/Scrivania/XM MT4/MQL4/Files/sl_commands.json"
+ORDERS_JSON = os.path.join(MT4_FILES, "orders.json")
+OPEN_TIME_FILE = os.path.join(MT4_FILES, "open_time.json")
+ACCOUNT_JSON = os.path.join(MT4_FILES, "account.json")
+SL_COMMANDS_FILE = os.path.join(MT4_FILES, "sl_commands.json")
 LOCK_FILE = "/tmp/orchestrator.lock"
 DECISION_LOG = "/home/carlo/Progetti/AI_Trading/decision_log.jsonl"
 
@@ -47,7 +54,7 @@ def get_max_orders():
 
 
 def is_trading_hours(session):
-    now_utc = datetime.now(timezone.utc).hour
+    now_utc = get_now().hour
     if session == "all":
         return True
     if session == "london":
@@ -173,7 +180,7 @@ def check_triggers(check_fresh=False):
 def get_asymmetric_thresholds():
     """Ritorna (soglia_buy, soglia_sell) basate sulle ultime perdite."""
     import json
-    orders_path = "/home/carlo/Scrivania/XM MT4/MQL4/Files/orders.json"
+    orders_path = os.path.join(MT4_FILES, "orders.json")
     try:
         with open(orders_path) as f:
             orders = json.load(f)
@@ -332,7 +339,7 @@ def get_signal():
         with open('/home/carlo/Progetti/AI_Trading/cycles_context.txt', 'r') as f:
             text = f.read().lower()
             import re
-            month = datetime.now().month
+            month = get_now().month
             lines = text.split('\n')
             for line in lines:
                 if f"mese {month}" in line:
@@ -379,7 +386,7 @@ def get_signal():
         # Pattern: 3 BUY loss consecutivi -> blocca BUY
         import json as _json
         try:
-            with open('/home/carlo/Scrivania/XM MT4/MQL4/Files/orders.json') as _f:
+            with open(os.path.join(MT4_FILES, 'orders.json')) as _f:
                 _orders = _json.load(_f)
             _closed = [o for o in _orders if o.get('status') == 'closed']
             _recent = _closed[-3:] if len(_closed) >= 3 else _closed
@@ -449,7 +456,7 @@ def check_time_stop():
             json.dump(open_times, f)
         return
     open_dt = datetime.fromtimestamp(open_time)
-    if datetime.now() - open_dt > timedelta(hours=24):
+    if get_now() - open_dt > timedelta(hours=24):
         print(f"[O8] Ordine {ticket} aperto da >24h. Chiusura.", flush=True)
         send_close_command(ticket, "time_stop_24h")
         try:
@@ -670,7 +677,7 @@ def read_bridge_result(timeout=8):
 def write_decision(detail, action_taken, ticket=None, reason=None, error=None):
     import json as _json
     entry = {
-        "timestamp": datetime.now().isoformat(),
+        "timestamp": get_now().isoformat(),
         "scores": detail.get("scores", {}),
         "weights": detail.get("weights", {}),
         "final_score": detail.get("final_score", 0.0),
@@ -749,7 +756,7 @@ def main():
             signal, detail = get_ema_volume_signal()
             print(f"Segnale AI: {signal}", flush=True)
 
-            now_utc = datetime.now(timezone.utc)
+            now_utc = get_now()
             if signal in ("BUY", "SELL") and now_utc.weekday() == 4 and now_utc.hour >= 19:
                 print("[P013] Venerdi dopo 19:00 UTC: apertura bloccata.", flush=True)
                 write_decision(detail, action_taken="none", reason="p013_friday_late")
