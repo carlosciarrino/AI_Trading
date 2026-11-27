@@ -689,18 +689,21 @@ def write_decision(detail, action_taken, ticket=None, reason=None, error=None):
 
 
 def main():
-    if os.path.exists(LOCK_FILE):
-        try:
-            with open(LOCK_FILE) as f:
-                pid = int(f.read().strip())
-            os.kill(pid, 0)
-            print(f"[LOCK] Orchestratore già attivo (PID {pid}). Esco.", flush=True)
-            return
-        except (ProcessLookupError, ValueError):
-            os.remove(LOCK_FILE)
-
-    with open(LOCK_FILE, "w") as f:
-        f.write(str(os.getpid()))
+    # Test mode: bypass lock se richiesto
+    if os.environ.get("ORCHESTRATOR_NO_LOCK") == "1":
+        pass  # salta il lock
+    else:
+        if os.path.exists(LOCK_FILE):
+            try:
+                with open(LOCK_FILE) as f:
+                    pid = int(f.read().strip())
+                os.kill(pid, 0)
+                print(f"[LOCK] Orchestratore già attivo (PID {pid}). Esco.", flush=True)
+                return
+            except (ProcessLookupError, ValueError):
+                os.remove(LOCK_FILE)
+        with open(LOCK_FILE, "w") as f:
+            f.write(str(os.getpid()))
 
     try:
         config = load_config()

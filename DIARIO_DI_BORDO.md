@@ -22,3 +22,23 @@ Forward test: MT4 SweepEA attivo. XAUUSD.r M15. Lotto 0.01. Filtro news ON (5 da
 - Io (assistente) non ho memoria tra chat. Questo file è la memoria.
 - All'inizio di ogni nuova chat: incollare questo file. Io riparto da qui.
 - Aggiornare a fine sessione (io scrivo, tu salvi).
+
+## Sessione 2026-11-27
+
+**Obiettivo**: Ripristinare il funzionamento del sistema di trading e testare l'integrazione orchestratore + EA MT4.
+
+**Cosa è stato fatto (ordine cronologico)**:
+1. **Diagnosi XAUUSD (SweepEA)**: scoperto che l'EA era "fermo" da giorni per un problema di init di MT4 (uninit reason 5). Ripartito manualmente alle 14:01.
+2. **Fix EURUSD**: corretto mismatch unità SL/TP (orchestratore inviava prezzi assoluti, EA leggeva pips); disattivato bypass del trigger engine (ora usa solo punteggio composito); allineato `ea_params.json` (StopLoss=10, TakeProfit=20).
+3. **Costruzione Simulatore MT4**: creati `sim_loader.py`, `sim_bridge.py`, `sim_runner.py` in `backtest_sim/` per testare l'orchestratore su dati storici M1/M15.
+4. **Documentazione**: creato `docs/ECOSISTEMA_E_METODO.md`, aggiornati `APERTURA_CHAT.md` e `ISTRUZIONI_AGENTI.md` con riferimenti al report strategico e alla direttiva lingua.
+
+**Stato attuale**:
+- EURUSD: fix applicati, in attesa di test lunedì a mercato aperto.
+- XAUUSD (SweepEA): ripartito, in attesa di segnali. Monitorare.
+- Simulatore: funzionante (smoke test passato), ma genera 0 operazioni perché i context file sono neutri (Punteggio 0.0). Da migliorare per generare segnali.
+
+**Prossimi passi**:
+1. Risolvere il problema dei context file neutri nel simulatore (dare dati veri o disattivare filtri).
+2. Testare il simulatore su EURUSD (2024-2025) e XAUUSD (2024-2025).
+3. Aggiornare `RICERCA_ESITI.md` con l'esito dei test e degli strumenti valutati (mcp-mt5, EA31337, etc.).
